@@ -12,9 +12,16 @@
 .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}.reveal.visible{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1!important;transform:none!important;transition:none!important}.btn,.step{transition:none!important}}
 
-/* Final desktop rhythm: remove the oversized dead zone before “Что мы делаем” */
+/* Final desktop rhythm */
 @media(min-width:901px){
   .about{height:740px}
   .activities{padding-top:42px}
   .about + .activities{margin-top:-18px}
+
+  /* Tighten the transition from “Кого мы ищем” to the application section. */
+  .who{height:720px}
+  .who-copy{top:8%}
+  .apply{height:900px;margin-top:-90px}
+  .apply-copy{top:8%}
+  .form-card{top:7.5%}
 }
