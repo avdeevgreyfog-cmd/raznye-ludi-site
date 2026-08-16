@@ -12,35 +12,48 @@
 .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}.reveal.visible{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1!important;transform:none!important;transition:none!important}.btn,.step{transition:none!important}}
 
-/* Desktop rhythm: content-driven endings instead of empty fixed-height tails. */
+/* Improve line balance without forcing awkward manual wrapping. */
+.scene h2,.join-copy-v24 h2,.who-copy h2,.apply-copy h2{text-wrap:balance}
+.bodycopy,.join-lead-v24,.who-lead,.trait p,.who-note p{text-wrap:pretty}
+
+/* Desktop rhythm and visual alignment. */
 @media(min-width:901px){
-  /* About -> activities: keep the cinematic fade, but remove the long empty tail. */
+  /* About: photo and copy share one vertical centre. */
   .about{height:650px}
-  .about-copy{top:12%}
+  .about .scene-photo{top:50%;transform:translateY(-50%)}
+  .about-copy{top:50%;transform:translateY(-50%);left:6%;width:min(650px,38%)}
+  .about-copy .bodycopy{max-width:500px}
+
+  /* Activities: same outer gutter as the text sections; captions sit on one baseline. */
   .activities{height:710px;padding-top:34px}
-  .activities-head-v23{margin-bottom:18px}
+  .activities-head-v23{width:88%;margin:0 auto 18px}
   .activity-grid-v23{height:570px}
+  .activity-v23-copy,.activity-v23-2 .activity-v23-copy,.activity-v23-3 .activity-v23-copy{bottom:52px}
+  .activity-v23-copy{left:13%;right:12%}
+  .activity-v23-2 .activity-v23-copy{left:16%;right:13%}
+  .activity-v23-3 .activity-v23-copy{left:16%;right:12%}
   .about + .activities{margin-top:-8px}
 
-  /* Join already uses the full height well; only make the edge rhythm match neighbours. */
+  /* Join: keep the photo vertically centred and preserve a clear left reading column. */
   .join{height:890px}
-  .join-copy-v24{top:8.5%}
-  .steps-v24{top:41%}
-  .join-note-v24{bottom:48px}
+  .join .scene-photo{top:50%;transform:translateY(-50%)}
+  .join-copy-v24{left:6%;top:8.5%;width:min(760px,45%)}
+  .steps-v24{left:6%;top:41%;width:min(820px,47%)}
+  .join-note-v24{left:6%;bottom:48px}
 
-  /* Who becomes content-driven: no large blank area after the final note. */
-  .who{height:auto;min-height:620px;padding:66px 0 70px}
-  .who .scene-content{position:relative;inset:auto;min-height:484px}
-  .who-copy{position:relative;left:auto;top:auto;width:47%;max-width:850px;margin-left:47%}
+  /* Who: centre the full text group against the image instead of pinning it to the top. */
+  .who{height:auto;min-height:620px;padding:58px 0 62px}
+  .who .scene-content{position:relative;inset:auto;min-height:500px;display:flex;align-items:center}
+  .who-copy{position:relative;left:auto;top:auto;width:47%;max-width:820px;margin-left:47%;margin-right:6%}
   .who .scene-photo{top:0;height:100%;width:67%;object-fit:cover}
   .who .scene-ambient{height:100%;object-fit:cover}
-  .traits{margin-top:34px}
-  .who-note{margin-top:26px}
+  .traits{margin-top:32px}
+  .who-note{margin-top:24px}
 
-  /* Application is also content-driven. Text and form start on one baseline. */
-  .apply{height:auto;min-height:760px;margin-top:0;padding:66px 0 72px}
-  .apply .scene-content{position:relative;inset:auto;width:min(1680px,88%);margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 510px;gap:clamp(56px,6vw,118px);align-items:start}
-  .apply-copy{position:relative;left:auto;top:auto;width:auto;max-width:690px;padding-top:14px}
+  /* Application: text and form are vertically centred as one composition with equal side gutters. */
+  .apply{height:auto;min-height:740px;margin-top:0;padding:58px 0 64px}
+  .apply .scene-content{position:relative;inset:auto;width:88%;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 510px;gap:clamp(56px,6vw,118px);align-items:center;min-height:618px}
+  .apply-copy{position:relative;left:auto;top:auto;width:auto;max-width:690px;padding-top:0}
   .form-card{position:relative;right:auto;top:auto;width:510px}
   .apply .scene-photo{top:0;height:100%;object-fit:cover}
   .apply .scene-ambient{height:100%;object-fit:cover}
