@@ -54,3 +54,11 @@
  .about-copy,.join-copy-v24,.who-copy,.apply-copy{margin-left:17px;margin-right:17px}
  .steps-v24{margin-left:17px;margin-right:17px}.form-card{margin-left:12px;margin-right:12px}
 }
+
+/* Desktop-laptop bridge: keep the content-driven end sections stable below 1280px. */
+@media(min-width:901px) and (max-width:1280px){
+ .who-copy{left:auto;top:auto;width:50%;max-width:none;margin-left:45%}
+ .apply .scene-content{width:90%;grid-template-columns:minmax(0,1fr) 450px;gap:40px}
+ .apply-copy{left:auto;top:auto;width:auto;max-width:620px}
+ .form-card{right:auto;top:auto;width:450px}
+}
