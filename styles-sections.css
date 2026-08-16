@@ -12,16 +12,36 @@
 .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}.reveal.visible{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1!important;transform:none!important;transition:none!important}.btn,.step{transition:none!important}}
 
-/* Final desktop rhythm */
+/* Desktop rhythm: content-driven endings instead of empty fixed-height tails. */
 @media(min-width:901px){
-  .about{height:740px}
-  .activities{padding-top:42px}
-  .about + .activities{margin-top:-18px}
+  /* About -> activities: keep the cinematic fade, but remove the long empty tail. */
+  .about{height:650px}
+  .about-copy{top:12%}
+  .activities{height:710px;padding-top:34px}
+  .activities-head-v23{margin-bottom:18px}
+  .activity-grid-v23{height:570px}
+  .about + .activities{margin-top:-8px}
 
-  /* Tighten the transition from “Кого мы ищем” to the application section. */
-  .who{height:720px}
-  .who-copy{top:8%}
-  .apply{height:900px;margin-top:-90px}
-  .apply-copy{top:8%}
-  .form-card{top:7.5%}
+  /* Join already uses the full height well; only make the edge rhythm match neighbours. */
+  .join{height:890px}
+  .join-copy-v24{top:8.5%}
+  .steps-v24{top:41%}
+  .join-note-v24{bottom:48px}
+
+  /* Who becomes content-driven: no large blank area after the final note. */
+  .who{height:auto;min-height:620px;padding:66px 0 70px}
+  .who .scene-content{position:relative;inset:auto;min-height:484px}
+  .who-copy{position:relative;left:auto;top:auto;width:47%;max-width:850px;margin-left:47%}
+  .who .scene-photo{top:0;height:100%;width:67%;object-fit:cover}
+  .who .scene-ambient{height:100%;object-fit:cover}
+  .traits{margin-top:34px}
+  .who-note{margin-top:26px}
+
+  /* Application is also content-driven. Text and form start on one baseline. */
+  .apply{height:auto;min-height:760px;margin-top:0;padding:66px 0 72px}
+  .apply .scene-content{position:relative;inset:auto;width:min(1680px,88%);margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 510px;gap:clamp(56px,6vw,118px);align-items:start}
+  .apply-copy{position:relative;left:auto;top:auto;width:auto;max-width:690px;padding-top:14px}
+  .form-card{position:relative;right:auto;top:auto;width:510px}
+  .apply .scene-photo{top:0;height:100%;object-fit:cover}
+  .apply .scene-ambient{height:100%;object-fit:cover}
 }
