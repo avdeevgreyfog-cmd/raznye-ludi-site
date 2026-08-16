@@ -1,0 +1,32 @@
+name: Promote fog index
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/promote-fog.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Replace production index and clean temporary file
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f 'index(2).html'
+          cp 'index(2).html' index.html
+          rm 'index(2).html'
+          rm '.github/workflows/promote-fog.yml'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Deploy section fog LOW speed 3'
+          git push origin main
