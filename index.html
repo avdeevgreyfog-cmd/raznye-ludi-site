@@ -1345,7 +1345,85 @@ a[data-disabled="true"]:hover{transform:none!important;}
   #apply .proofs{display:block!important;}
   #apply .proof.proof-link{width:100%!important;}
 }
-</style></head><body class="final-site">
+</style>
+<style id="section-flow-fog-css">
+/* === РЛ / SECTION FOG ===
+   Базовая настройка: LOW + speed 3.
+   Панель настройки скрыта на обычном сайте.
+   Для теста: добавь к адресу ?fogdebug=1
+   Доступно:
+   density = OFF / LOW / LOW+ / MED / HIGH
+   speed   = 0..8
+*/
+.section-fog-host{position:relative!important;isolation:isolate}
+.section-fog-canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  z-index:4;
+  display:block;
+  opacity:.18;
+  mix-blend-mode:screen;
+}
+.section-fog-host .scene-content,
+.section-fog-host .latest-inner,
+.section-fog-host .hero-inner,
+.section-fog-host .hero-content{
+  position:relative;
+  z-index:7!important;
+}
+
+/* Debug UI exists only when ?fogdebug=1 is present in the URL. */
+#sectionFogPanel{
+  position:fixed;
+  left:16px;
+  bottom:16px;
+  z-index:99999;
+  display:flex;
+  flex-wrap:wrap;
+  max-width:min(760px,calc(100vw - 32px));
+  gap:6px;
+  align-items:center;
+  padding:8px 9px;
+  background:rgba(4,7,4,.90);
+  border:1px solid rgba(215,174,93,.32);
+  backdrop-filter:blur(8px);
+  font:700 10px/1 Arial,sans-serif;
+  letter-spacing:.05em;
+  color:#bcb3a6
+}
+#sectionFogPanel span{
+  margin-right:3px;
+  color:#d7ae5d;
+  text-transform:uppercase
+}
+#sectionFogPanel button{
+  border:1px solid rgba(215,174,93,.28);
+  background:#0b0f0b;
+  color:#aaa196;
+  padding:7px 9px;
+  cursor:pointer;
+  font:inherit
+}
+#sectionFogPanel button.active,
+#sectionFogPanel button.speed-active{
+  background:#d0a253;
+  color:#171109;
+  border-color:#d0a253
+}
+@media(max-width:760px){
+  #sectionFogPanel{left:9px;bottom:9px;max-width:calc(100vw - 18px);padding:6px;gap:4px}
+  #sectionFogPanel button{padding:6px 7px}
+}
+@media(prefers-reduced-motion:reduce){
+  .section-fog-canvas{display:none!important}
+  #sectionFogPanel{display:none!important}
+}
+</style>
+
+</head><body class="final-site">
 <div class="site-canvas">
 <header class="header" id="header"><div class="header-inner"><a class="brand" href="#home"><img alt="РЛ" src="assets/final_logo.png"/><div><strong>Разные люди</strong><small>тактическая команда</small></div></a><nav class="nav"><a href="#about">О КОМАНДЕ</a><a href="#activities">ЧТО МЫ ДЕЛАЕМ</a><a href="#join">КАК ПОПАСТЬ</a><a href="#who">КОГО МЫ ИЩЕМ</a><a href="#apply">КОНТАКТЫ</a></nav><a aria-disabled="true" class="header-login" data-disabled="true" href="#" onclick="return false;" tabindex="-1">ВОЙТИ</a><a class="header-cta" data-scroll="apply" href="#apply">ХОЧУ В КОМАНДУ</a><button aria-expanded="false" aria-label="Открыть меню" class="mobile-menu-btn" type="button"><span></span><span></span><span></span></button></div></header><div class="mobile-menu" id="mobileMenu"><div class="mobile-menu-inner">
 <a href="#about">О КОМАНДЕ</a><a href="#activities">ЧТО МЫ ДЕЛАЕМ</a><a href="#join">КАК ПОПАСТЬ</a><a href="#who">КОГО МЫ ИЩЕМ</a><a href="#apply">КОНТАКТЫ</a>
@@ -1476,4 +1554,349 @@ a[data-disabled="true"]:hover{transform:none!important;}
  btn?.addEventListener('click',()=>{const open=menu?.classList.toggle('open');btn.setAttribute('aria-expanded',open?'true':'false')});
  menu?.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
 })();
-</script></body></html>
+</script>
+<script id="section-flow-fog-js">
+(() => {
+  /* ============================================================
+     РЛ FOG CONFIG
+     ------------------------------------------------------------
+     БАЗОВАЯ НАСТРОЙКА САЙТА:
+       density: LOW  = 0.18
+       speed:   3
+
+     Сохранённый диапазон для будущей перенастройки:
+       density: OFF / LOW / LOW+ / MED / HIGH
+       speed:   0 / 1 / 2 / 3 / 4 / 5 / 6 / 7 / 8
+
+     Быстрая тестовая панель:
+       открой сайт с ?fogdebug=1
+
+     Можно сразу задать тестовые значения URL-параметрами:
+       ?fogdebug=1&fog=lowplus&speed=4
+       ?fogdebug=1&fog=med&speed=6
+     ============================================================ */
+
+  const FOG_LEVELS = Object.freeze({
+    off: 0,
+    low: 0.18,
+    lowplus: 0.23,
+    med: 0.28,
+    high: 0.42
+  });
+  const SPEED_MIN = 0;
+  const SPEED_MAX = 8;
+
+  const BASE_FOG = 'low';
+  const BASE_SPEED = 3;
+
+  const params = new URLSearchParams(location.search);
+  const requestedFog = (params.get('fog') || BASE_FOG).toLowerCase().replace('+','plus');
+  const requestedSpeed = Number(params.get('speed'));
+
+  let globalOpacity = Object.prototype.hasOwnProperty.call(FOG_LEVELS, requestedFog)
+    ? FOG_LEVELS[requestedFog]
+    : FOG_LEVELS[BASE_FOG];
+
+  let globalSpeed = Number.isFinite(requestedSpeed)
+    ? Math.max(SPEED_MIN, Math.min(SPEED_MAX, Math.round(requestedSpeed)))
+    : BASE_SPEED;
+
+  const targetIds = ['about','activities','join','latest','who','apply'];
+  const targets = targetIds.map(id => document.getElementById(id)).filter(Boolean);
+  if (!targets.length) return;
+
+  const mobile = matchMedia('(max-width:760px)').matches;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+
+  let lastFrame = 0;
+  const fps = mobile ? 15 : 24;
+  const frameMs = 1000 / fps;
+
+  const VS = `
+    attribute vec2 a_position;
+    void main(){ gl_Position = vec4(a_position,0.0,1.0); }
+  `;
+
+  const FS = `
+    precision mediump float;
+    uniform vec2 u_resolution;
+    uniform float u_time;
+    uniform float u_seed;
+    uniform float u_density;
+    uniform vec2 u_drift;
+    uniform float u_speed;
+
+    float hash(vec2 p){
+      p = fract(p*vec2(123.34,456.21));
+      p += dot(p,p+45.32);
+      return fract(p.x*p.y);
+    }
+    float noise(vec2 p){
+      vec2 i=floor(p), f=fract(p);
+      f=f*f*(3.0-2.0*f);
+      float a=hash(i);
+      float b=hash(i+vec2(1.0,0.0));
+      float c=hash(i+vec2(0.0,1.0));
+      float d=hash(i+vec2(1.0,1.0));
+      return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);
+    }
+    float fbm(vec2 p){
+      float v=0.0;
+      float a=0.52;
+      mat2 m=mat2(1.63,1.18,-1.18,1.63);
+      for(int i=0;i<5;i++){
+        v += a*noise(p);
+        p = m*p + 0.17;
+        a *= 0.50;
+      }
+      return v;
+    }
+    void main(){
+      vec2 uv = gl_FragCoord.xy/u_resolution.xy;
+      float aspect=u_resolution.x/max(u_resolution.y,1.0);
+      vec2 p=vec2((uv.x-.5)*aspect,(uv.y-.5));
+      p*=1.48;
+      p += vec2(u_seed*2.17,u_seed*1.31);
+
+      /* Реальный перенос туманной массы через секцию + изменение формы. */
+      float tt=u_time*u_speed;
+      vec2 flow=u_drift*tt*0.20;
+      p -= flow;
+
+      vec2 driftA=u_drift*tt*0.075;
+      vec2 driftB=vec2(-u_drift.y,u_drift.x)*tt*0.038;
+
+      float q=fbm(p*1.05 + driftA);
+      float r=fbm(p*1.33 + vec2(q*1.65,-q*1.12) + driftB + 4.7);
+      float f=fbm(p*0.88 + vec2(q,r)*2.25 + driftA*0.62 + 9.3);
+      float detail=fbm(p*2.05 - driftB*0.9 + vec2(r,-q)*0.65 + 17.0);
+      float field=mix(f,detail,0.22);
+
+      float bank=smoothstep(0.43,0.78,field);
+      float wisps=smoothstep(0.52,0.82,r)*0.42;
+      float shape=clamp(bank+wisps,0.0,1.0);
+
+      float vertical=smoothstep(0.02,0.22,uv.y)*(1.0-smoothstep(0.92,1.0,uv.y));
+      float edge=smoothstep(0.0,0.10,uv.x)*(1.0-smoothstep(0.90,1.0,uv.x));
+
+      float alpha=shape*vertical*edge*u_density;
+      alpha*=0.80+0.20*sin(u_time*(0.24+0.035*u_speed)+u_seed*5.0);
+
+      vec3 fogColor=mix(
+        vec3(0.47,0.50,0.45),
+        vec3(0.64,0.64,0.58),
+        clamp(field,0.0,1.0)
+      );
+      gl_FragColor=vec4(fogColor,alpha);
+    }
+  `;
+
+  const configs = [
+    {seed:1.2,drift:[ 0.42, 0.055],density:0.58},
+    {seed:2.8,drift:[-0.36, 0.045],density:0.48},
+    {seed:4.1,drift:[ 0.39,-0.030],density:0.56},
+    {seed:5.7,drift:[-0.31, 0.025],density:0.38},
+    {seed:7.3,drift:[ 0.44, 0.040],density:0.55},
+    {seed:9.1,drift:[-0.38,-0.025],density:0.62}
+  ];
+
+  function makeRenderer(section,index){
+    section.classList.add('section-fog-host');
+
+    const canvas=document.createElement('canvas');
+    canvas.className='section-fog-canvas';
+    canvas.setAttribute('aria-hidden','true');
+    section.insertBefore(canvas,section.firstChild);
+
+    const gl=canvas.getContext('webgl',{
+      alpha:true,
+      antialias:false,
+      premultipliedAlpha:true,
+      preserveDrawingBuffer:false
+    });
+    if(!gl){canvas.remove();return null;}
+
+    const compile=(type,src)=>{
+      const sh=gl.createShader(type);
+      gl.shaderSource(sh,src);
+      gl.compileShader(sh);
+      if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS)){
+        console.warn('[RL fog shader]',gl.getShaderInfoLog(sh));
+        gl.deleteShader(sh);
+        return null;
+      }
+      return sh;
+    };
+
+    const vs=compile(gl.VERTEX_SHADER,VS);
+    const fs=compile(gl.FRAGMENT_SHADER,FS);
+    if(!vs||!fs){canvas.remove();return null;}
+
+    const program=gl.createProgram();
+    gl.attachShader(program,vs);
+    gl.attachShader(program,fs);
+    gl.linkProgram(program);
+
+    if(!gl.getProgramParameter(program,gl.LINK_STATUS)){
+      console.warn('[RL fog program]',gl.getProgramInfoLog(program));
+      canvas.remove();
+      return null;
+    }
+
+    gl.useProgram(program);
+
+    const buf=gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),
+      gl.STATIC_DRAW
+    );
+
+    const pos=gl.getAttribLocation(program,'a_position');
+    gl.enableVertexAttribArray(pos);
+    gl.vertexAttribPointer(pos,2,gl.FLOAT,false,0,0);
+
+    const loc={
+      resolution:gl.getUniformLocation(program,'u_resolution'),
+      time:gl.getUniformLocation(program,'u_time'),
+      seed:gl.getUniformLocation(program,'u_seed'),
+      density:gl.getUniformLocation(program,'u_density'),
+      drift:gl.getUniformLocation(program,'u_drift'),
+      speed:gl.getUniformLocation(program,'u_speed')
+    };
+
+    const cfg=configs[index%configs.length];
+    let active=false;
+
+    function resize(){
+      const r=section.getBoundingClientRect();
+      const scale=mobile?0.34:0.46;
+      const dpr=Math.min(devicePixelRatio||1,1.4);
+      const w=Math.max(180,Math.min(1000,Math.round(r.width*scale*dpr)));
+      const h=Math.max(120,Math.min(520,Math.round(r.height*scale*dpr)));
+
+      if(canvas.width!==w||canvas.height!==h){
+        canvas.width=w;
+        canvas.height=h;
+        gl.viewport(0,0,w,h);
+      }
+    }
+
+    function draw(t){
+      if(!active || globalOpacity<=0 || globalSpeed<=0) return;
+
+      resize();
+      gl.clearColor(0,0,0,0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+      gl.useProgram(program);
+
+      gl.uniform2f(loc.resolution,canvas.width,canvas.height);
+      gl.uniform1f(loc.time,t*0.001);
+      gl.uniform1f(loc.seed,cfg.seed);
+      gl.uniform1f(loc.density,cfg.density);
+      gl.uniform2f(loc.drift,cfg.drift[0],cfg.drift[1]);
+      gl.uniform1f(loc.speed,globalSpeed);
+      gl.drawArrays(gl.TRIANGLES,0,6);
+    }
+
+    return {
+      canvas,
+      setActive:v=>active=v,
+      draw
+    };
+  }
+
+  const renderers=targets.map(makeRenderer).filter(Boolean);
+  const map=new Map(renderers.map(r=>[r.canvas.parentElement,r]));
+
+  const io=new IntersectionObserver(entries=>{
+    for(const e of entries){
+      const r=map.get(e.target);
+      if(r)r.setActive(e.isIntersecting);
+    }
+  },{rootMargin:'160px 0px 160px 0px',threshold:0});
+
+  targets.forEach(s=>io.observe(s));
+
+  function loop(now){
+    if(now-lastFrame>=frameMs){
+      lastFrame=now;
+      for(const r of renderers){
+        r.canvas.style.opacity=String(globalOpacity);
+        r.canvas.style.visibility=(globalOpacity>0 && globalSpeed>0)?'visible':'hidden';
+        r.draw(now);
+      }
+    }
+    requestAnimationFrame(loop);
+  }
+
+  requestAnimationFrame(loop);
+
+  addEventListener('resize',()=>{
+    renderers.forEach(r=>{
+      r.canvas.width=1;
+      r.canvas.height=1;
+    });
+  },{passive:true});
+
+  /* ---------- Hidden tuning panel ---------- */
+  if(params.get('fogdebug')==='1'){
+    const panel=document.createElement('div');
+    panel.id='sectionFogPanel';
+    panel.setAttribute('aria-label','Настройка тумана');
+
+    const densityOrder=[
+      ['off','OFF'],
+      ['low','LOW'],
+      ['lowplus','LOW+'],
+      ['med','MED'],
+      ['high','HIGH']
+    ];
+
+    panel.innerHTML =
+      '<span>Плотность</span>' +
+      densityOrder.map(([key,label])=>
+        `<button type="button" data-fog="${key}">${label}</button>`
+      ).join('') +
+      '<span style="margin-left:8px">Скорость</span>' +
+      Array.from({length:9},(_,i)=>
+        `<button type="button" data-speed="${i}">${i}</button>`
+      ).join('');
+
+    document.body.appendChild(panel);
+
+    function syncPanel(){
+      panel.querySelectorAll('[data-fog]').forEach(btn=>{
+        btn.classList.toggle('active',FOG_LEVELS[btn.dataset.fog]===globalOpacity);
+      });
+      panel.querySelectorAll('[data-speed]').forEach(btn=>{
+        btn.classList.toggle('speed-active',Number(btn.dataset.speed)===globalSpeed);
+      });
+    }
+
+    panel.addEventListener('click',e=>{
+      const fogBtn=e.target.closest('button[data-fog]');
+      const speedBtn=e.target.closest('button[data-speed]');
+
+      if(fogBtn){
+        globalOpacity=FOG_LEVELS[fogBtn.dataset.fog] ?? FOG_LEVELS[BASE_FOG];
+      }
+      if(speedBtn){
+        globalSpeed=Math.max(
+          SPEED_MIN,
+          Math.min(SPEED_MAX,Number(speedBtn.dataset.speed)||0)
+        );
+      }
+      syncPanel();
+    });
+
+    syncPanel();
+  }
+})();
+</script>
+
+</body></html>
