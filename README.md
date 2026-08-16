@@ -1,5 +1,2 @@
-# Разные люди — сайт команды
-
-Статический лендинг команды «Разные люди».
-
-Публикация: GitHub Pages из ветки `main`, папка `/ (root)`.
+# Raznye Ludi
+Landing page for the airsoft team «Разные люди».
