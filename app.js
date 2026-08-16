@@ -1,4 +1,9 @@
 (() => {
+  const finalStyles = document.createElement('link');
+  finalStyles.rel = 'stylesheet';
+  finalStyles.href = 'final-overrides.css';
+  document.head.appendChild(finalStyles);
+
   document.documentElement.classList.add('js');
 
   const header = document.getElementById('header');
