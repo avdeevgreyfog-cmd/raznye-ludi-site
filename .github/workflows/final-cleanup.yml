@@ -1,0 +1,57 @@
+name: Final production cleanup
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/final-cleanup.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Clean final production tree
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          s2 = re.sub(r'<script[^>]*kaspersky-labs\.com[^>]*></script>', '', s, flags=re.I)
+          p.write_text(s2, encoding='utf-8')
+          PY
+
+          rm -f app.js final-overrides.css styles-base.css styles-responsive.css styles-sections.css styles.css README.txt
+          rm -f assets/README.md \
+            assets/activity_outings.webp assets/activity_teamwork.webp \
+            assets/asset_01_23ac9bf7c4.png assets/asset_03_3402981487.webp \
+            assets/asset_04_801a0d4f33.webp assets/asset_05_7b697891ae.webp \
+            assets/asset_06_4b79596701.webp assets/asset_07_8e21b6c263.webp \
+            assets/briefing_steps.webp assets/briefing_values.webp assets/camp_cta.webp \
+            assets/hero.mp4 assets/latest_2026-07-27.webp assets/latest_2026-08-03.webp \
+            assets/latest_2026-08-10.webp
+
+          rm -f .github/workflows/final-cleanup.yml
+
+      - name: Commit cleaned production site
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing to clean"
+            exit 0
+          fi
+          git commit -m "Clean final production site"
+          git push
