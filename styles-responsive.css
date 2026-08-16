@@ -57,8 +57,49 @@
 
 /* Desktop-laptop bridge: keep the content-driven end sections stable below 1280px. */
 @media(min-width:901px) and (max-width:1280px){
- .who-copy{left:auto;top:auto;width:50%;max-width:none;margin-left:45%}
+ .who-copy{left:auto;top:auto;width:50%;max-width:none;margin-left:45%;margin-right:5%}
  .apply .scene-content{width:90%;grid-template-columns:minmax(0,1fr) 450px;gap:40px}
  .apply-copy{left:auto;top:auto;width:auto;max-width:620px}
  .form-card{right:auto;top:auto;width:450px}
+}
+
+/* Tablet alignment pass: centre imagery and keep one consistent reading gutter. */
+@media(min-width:601px) and (max-width:900px){
+ .about .scene-photo{left:50%;width:116%;transform:translateX(-50%)}
+ .join .scene-photo{left:50%;width:122%;transform:translateX(-50%)}
+ .who .scene-photo{left:50%;width:118%;transform:translateX(-50%)}
+ .apply .scene-photo{left:50%;width:126%;transform:translateX(-50%)}
+ .about-copy,.join-copy-v24,.who-copy,.apply-copy{left:32px;right:32px}
+ .steps-v24{left:32px;right:32px}
+ .form-card{left:32px;right:32px}
+}
+
+/* Phone alignment pass: photos are centred on the viewport, text uses one gutter throughout. */
+@media(max-width:600px){
+ .about-copy,.join-copy-v24,.who-copy,.apply-copy{margin-left:20px;margin-right:20px}
+ .steps-v24{margin-left:20px;margin-right:20px}
+ .join-note-v24{margin-left:20px;margin-right:20px}
+
+ .join{padding-top:288px}
+ .join .scene-photo{left:50%!important;width:148%!important;transform:translateX(-50%);opacity:.80}
+ .join .scene-ambient{left:50%!important;width:148%!important;transform:translateX(-50%) scale(1.04)}
+
+ .who{padding-top:292px}
+ .who .scene-photo{left:50%!important;width:154%!important;transform:translateX(-50%);opacity:.88}
+ .who .scene-ambient{left:50%!important;width:154%!important;transform:translateX(-50%) scale(1.04)}
+
+ .apply{padding-top:294px}
+ .apply .scene-photo{left:50%!important;width:160%!important;transform:translateX(-50%);opacity:.84}
+ .apply .scene-ambient{left:50%!important;width:160%!important;transform:translateX(-50%) scale(1.04)}
+
+ .activities-head-v23{width:calc(100% - 40px)}
+ .activity-v23-copy,.activity-v23-2 .activity-v23-copy,.activity-v23-3 .activity-v23-copy{left:20px;right:20px}
+ .form-card{margin-left:16px;margin-right:16px}
+}
+
+@media(max-width:420px){
+ .about-copy,.join-copy-v24,.who-copy,.apply-copy{margin-left:17px;margin-right:17px}
+ .steps-v24,.join-note-v24{margin-left:17px;margin-right:17px}
+ .activity-v23-copy,.activity-v23-2 .activity-v23-copy,.activity-v23-3 .activity-v23-copy{left:17px;right:17px}
+ .form-card{margin-left:12px;margin-right:12px}
 }
