@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Scout — источники данных</title>
+<style>
+:root{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#17212b;background:#f3f5f6}*{box-sizing:border-box}body{margin:0}.shell{max-width:1100px;margin:auto;padding:24px}.top{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:18px}.panel{background:#fff;border:1px solid #dfe4e8;padding:18px;margin-bottom:14px}.provider{display:grid;grid-template-columns:180px 1fr 150px;gap:16px;align-items:start;padding:16px;border:1px solid #e1e6ea;margin:10px 0;background:#fff}.name{font-weight:800;font-size:18px}.muted{color:#6b7580;font-size:13px}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.input{border:1px solid #cbd3d9;padding:9px;background:#fff;min-width:260px}.btn{border:0;background:#1f654d;color:#fff;padding:9px 13px;cursor:pointer}.btn.secondary{background:#e8ecef;color:#26313b}.badge{display:inline-block;padding:5px 8px;font-size:12px;background:#eef2f4}.ok{background:#e9f6ee;color:#235b3d}.bad{background:#fff0f0;color:#7a2a2a}.warn{background:#fff7e8;color:#765514}.msg{margin-top:8px;font-size:13px}.right{text-align:right}@media(max-width:760px){.provider{grid-template-columns:1fr}.right{text-align:left}.top{display:block}.input{min-width:100%;width:100%}}
+</style>
+</head>
+<body>
+<div class="shell">
+<div class="top"><div><h1 style="margin:0">Scout · источники данных</h1><div class="muted">Подключение и проверка внешних провайдеров</div></div><a href="./" style="color:#1f654d">← Вернуться в Scout</a></div>
+<section class="panel"><p style="margin-top:0">Ключи сохраняются на серверной стороне. Браузер после сохранения получает только признак «ключ задан».</p><div class="muted">Рекомендуемый порядок для теста: Coresignal → TheirStack → HeadHunter. «Работа России» оставляем дополнительным бесплатным источником, но не основным.</div></section>
+<section id="list" class="panel"><div class="muted">Загрузка…</div></section>
+</div>
+<script>
+const API='https://bymiwluggihlentaoejc.supabase.co/functions/v1/scout-proxy';
+let session=JSON.parse(localStorage.getItem('scout_session')||'null'),providers=[];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function af(path,opts={}){if(!session?.access_token)throw Error('Сначала войдите в Scout');opts.headers={...(opts.headers||{}),'Content-Type':'application/json',Authorization:'Bearer '+session.access_token};const r=await fetch(API+path,opts);return r}
+function label(p){return p.config?.label||p.provider}
+function help(p){return ({trudvsem:'Без ключа. Используем как резервный государственный источник.',hh:'Нужен application access token HeadHunter. Получается после регистрации приложения в dev.hh.ru.',coresignal:'Нужен API key Coresignal. Для MVP достаточно trial/free credits.',theirstack:'Нужен TheirStack API key из Settings → API Keys.',predictleads:'Сигналы расширения/новостей подключим после проверки вакансий.'})[p.provider]||''}
+function status(p){if(p.lastHealthStatus==='ok')return '<span class="badge ok">Работает</span>';if(p.lastHealthStatus==='error')return '<span class="badge bad">Ошибка</span>';if(p.lastHealthStatus==='pending')return '<span class="badge warn">Позже</span>';if(p.config?.requiresKey&&!p.hasSecret)return '<span class="badge warn">Нужен ключ</span>';return '<span class="badge">Не проверен</span>'}
+function render(){document.getElementById('list').innerHTML=providers.map(p=>`<div class="provider"><div><div class="name">${esc(label(p))}</div><div style="margin-top:7px">${status(p)}</div></div><div><div class="muted">${esc(help(p))}</div>${p.config?.requiresKey?`<div class="row" style="margin-top:10px"><input id="key-${p.provider}" class="input" type="password" placeholder="${p.hasSecret?'Ключ уже сохранён · вставьте новый для замены':'Вставьте API key / token'}"><button class="btn" onclick="save('${p.provider}')">Сохранить</button>${p.hasSecret?`<button class="btn secondary" onclick="clearKey('${p.provider}')">Удалить ключ</button>`:''}</div>`:''}<div id="msg-${p.provider}" class="msg muted">${p.lastHealthDetail?.detail?esc(p.lastHealthDetail.detail):''}</div></div><div class="right"><label><input type="checkbox" ${p.enabled?'checked':''} onchange="toggle('${p.provider}',this.checked)"> использовать</label><div style="margin-top:10px"><button class="btn secondary" onclick="test('${p.provider}')">Проверить</button></div></div></div>`).join('')}
+async function load(){try{const r=await af('/api/providers');const d=await r.json();if(!r.ok)throw Error(d.error||'Ошибка загрузки');providers=d.providers||[];render()}catch(e){document.getElementById('list').innerHTML='<div class="bad badge">'+esc(e.message)+'</div>'}}
+async function save(provider){const secret=document.getElementById('key-'+provider).value.trim();if(!secret)return;const r=await af('/api/providers/'+provider,{method:'POST',body:JSON.stringify({secret,enabled:true})});const d=await r.json();if(!r.ok)return note(provider,d.error||'Ошибка сохранения',true);providers=d.providers||providers;render();note(provider,'Ключ сохранён. Теперь нажмите «Проверить».')}
+async function clearKey(provider){const r=await af('/api/providers/'+provider,{method:'POST',body:JSON.stringify({clearSecret:true,enabled:false})});const d=await r.json();if(!r.ok)return note(provider,d.error||'Ошибка',true);providers=d.providers||providers;render()}
+async function toggle(provider,enabled){const r=await af('/api/providers/'+provider,{method:'POST',body:JSON.stringify({enabled})});const d=await r.json();if(r.ok){providers=d.providers||providers;render()}}
+async function test(provider){note(provider,'Проверяем…');const r=await af('/api/providers/'+provider+'/test',{method:'POST'});let d={};try{d=await r.json()}catch{};if(!r.ok)return note(provider,d.error||('HTTP '+r.status),true);note(provider,(d.result?.status==='ok'?'OK · ':'')+(d.result?.detail||d.result?.status||'готово'),d.result?.status!=='ok');await load()}
+function note(provider,text,bad=false){const el=document.getElementById('msg-'+provider);if(el){el.textContent=text;el.style.color=bad?'#7a2a2a':'#24593e'}}
+load();
+</script>
+</body>
+</html>
