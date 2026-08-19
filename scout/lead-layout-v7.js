@@ -15,60 +15,41 @@ function flattenCard(card){
  const body=card.querySelector('.lead-body');
  const grid=body?.querySelector('.lead-columns');
  if(!body||!grid)return;
-
- // Сохраняем всё, что должно идти после информационной сетки,
- // до перестройки вложенных колонок.
  const jobsTitle=body.querySelector('.jobs-title');
  const jobGroups=[...body.querySelectorAll('.job-group')];
  const actions=body.querySelector('.actions');
-
  const sections=[...grid.querySelectorAll('.subsection')];
  if(!sections.length)return;
-
- // Четыре смысловых блока становятся прямыми элементами одной сетки 2×2.
  sections.forEach(sec=>grid.appendChild(sec));
- [...grid.children].forEach(ch=>{
-   if(!ch.classList.contains('subsection'))ch.remove();
- });
+ [...grid.children].forEach(ch=>{if(!ch.classList.contains('subsection'))ch.remove()});
  grid.classList.add('layout-v7');
-
- // Гарантированно возвращаем вакансии и действия после сетки.
  let anchor=grid;
- if(jobsTitle){
-   jobsTitle.classList.add('layout-v7-jobs');
-   anchor.insertAdjacentElement('afterend',jobsTitle);
-   anchor=jobsTitle;
- }
- jobGroups.forEach(group=>{
-   group.classList.add('layout-v7-job');
-   anchor.insertAdjacentElement('afterend',group);
-   anchor=group;
- });
- if(actions){
-   actions.classList.add('layout-v7-actions');
-   anchor.insertAdjacentElement('afterend',actions);
- }
-
+ if(jobsTitle){jobsTitle.classList.add('layout-v7-jobs');anchor.insertAdjacentElement('afterend',jobsTitle);anchor=jobsTitle}
+ jobGroups.forEach(group=>{group.classList.add('layout-v7-job');anchor.insertAdjacentElement('afterend',group);anchor=group});
+ if(actions){actions.classList.add('layout-v7-actions');anchor.insertAdjacentElement('afterend',actions)}
  card.dataset.layoutV7='done';
 }
 
 function applyAll(){document.querySelectorAll('.lead').forEach(flattenCard)}
-
 const original=window.renderLeads;
 if(typeof original==='function'){
- window.renderLeads=function(){
-   const r=original.apply(this,arguments);
-   requestAnimationFrame(applyAll);
-   return r;
- };
+ window.renderLeads=function(){const r=original.apply(this,arguments);requestAnimationFrame(applyAll);return r};
 }
-
 const observer=new MutationObserver(mutations=>{
- if(mutations.some(m=>[...m.addedNodes].some(n=>n.nodeType===1&&(n.matches?.('.lead')||n.querySelector?.('.lead'))))){
-   requestAnimationFrame(applyAll);
- }
+ if(mutations.some(m=>[...m.addedNodes].some(n=>n.nodeType===1&&(n.matches?.('.lead')||n.querySelector?.('.lead')))))requestAnimationFrame(applyAll);
 });
 observer.observe(document.getElementById('current-leads')||document.body,{subtree:true,childList:true});
 observer.observe(document.getElementById('history-leads')||document.body,{subtree:true,childList:true});
 requestAnimationFrame(applyAll);
+
+// Compatibility loader: older cached lead-v2.js versions still load this file,
+// so the active layout guarantees that contact intelligence is available.
+if(!window.ScoutContacts && !document.querySelector('script[data-scout-contact-intel]')){
+ const s=document.createElement('script');
+ s.dataset.scoutContactIntel='1';
+ s.src='contact-intel-v1.js?v=6';
+ s.onload=()=>{try{window.renderLeads?.()}catch(e){console.error('CONTACT_INTEL_RENDER',e)}};
+ s.onerror=()=>console.error('CONTACT_INTEL_LOAD_FAILED');
+ document.body.appendChild(s);
+}
 })();
