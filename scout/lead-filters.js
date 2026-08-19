@@ -1,7 +1,7 @@
 (()=>{
-function scoreOf(l){return Number(l?.metrics?.salesPriorityScore??l?.score??0)}
+function scoreOf(l){return Number(l?.metrics?.salesPriority??l?.metrics?.salesPriorityScore??l?.score??0)}
 function demandOf(l){return Number(l?.metrics?.demandScore??0)}
-function industryOf(l){return String(l?.metrics?.industry||l?.explanation?.industry||'Другое')}
+function industryOf(l){return String(l?.metrics?.businessDirectionLabel||l?.metrics?.industry||l?.explanation?.industry||'Другое')}
 function repairCurrentBucket(){
   if((currentLeads||[]).length || !(historyLeads||[]).length || !latestRun?.started_at)return;
   const since=Date.parse(latestRun.started_at);if(!Number.isFinite(since))return;
