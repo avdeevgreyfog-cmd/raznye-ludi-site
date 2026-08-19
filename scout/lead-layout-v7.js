@@ -42,12 +42,13 @@ observer.observe(document.getElementById('current-leads')||document.body,{subtre
 observer.observe(document.getElementById('history-leads')||document.body,{subtree:true,childList:true});
 requestAnimationFrame(applyAll);
 
-// Compatibility loader: older cached lead-v2.js versions still load this file,
-// so the active layout guarantees that contact intelligence is available.
-if(!window.ScoutContacts && !document.querySelector('script[data-scout-contact-intel]')){
+// Always load the newest contact-intelligence module once. Older cached modules may
+// define window.ScoutContacts even when their DOM injection logic is broken, so
+// existence of that global is not a reliable freshness check.
+if(!document.querySelector('script[data-scout-contact-intel-v7]')){
  const s=document.createElement('script');
- s.dataset.scoutContactIntel='1';
- s.src='contact-intel-v1.js?v=6';
+ s.dataset.scoutContactIntelV7='1';
+ s.src='contact-intel-v1.js?v=7';
  s.onload=()=>{try{window.renderLeads?.()}catch(e){console.error('CONTACT_INTEL_RENDER',e)}};
  s.onerror=()=>console.error('CONTACT_INTEL_LOAD_FAILED');
  document.body.appendChild(s);
