@@ -64,5 +64,6 @@ function renderLeads(){const f=$('filter').value,flt=rows=>rows.filter(l=>f==='a
 async function setStatus(id,status){const r=await af('/api/leads/'+id+'/status',{method:'POST',body:JSON.stringify({status})});if(!r.ok)return alert('Не удалось сохранить статус');await refreshData()}
 init();
 </script>
+<script src="lead-v2.js?v=2"></script>
 </body>
 </html>
