@@ -1,4 +1,4 @@
 (()=>{
 function load(src){return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.body.appendChild(s)})}
-load('lead-card-v3.js?v=3').then(()=>load('lead-filters.js?v=3')).then(()=>load('lead-contacts.js?v=1')).then(()=>{try{renderLeads()}catch{}}).catch(()=>{try{renderLeads()}catch{}});
+load('lead-card-v4.js?v=1').then(()=>load('lead-filters.js?v=4')).then(()=>{try{renderLeads()}catch{}}).catch(()=>{try{renderLeads()}catch{}});
 })();
