@@ -2,6 +2,13 @@
 function scoreOf(l){return Number(l?.metrics?.salesPriorityScore??l?.score??0)}
 function demandOf(l){return Number(l?.metrics?.demandScore??0)}
 function industryOf(l){return String(l?.metrics?.industry||l?.explanation?.industry||'Другое')}
+function repairCurrentBucket(){
+  if((currentLeads||[]).length || !(historyLeads||[]).length || !latestRun?.started_at)return;
+  const since=Date.parse(latestRun.started_at);if(!Number.isFinite(since))return;
+  const cur=[],hist=[];
+  for(const l of historyLeads||[]){const t=Date.parse(l?.lastSignalAt||'');if(Number.isFinite(t)&&t>=since)cur.push(l);else hist.push(l)}
+  if(cur.length){currentLeads=cur;historyLeads=hist}
+}
 function ensureToolbar(){
  if(document.getElementById('lead-toolbar-v2'))return;
  const host=document.getElementById('current-leads');if(!host)return;
@@ -20,9 +27,8 @@ function ensureToolbar(){
  document.getElementById('lead-reset').addEventListener('click',()=>{document.getElementById('lead-search').value='';document.getElementById('lead-industry').value='all';document.getElementById('lead-min-score').value='35';document.getElementById('lead-sort').value='sales';const p=document.getElementById('filter');if(p)p.value='all';renderLeads()});
 }
 function fillIndustries(){const s=document.getElementById('lead-industry');if(!s)return;const current=s.value||'all';const vals=[...new Set([...(currentLeads||[]),...(historyLeads||[])].map(industryOf).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ru'));s.innerHTML='<option value="all">Все отрасли</option>'+vals.map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join('');if(vals.includes(current))s.value=current}
-const baseRender=renderLeads;
 renderLeads=function(){
- ensureToolbar();fillIndustries();
+ repairCurrentBucket();ensureToolbar();fillIndustries();
  const priority=document.getElementById('filter')?.value||'all';
  const q=(document.getElementById('lead-search')?.value||'').trim().toLowerCase();
  const industry=document.getElementById('lead-industry')?.value||'all';
@@ -46,5 +52,5 @@ renderLeads=function(){
  document.getElementById('history-leads').innerHTML=hist.length?hist.map(leadHtml).join(''):'<div class="empty">По выбранным фильтрам истории нет.</div>';
  const total=(currentLeads||[]).length,count=document.getElementById('lead-count');if(count)count.textContent=`Показано ${cur.length} из ${total} компаний последнего запуска. По умолчанию скрыты слабые лиды ниже 35/100.`;
 };
-ensureToolbar();fillIndustries();setTimeout(()=>renderLeads(),0);
+repairCurrentBucket();ensureToolbar();fillIndustries();setTimeout(()=>renderLeads(),0);
 })();
