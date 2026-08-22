@@ -1,4 +1,4 @@
-/* Scout company history v3
+/* Scout company history v4
    Server-first history from Supabase scout_snapshots; localStorage is fallback only.
 */
 (()=>{
@@ -14,7 +14,7 @@ const n=v=>Number.isFinite(Number(v))?Number(v):0;
 function loadLocal(){try{const x=JSON.parse(localStorage.getItem(KEY)||'{}');return x&&typeof x==='object'?x:{}}catch{return {}}}
 function currentLead(id){return [...(window.currentLeads||[]),...(window.historyLeads||[])].find(x=>x?.company_id===id)||null}
 function idFromCard(card){const b=card.querySelector('.actions button[onclick*="setStatus"]');const s=b?.getAttribute('onclick')||'';const m=s.match(/setStatus\('([^']+)'/);if(!m)return'';try{return decodeURIComponent(m[1])}catch{return m[1]}}
-function trendLabel(t){return t==='growth'?'Растёт':t==='decline'?'Снижается':t==='change'?'Изменилось':t==='first'?'База':'Стабильно'}
+function trendLabel(t){return t==='growth'?'Растёт':t==='decline'?'Снижается':t==='change'?'Изменилось':t==='missing'?'Не найдено':t==='first'?'База':'Стабильно'}
 function dateRu(v){try{return new Date(v).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'2-digit'})}catch{return ''}}
 function localFallback(id){const db=loadLocal(),list=Array.isArray(db[id])?db[id]:[];if(!list.length)return null;return {snapshots:list.map(x=>({snapshot_at:x.date,relevant_jobs:x.vacancies,new_jobs_7d:x.fresh7d,role_summary:(x.roles||[]).map((label,i)=>({role:String(i),label,count:1})),diff:x.diff||{type:'stable',title:'Локальный снимок',details:[]}})),stats:{checks:list.length,days:list.length>1?Math.max(0,Math.round((new Date(list.at(-1).date)-new Date(list[0].date))/86400000)):0,maxRelevant:Math.max(...list.map(x=>n(x.vacancies))),avgRelevant:Math.round(list.reduce((s,x)=>s+n(x.vacancies),0)/list.length),avgFresh:Math.round(list.reduce((s,x)=>s+n(x.fresh7d),0)/list.length),trend:list.at(-1)?.diff?.type||'first'},source:'local'} }
 async function serverHistory(id){const r=await af('/api/companies/'+encodeURIComponent(id)+'/history');const d=await safeJson(r);if(!r.ok)throw Error(d.error||'Не удалось загрузить историю');return {...d,source:'server'} }
@@ -35,5 +35,6 @@ document.addEventListener('toggle',onToggle,true);
 const observer=new MutationObserver(ms=>{if(ms.some(m=>[...m.addedNodes].some(node=>node.nodeType===1&&(node.matches?.('.lead')||node.querySelector?.('.lead')))))schedule()});
 observer.observe(document.getElementById('current-leads')||document.body,{subtree:true,childList:true});observer.observe(document.getElementById('history-leads')||document.body,{subtree:true,childList:true});
 window.ScoutHistory={refresh(id){document.querySelectorAll('.company-history-panel').forEach(p=>{if(!id||p.dataset.historyId===id){delete p.dataset.loaded;const card=p.closest('.lead'),cid=p.dataset.historyId;if(card&&cid)loadPanel(card,cid)}})}};
+if(!document.querySelector('script[data-scout-main-ui-v1]')){const s=document.createElement('script');s.dataset.scoutMainUiV1='1';s.src='main-ui-v1.js?v=1';s.onload=()=>window.ScoutMainUI?.refresh?.();s.onerror=()=>console.error('SCOUT_MAIN_UI_LOAD_FAILED');document.body.appendChild(s)}
 schedule();
 })();
