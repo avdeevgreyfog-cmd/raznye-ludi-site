@@ -1,4 +1,5 @@
 (()=>{
+if(window.__scoutLayoutV7)return;window.__scoutLayoutV7=true;
 const style=document.createElement('style');
 style.textContent=`
 .lead-columns.layout-v7{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;align-items:start!important;width:100%!important;margin-top:12px!important}
@@ -13,10 +14,11 @@ function flattenCard(card){if(card.dataset.layoutV7==='done')return;const body=c
 function applyAll(){document.querySelectorAll('.lead').forEach(flattenCard)}
 const original=window.renderLeads;if(typeof original==='function')window.renderLeads=function(){const r=original.apply(this,arguments);requestAnimationFrame(applyAll);return r};
 const observer=new MutationObserver(mutations=>{if(mutations.some(m=>[...m.addedNodes].some(n=>n.nodeType===1&&(n.matches?.('.lead')||n.querySelector?.('.lead')))))requestAnimationFrame(applyAll)});
-observer.observe(document.getElementById('current-leads')||document.body,{subtree:true,childList:true});observer.observe(document.getElementById('history-leads')||document.body,{subtree:true,childList:true});requestAnimationFrame(applyAll);
-function loadOnce(attr,src,onload){if(document.querySelector(`script[${attr}]`))return;const s=document.createElement('script');s.setAttribute(attr,'1');s.src=src;s.onload=onload||null;s.onerror=()=>console.error('MODULE_LOAD_FAILED',src);document.body.appendChild(s)}
-loadOnce('data-scout-contact-intel-v8','contact-intel-v1.js?v=8',()=>{try{window.renderLeads?.()}catch(e){console.error('CONTACT_INTEL_RENDER',e)}});
-loadOnce('data-scout-company-history-v4','company-history-v1.js?v=4',()=>{try{window.renderLeads?.()}catch(e){console.error('COMPANY_HISTORY_RENDER',e)}});
-loadOnce('data-scout-monitoring-v1','monitoring-v1.js?v=1',()=>{try{window.ScoutMonitoring?.refresh?.()}catch(e){console.error('MONITORING_RENDER',e)}});
-loadOnce('data-scout-scan-guard-v1','scan-guard-v1.js?v=1',()=>{try{window.ScoutScanGuard?.refresh?.()}catch(e){console.error('SCAN_GUARD_RENDER',e)}});
+const cur=document.getElementById('current-leads'),hist=document.getElementById('history-leads');if(cur)observer.observe(cur,{subtree:true,childList:true});if(hist)observer.observe(hist,{subtree:true,childList:true});requestAnimationFrame(applyAll);
+function loadOnce(attr,src){if(document.querySelector(`script[${attr}]`))return;const s=document.createElement('script');s.setAttribute(attr,'1');s.src=src;s.onerror=()=>console.error('MODULE_LOAD_FAILED',src);document.body.appendChild(s)}
+loadOnce('data-scout-contact-intel-v8','contact-intel-v1.js?v=8');
+loadOnce('data-scout-company-history-v4','company-history-v1.js?v=4');
+loadOnce('data-scout-monitoring-v2','monitoring-v1.js?v=2');
+loadOnce('data-scout-scan-guard-v2','scan-guard-v1.js?v=2');
+loadOnce('data-scout-main-ui-v2','main-ui-v1.js?v=2');
 })();
