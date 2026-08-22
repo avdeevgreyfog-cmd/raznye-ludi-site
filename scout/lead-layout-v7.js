@@ -21,7 +21,18 @@ function applyAll(){document.querySelectorAll('.lead').forEach(flattenCard)}
 const original=window.renderLeads;if(typeof original==='function')window.renderLeads=function(){const r=original.apply(this,arguments);requestAnimationFrame(applyAll);return r};
 const observer=new MutationObserver(mutations=>{if(mutations.some(m=>[...m.addedNodes].some(n=>n.nodeType===1&&(n.matches?.('.lead')||n.querySelector?.('.lead')))))requestAnimationFrame(applyAll)});
 observer.observe(document.getElementById('current-leads')||document.body,{subtree:true,childList:true});observer.observe(document.getElementById('history-leads')||document.body,{subtree:true,childList:true});requestAnimationFrame(applyAll);
+
+// Contact intelligence is loaded here as a cache-safe fallback because this layout file
+// is part of the active card rendering path.
 if(!document.querySelector('script[data-scout-contact-intel-v8]')){
  const s=document.createElement('script');s.dataset.scoutContactIntelV8='1';s.src='contact-intel-v1.js?v=8';s.onload=()=>{try{window.renderLeads?.()}catch(e){console.error('CONTACT_INTEL_RENDER',e)}};s.onerror=()=>console.error('CONTACT_INTEL_LOAD_FAILED');document.body.appendChild(s);
+}
+
+// Same cache-safe fallback for company history. Do not rely only on lead-v2.js because
+// GitHub Pages/browser may keep an older loader in cache.
+if(!document.querySelector('script[data-scout-company-history-v3]')){
+ const h=document.createElement('script');h.dataset.scoutCompanyHistoryV3='1';h.src='company-history-v1.js?v=3';
+ h.onload=()=>{try{window.ScoutHistory?.captureCurrent?.();window.renderLeads?.()}catch(e){console.error('COMPANY_HISTORY_RENDER',e)}};
+ h.onerror=()=>console.error('COMPANY_HISTORY_LOAD_FAILED');document.body.appendChild(h);
 }
 })();
