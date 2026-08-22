@@ -9,30 +9,11 @@ style.textContent=`
 @media(max-width:760px){.lead-columns.layout-v7{grid-template-columns:1fr!important}}
 `;
 document.head.appendChild(style);
-function flattenCard(card){
- if(card.dataset.layoutV7==='done')return;
- const body=card.querySelector('.lead-body');const grid=body?.querySelector('.lead-columns');if(!body||!grid)return;
- const jobsTitle=body.querySelector('.jobs-title'),jobGroups=[...body.querySelectorAll('.job-group')],actions=body.querySelector('.actions'),sections=[...grid.querySelectorAll('.subsection')];if(!sections.length)return;
- sections.forEach(sec=>grid.appendChild(sec));[...grid.children].forEach(ch=>{if(!ch.classList.contains('subsection'))ch.remove()});grid.classList.add('layout-v7');let anchor=grid;
- if(jobsTitle){jobsTitle.classList.add('layout-v7-jobs');anchor.insertAdjacentElement('afterend',jobsTitle);anchor=jobsTitle}
- jobGroups.forEach(group=>{group.classList.add('layout-v7-job');anchor.insertAdjacentElement('afterend',group);anchor=group});if(actions){actions.classList.add('layout-v7-actions');anchor.insertAdjacentElement('afterend',actions)}card.dataset.layoutV7='done';
-}
+function flattenCard(card){if(card.dataset.layoutV7==='done')return;const body=card.querySelector('.lead-body'),grid=body?.querySelector('.lead-columns');if(!body||!grid)return;const jobsTitle=body.querySelector('.jobs-title'),jobGroups=[...body.querySelectorAll('.job-group')],actions=body.querySelector('.actions'),sections=[...grid.querySelectorAll('.subsection')];if(!sections.length)return;sections.forEach(sec=>grid.appendChild(sec));[...grid.children].forEach(ch=>{if(!ch.classList.contains('subsection'))ch.remove()});grid.classList.add('layout-v7');let anchor=grid;if(jobsTitle){jobsTitle.classList.add('layout-v7-jobs');anchor.insertAdjacentElement('afterend',jobsTitle);anchor=jobsTitle}jobGroups.forEach(group=>{group.classList.add('layout-v7-job');anchor.insertAdjacentElement('afterend',group);anchor=group});if(actions){actions.classList.add('layout-v7-actions');anchor.insertAdjacentElement('afterend',actions)}card.dataset.layoutV7='done'}
 function applyAll(){document.querySelectorAll('.lead').forEach(flattenCard)}
 const original=window.renderLeads;if(typeof original==='function')window.renderLeads=function(){const r=original.apply(this,arguments);requestAnimationFrame(applyAll);return r};
 const observer=new MutationObserver(mutations=>{if(mutations.some(m=>[...m.addedNodes].some(n=>n.nodeType===1&&(n.matches?.('.lead')||n.querySelector?.('.lead')))))requestAnimationFrame(applyAll)});
 observer.observe(document.getElementById('current-leads')||document.body,{subtree:true,childList:true});observer.observe(document.getElementById('history-leads')||document.body,{subtree:true,childList:true});requestAnimationFrame(applyAll);
-
-// Contact intelligence is loaded here as a cache-safe fallback because this layout file
-// is part of the active card rendering path.
-if(!document.querySelector('script[data-scout-contact-intel-v8]')){
- const s=document.createElement('script');s.dataset.scoutContactIntelV8='1';s.src='contact-intel-v1.js?v=8';s.onload=()=>{try{window.renderLeads?.()}catch(e){console.error('CONTACT_INTEL_RENDER',e)}};s.onerror=()=>console.error('CONTACT_INTEL_LOAD_FAILED');document.body.appendChild(s);
-}
-
-// Same cache-safe fallback for company history. Do not rely only on lead-v2.js because
-// GitHub Pages/browser may keep an older loader in cache.
-if(!document.querySelector('script[data-scout-company-history-v3]')){
- const h=document.createElement('script');h.dataset.scoutCompanyHistoryV3='1';h.src='company-history-v1.js?v=3';
- h.onload=()=>{try{window.ScoutHistory?.captureCurrent?.();window.renderLeads?.()}catch(e){console.error('COMPANY_HISTORY_RENDER',e)}};
- h.onerror=()=>console.error('COMPANY_HISTORY_LOAD_FAILED');document.body.appendChild(h);
-}
+if(!document.querySelector('script[data-scout-contact-intel-v8]')){const s=document.createElement('script');s.dataset.scoutContactIntelV8='1';s.src='contact-intel-v1.js?v=8';s.onload=()=>{try{window.renderLeads?.()}catch(e){console.error('CONTACT_INTEL_RENDER',e)}};s.onerror=()=>console.error('CONTACT_INTEL_LOAD_FAILED');document.body.appendChild(s)}
+if(!document.querySelector('script[data-scout-company-history-v4]')){const h=document.createElement('script');h.dataset.scoutCompanyHistoryV4='1';h.src='company-history-v1.js?v=4';h.onload=()=>{try{window.renderLeads?.()}catch(e){console.error('COMPANY_HISTORY_RENDER',e)}};h.onerror=()=>console.error('COMPANY_HISTORY_LOAD_FAILED');document.body.appendChild(h)}
 })();
