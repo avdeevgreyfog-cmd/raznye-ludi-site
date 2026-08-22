@@ -3,11 +3,13 @@ function load(src){return new Promise((resolve,reject)=>{const s=document.create
 try{
   Object.defineProperty(window,'currentLeads',{configurable:true,get:()=>currentLeads});
   Object.defineProperty(window,'historyLeads',{configurable:true,get:()=>historyLeads});
+  Object.defineProperty(window,'latestRun',{configurable:true,get:()=>latestRun});
 }catch{}
 load('lead-card-v4.js?v=2')
   .then(()=>load('lead-filters.js?v=6'))
   .then(()=>load('contact-intel-v1.js?v=8'))
   .then(()=>load('lead-layout-v7.js?v=3'))
+  .then(()=>load('company-history-v1.js?v=2'))
   .then(()=>{try{renderLeads()}catch{}})
   .catch(()=>{try{renderLeads()}catch{}});
 })();
