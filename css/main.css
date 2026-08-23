@@ -1,0 +1,16 @@
+/* Raznye Ludi site architecture */
+:root{
+ --bg:#050805;
+ --panel:#090d09;
+ --ink:#e8e3d8;
+ --text:#c1b9ad;
+ --muted:#8f887d;
+ --sand:#c89a48;
+ --sand2:#dfb766;
+ --line:rgba(215,174,93,.24);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:#030503}
+body{margin:0;background:#030503;color:var(--ink);font-family:Bahnschrift,"Segoe UI",Arial,sans-serif}
+a{color:inherit;text-decoration:none}
+.container{width:min(1740px,90.5%);margin:auto}
