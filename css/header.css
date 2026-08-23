@@ -1,0 +1,10 @@
+.site-header{position:sticky;top:0;z-index:1000;background:rgba(5,8,5,.86);backdrop-filter:blur(14px);border-bottom:1px solid rgba(215,174,93,.18)}
+.header-inner{width:min(1400px,90%);margin:auto;height:76px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;font-size:22px}
+.main-nav{display:flex;gap:26px;align-items:center}
+.nav-item{position:relative;text-transform:uppercase;font-size:13px;letter-spacing:.12em;color:var(--text)}
+.nav-item:hover{color:var(--sand)}
+.dropdown{position:absolute;top:34px;left:0;width:260px;padding:20px;background:#090d09;border:1px solid var(--line);opacity:0;visibility:hidden;transform:translateY(10px);transition:.25s}
+.nav-item:hover .dropdown{opacity:1;visibility:visible;transform:none}
+.dropdown a{display:block;padding:8px 0;color:var(--muted)}
+.dropdown a:hover{color:var(--sand)}
