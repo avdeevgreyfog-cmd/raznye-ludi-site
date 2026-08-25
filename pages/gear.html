@@ -1,22 +1,194 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Снаряжение бойца — Разные люди</title>
-<meta name="description" content="Экипировка и снаряжение страйкбольной команды Разные люди.">
-<link rel="stylesheet" href="../css/main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050805">
+  <title>Снаряжение бойца — Разные люди</title>
+  <meta name="description" content="Интерактивный разбор экипировки бойца страйкбольной команды «Разные люди»: защита, разгрузка, связь, основной привод и мобильность.">
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/gear.css">
 </head>
-<body>
-<header class="page-header"><a href="../index.html">Разные люди</a></header>
-<main class="page-content">
-<h1>Снаряжение</h1>
-<p>Экипировка бойца строится вокруг практичности, безопасности и готовности к командным задачам.</p>
-<section class="cards">
-<div class="card"><h2>Базовый комплект</h2><p>Защита глаз, форма, перчатки, обувь и необходимый минимум для первых игр.</p></div>
-<div class="card"><h2>Продвинутый уровень</h2><p>Дополнительная защита, средства связи и оборудование для регулярных участников.</p></div>
-<div class="card"><h2>Кабинет бойца</h2><p>В будущем здесь будет персональный учёт экипировки.</p></div>
-</section>
-</main>
+<body class="gear-body">
+  <header class="gear-nav" id="gearNav">
+    <div class="gear-nav__inner">
+      <a class="gear-brand" href="../index.html" aria-label="Разные люди — главная">
+        <img src="../assets/final_logo.png" alt="" width="42" height="42">
+        <span><strong>Разные люди</strong><small>тактическая команда</small></span>
+      </a>
+      <nav class="gear-nav__links" aria-label="Основная навигация">
+        <a href="team.html">Команда</a>
+        <a href="events.html">Мероприятия</a>
+        <a class="is-active" href="gear.html" aria-current="page">Снаряжение</a>
+        <a href="join.html">Вступление</a>
+        <a href="profile.html">Кабинет</a>
+      </nav>
+      <button class="gear-nav__menu" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="gearMobileMenu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <nav class="gear-mobile-menu" id="gearMobileMenu" aria-label="Мобильная навигация">
+      <a href="team.html">Команда</a>
+      <a href="events.html">Мероприятия</a>
+      <a class="is-active" href="gear.html">Снаряжение</a>
+      <a href="join.html">Вступление</a>
+      <a href="profile.html">Кабинет</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="gear-hero" aria-labelledby="gearTitle">
+      <div class="gear-hero__noise" aria-hidden="true"></div>
+      <div class="gear-hero__grid">
+        <div class="gear-hero__copy">
+          <div class="gear-eyebrow"><span>LOADOUT / 01</span><span>Снаряжение команды</span></div>
+          <h1 id="gearTitle">Снаряжение<br>бойца</h1>
+          <p class="gear-hero__lead">Не коллекция вещей ради вида, а рабочая система. Защита, связь, разгрузка и мобильность должны помогать бойцу выполнять задачу и не мешать команде.</p>
+          <div class="gear-hero__meta" aria-label="Основные принципы комплекта">
+            <span>Защита</span><span>Связь</span><span>Модульность</span><span>Мобильность</span>
+          </div>
+        </div>
+        <div class="gear-hero__brief">
+          <span class="gear-hero__brief-label">ПРИНЦИП</span>
+          <strong>Сначала функция.<br>Потом внешний вид.</strong>
+          <p>Ниже — последовательный разбор комплекта. Прокручивай страницу: камера будет переходить от общего плана к отдельным зонам экипировки.</p>
+          <a href="#loadout" class="gear-scroll-link">Начать разбор <span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="loadout-scroll" id="loadout" aria-label="Интерактивный разбор снаряжения">
+      <div class="loadout-sticky">
+        <div class="loadout-frames" aria-hidden="true">
+          <img class="loadout-frame is-active" data-frame="0" src="../assets/gear/loadout-01.webp" alt="" decoding="async">
+          <img class="loadout-frame" data-frame="1" src="../assets/gear/loadout-02.webp" alt="" loading="lazy" decoding="async">
+          <img class="loadout-frame" data-frame="2" src="../assets/gear/loadout-03.webp" alt="" loading="lazy" decoding="async">
+          <img class="loadout-frame" data-frame="3" src="../assets/gear/loadout-04.webp" alt="" loading="lazy" decoding="async">
+          <img class="loadout-frame" data-frame="4" src="../assets/gear/loadout-05.webp" alt="" loading="lazy" decoding="async">
+          <img class="loadout-frame" data-frame="5" src="../assets/gear/loadout-06.webp" alt="" loading="lazy" decoding="async">
+          <img class="loadout-frame" data-frame="6" src="../assets/gear/loadout-07.webp" alt="" loading="lazy" decoding="async">
+        </div>
+        <div class="loadout-shade" aria-hidden="true"></div>
+        <div class="loadout-grid-overlay" aria-hidden="true"></div>
+
+        <div class="loadout-topline">
+          <div class="loadout-system"><span class="loadout-dot"></span> БАЗА СНАРЯЖЕНИЯ</div>
+          <div class="loadout-counter"><span id="stageCurrent">01</span><i></i><span>07</span></div>
+        </div>
+
+        <div class="loadout-copy" aria-live="polite">
+          <article class="loadout-stage is-active" data-stage="0">
+            <span class="loadout-stage__index">01 / ОБЩИЙ ПЛАН</span>
+            <h2>Комплект<br>как система</h2>
+            <p>Боец должен свободно двигаться, видеть, слышать команду и быстро получать доступ к тому, что реально используется на игре.</p>
+            <ul><li>защита обязательных зон</li><li>минимум лишнего веса</li><li>единая логика размещения</li></ul>
+          </article>
+
+          <article class="loadout-stage loadout-stage--right" data-stage="1">
+            <span class="loadout-stage__index">02 / ГОЛОВА</span>
+            <h2>Защита<br>головы</h2>
+            <p>Шлем — платформа для защиты и коммуникаций. Крепления не должны ухудшать обзор или цепляться за снаряжение.</p>
+            <div class="loadout-tags"><span>Шлем</span><span>Крепления</span><span>Гарнитура</span></div>
+          </article>
+
+          <article class="loadout-stage loadout-stage--right" data-stage="2">
+            <span class="loadout-stage__index">03 / ЛИЦО</span>
+            <h2>Глаза и<br>лицо</h2>
+            <p>Защита глаз — обязательный элемент. Остальная защита лица подбирается так, чтобы не мешать вкладке, дыханию и коммуникации.</p>
+            <div class="loadout-tags"><span>Очки</span><span>Балаклава</span><span>Низкий профиль</span></div>
+          </article>
+
+          <article class="loadout-stage" data-stage="3">
+            <span class="loadout-stage__index">04 / ТОРС</span>
+            <h2>Плитоносец<br>и разгрузка</h2>
+            <p>Главная задача — держать магазины, связь, аптечку и мелкое снаряжение в предсказуемых местах, без перегруза передней панели.</p>
+            <ul><li>магазинные подсумки</li><li>рация и PTT</li><li>аптечка и утилитарный подсумок</li></ul>
+          </article>
+
+          <article class="loadout-stage loadout-stage--right" data-stage="4">
+            <span class="loadout-stage__index">05 / ОСНОВНОЙ ПРИВОД</span>
+            <h2>Основной<br>привод</h2>
+            <p>Привод и навесное оборудование рассматриваются как часть общей системы: удобный ремень, понятный доступ к магазинам и отсутствие лишнего веса.</p>
+            <div class="loadout-tags"><span>Привод</span><span>Ремень</span><span>Магазины</span></div>
+          </article>
+
+          <article class="loadout-stage" data-stage="5">
+            <span class="loadout-stage__index">06 / МОБИЛЬНОСТЬ</span>
+            <h2>Ноги и<br>обувь</h2>
+            <p>Брюки, наколенники и обувь отвечают за то, насколько долго боец сможет нормально двигаться по лесу, зданиям и пересечённой местности.</p>
+            <div class="loadout-tags"><span>Брюки</span><span>Наколенники</span><span>Ботинки</span></div>
+          </article>
+
+          <article class="loadout-stage" data-stage="6">
+            <span class="loadout-stage__index">07 / ГОТОВО</span>
+            <h2>Комплект<br>собран</h2>
+            <p>Снаряжение должно быть привычным: каждый предмет находится на своём месте, а боец понимает, зачем он его несёт.</p>
+            <a class="loadout-stage__cta" href="#catalog">Открыть полный список <span aria-hidden="true">↓</span></a>
+          </article>
+        </div>
+
+        <div class="loadout-progress" aria-hidden="true"><span id="loadoutProgress"></span></div>
+        <div class="loadout-scroll-hint" id="scrollHint">ПРОКРУЧИВАЙТЕ <span>↓</span></div>
+      </div>
+    </section>
+
+    <section class="gear-catalog" id="catalog" aria-labelledby="catalogTitle">
+      <div class="gear-catalog__head">
+        <div>
+          <span class="gear-kicker">02 / ПОЛНЫЙ СПИСОК</span>
+          <h2 id="catalogTitle">Что входит<br>в комплект</h2>
+        </div>
+        <p>Это структура комплекта, а не жёсткий список конкретных брендов. Конфигурация меняется под задачу, формат игры и роль бойца.</p>
+      </div>
+
+      <div class="gear-filter" role="group" aria-label="Фильтр снаряжения">
+        <button class="is-active" type="button" data-filter="all">Всё</button>
+        <button type="button" data-filter="head">Голова</button>
+        <button type="button" data-filter="torso">Разгрузка</button>
+        <button type="button" data-filter="support">Поддержка</button>
+        <button type="button" data-filter="mobility">Мобильность</button>
+      </div>
+
+      <div class="gear-list">
+        <article class="gear-item" data-category="head"><span class="gear-item__num">01</span><div><small>ЗАЩИТА</small><h3>Тактический шлем</h3><p>Защита головы и платформа для креплений, гарнитуры и вспомогательного оборудования.</p></div></article>
+        <article class="gear-item" data-category="head"><span class="gear-item__num">02</span><div><small>ЗАЩИТА</small><h3>Защитные очки</h3><p>Обязательная защита глаз. Посадка должна сохранять обзор и не конфликтовать с маской или шлемом.</p></div></article>
+        <article class="gear-item" data-category="head"><span class="gear-item__num">03</span><div><small>КОММУНИКАЦИЯ</small><h3>Гарнитура</h3><p>Связь с отделением без необходимости снимать руку с привода в ключевой момент.</p></div></article>
+        <article class="gear-item" data-category="torso"><span class="gear-item__num">04</span><div><small>ОСНОВА</small><h3>Плитоносец</h3><p>Модульная база под магазинные, административные и утилитарные подсумки.</p></div></article>
+        <article class="gear-item" data-category="torso"><span class="gear-item__num">05</span><div><small>БОЕКОМПЛЕКТ</small><h3>Подсумки магазинов</h3><p>Быстрый и одинаковый доступ к магазинам без перегруза передней панели.</p></div></article>
+        <article class="gear-item" data-category="torso"><span class="gear-item__num">06</span><div><small>ПЕРВАЯ ПОМОЩЬ</small><h3>Аптечка</h3><p>Компактный медицинский подсумок в доступном и понятном для команды месте.</p></div></article>
+        <article class="gear-item" data-category="support"><span class="gear-item__num">07</span><div><small>СВЯЗЬ</small><h3>Рация</h3><p>Командная связь с защищённым размещением, удобным PTT и аккуратной укладкой кабелей.</p></div></article>
+        <article class="gear-item" data-category="support"><span class="gear-item__num">08</span><div><small>ПОДДЕРЖКА</small><h3>Боевой пояс</h3><p>Разгружает плитоносец и переносит часть часто используемого снаряжения на пояс.</p></div></article>
+        <article class="gear-item" data-category="support"><span class="gear-item__num">09</span><div><small>РЕЗЕРВ</small><h3>Мини-рюкзак</h3><p>Для воды, запасного слоя одежды, расходников и вещей, которые не нужны каждую минуту.</p></div></article>
+        <article class="gear-item" data-category="support"><span class="gear-item__num">10</span><div><small>ОСНОВНОЙ ПРИВОД</small><h3>АК-платформа</h3><p>Целевая командная конфигурация — АК-74М. Конкретное навесное оборудование подбирается под задачу бойца.</p></div></article>
+        <article class="gear-item" data-category="mobility"><span class="gear-item__num">11</span><div><small>ФОРМА</small><h3>Боевая рубаха и брюки</h3><p>Свобода движения, вентиляция и совместимость с разгрузочной системой.</p></div></article>
+        <article class="gear-item" data-category="mobility"><span class="gear-item__num">12</span><div><small>МОБИЛЬНОСТЬ</small><h3>Наколенники и ботинки</h3><p>Защита коленей, устойчивость и нормальная работа стопы на длительных выходах.</p></div></article>
+      </div>
+
+      <div class="gear-small-kit">
+        <div><span>Дополнительно</span><strong>Лоудер</strong></div>
+        <div><span>Дополнительно</span><strong>Мультитул</strong></div>
+        <div><span>Маркер</span><strong>Красная тряпка</strong></div>
+        <div><span>Организация</span><strong>Админ-подсумок</strong></div>
+      </div>
+    </section>
+
+    <section class="gear-final">
+      <div>
+        <span class="gear-kicker">03 / ПЕРВЫЙ ВЫХОД</span>
+        <h2>Не нужно покупать<br>всё сразу.</h2>
+      </div>
+      <div>
+        <p>Для первой тренировки важнее безопасный минимум и понимание дальнейшего комплекта. Остальное проще подбирать уже после знакомства с командой и реальными задачами.</p>
+        <a href="join.html" class="gear-final__cta">Как попасть в команду <span>→</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="gear-footer">
+    <a class="gear-brand" href="../index.html"><img src="../assets/final_logo.png" alt="" width="38" height="38"><span><strong>Разные люди</strong><small>тактическая команда</small></span></a>
+    <span>Одна команда. Одна задача.</span>
+  </footer>
+
+  <script src="../js/gear.js" defer></script>
 </body>
 </html>
