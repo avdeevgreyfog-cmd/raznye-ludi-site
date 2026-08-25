@@ -4,7 +4,7 @@
   const section = document.body.dataset.section || '';
   const href = (p) => `${base}${p}`;
 
-  ['/css/portal-editorial.css','/css/portal-flow.css'].forEach(file=>{
+  ['/css/portal-editorial.css','/css/portal-flow.css','/css/portal-sequence-fixes.css'].forEach(file=>{
     const link=document.createElement('link');
     link.rel='stylesheet';
     link.href=href(file);
