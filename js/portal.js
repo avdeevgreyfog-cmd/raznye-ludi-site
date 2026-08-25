@@ -4,10 +4,12 @@
   const section = document.body.dataset.section || '';
   const href = (p) => `${base}${p}`;
 
-  const editorial = document.createElement('link');
-  editorial.rel = 'stylesheet';
-  editorial.href = href('/css/portal-editorial.css');
-  document.head.appendChild(editorial);
+  ['/css/portal-editorial.css','/css/portal-flow.css'].forEach(file=>{
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href=href(file);
+    document.head.appendChild(link);
+  });
 
   const navItems = [
     {key:'team',label:'Команда',href:'/team/',links:[['О команде','/team/about.html'],['История','/team/history.html'],['Состав','/team/people.html'],['Принципы','/team/principles.html'],['Устав и правила','/team/rules.html']]},
