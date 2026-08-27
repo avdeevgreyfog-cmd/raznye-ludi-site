@@ -51,6 +51,27 @@ test('application produces prepared message without fake send',async({page})=>{
   await page.click('button[type=submit]');
   await expect(page.locator('[data-form-status]')).toHaveClass(/is-visible/);
   await expect(page.locator('[data-form-text]')).toHaveValue(/Тест/);
+  await expect(page.locator('[data-form-status] a[href="../gear/"]')).toBeVisible();
+});
+
+test('event filters and archive state work without data',async({page})=>{
+  await page.goto('/events/');
+  const archive=page.locator('[data-event-state="archive"]');
+  await archive.click();
+  await expect(archive).toHaveClass(/is-active/);
+  await expect(page.locator('[data-events]')).toContainText('Архив пока пуст');
+  const training=page.locator('[data-event-filter="training"]');
+  await training.click();
+  await expect(training).toHaveClass(/is-active/);
+});
+
+test('gear breakdown switches image and pressed state',async({page})=>{
+  await page.goto('/gear/');
+  const items=page.locator('[data-gear-item]');
+  expect(await items.count()).toBeGreaterThan(1);
+  await items.nth(1).click();
+  await expect(items.nth(1)).toHaveAttribute('aria-pressed','true');
+  await expect(page.locator('[data-gear-image]')).toHaveAttribute('src',/loadout-02\.webp$/);
 });
 
 test('canonical page internal links resolve',async({page,request})=>{
@@ -68,13 +89,38 @@ test('canonical page internal links resolve',async({page,request})=>{
   }
 });
 
+test('critical local assets resolve',async({page,request})=>{
+  const checked=new Set();
+  for(const url of pages){
+    await page.goto(url);
+    const refs=await page.locator('img[src],source[src],script[src],link[rel="stylesheet"][href]').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('src')||n.getAttribute('href')).filter(Boolean));
+    const posters=await page.locator('video[poster]').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('poster')).filter(Boolean));
+    for(const ref of [...refs,...posters]){
+      if(ref.startsWith('http')) continue;
+      const u=new URL(ref,page.url());
+      if(checked.has(u.pathname)) continue;
+      checked.add(u.pathname);
+      const r=await request.get(u.pathname);
+      expect(r.status(),`${ref} -> ${r.status()}`).toBeLessThan(400);
+    }
+  }
+});
+
+test('seo support files and 404 exist',async({request})=>{
+  for(const url of ['/robots.txt','/sitemap.xml','/404.html']){
+    const r=await request.get(url);
+    expect(r.status(),`${url} -> ${r.status()}`).toBeLessThan(400);
+  }
+});
+
 test('public copy contains no prototype phrases',async()=>{
   const files=['index.html','team/index.html','start/index.html','gear/index.html','events/index.html','start/application.html'];
   const forbidden=[
     'в дальнейшем','здесь будет','данный раздел','данный блок','позже добавим','структура позволяет',
     'предусмотрена возможность','публичный портал','этот блок спроектирован','каркас','здесь можно разместить',
     'когда появятся материалы','эта страница подготовлена для','погрузитесь в мир','уникальный опыт',
-    'больше, чем просто','незабываемые эмоции','новый уровень'
+    'больше, чем просто','незабываемые эмоции','новый уровень','характер сайта','сайт не заменяет',
+    'сайт строится вокруг','без претензии на официальный','не превращая наблюдения'
   ];
   for(const file of files){
     const text=fs.readFileSync(path.join(process.cwd(),file),'utf8').toLowerCase();
