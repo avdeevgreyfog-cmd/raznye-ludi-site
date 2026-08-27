@@ -1,23 +1,26 @@
 # Page matrix
 
-| URL | Title | Purpose | User intent | Primary CTA | Page type | Required sections | Visual | Content status | SEO topic | Internal links | Status |
+| URL | Title | Purpose | User intent | Primary CTA | Page type | Required sections | Visual requirements | Content status | SEO topic | Internal links | Status |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| `/` | Разные люди | Entry + recruitment | понять команду | познакомиться | Home | hero, team, life, events, newcomer, gear, people, CTA | cinematic video + scenes | ready | страйкбольная команда Москва | team/start/gear/events | COMPLETE |
-| `/team/` | Команда | показать характер команды | кто эти люди | новичку | Large hub | hero, identity, activity, visual DNA, principles, CTA | group/action scenes | history facts unavailable | страйкбольная команда | start/events | COMPLETE |
-| `/start/` | Новичку | снять неопределённость | как попасть | application | Large hub | route, first meeting, bring, questions, CTA | action scene | ready | как попасть в страйкбольную команду | gear/application | COMPLETE |
-| `/gear/` | Снаряжение | объяснить систему комплекта | что нужно новичку | application | Large hub | hero, interactive breakdown, observed patterns, buying order, CTA | full fighter sequence | official requirements unavailable | снаряжение для страйкбола | start/application | COMPLETE |
-| `/events/` | Мероприятия | показать подтверждённые события | когда можно приехать | application/VK | Large hub | hero, filters, stream, event anatomy, newcomer CTA | game scenes | no verified event dates | страйкбольные тренировки и игры | start/application | COMPLETE |
-| `/start/application.html` | Познакомиться | conversion | связаться | VK | Utility | context, short form, prepared message, success state | restrained | backend endpoint unavailable | заявка в страйкбольную команду | start | COMPLETE |
+| `/` | Разные люди | Entry + recruitment | понять команду и решить, стоит ли знакомиться | познакомиться | Home | cinematic hero, identity, team life, verified events, newcomer route, gear teaser, people, recruitment CTA | hero video, real team/action scenes, strong mobile crop | ready | страйкбольная команда Москва | team/start/gear/events/application | COMPLETE |
+| `/team/` | Команда | показать людей, среду и командную работу без выдуманной истории | кто эти люди и как выглядит команда в деле | новичку / application | Large hub | hero, identity, team in motion, field environment, team-play basics, first contact, CTA | group/action scenes, documentary crops | history facts unavailable | страйкбольная команда | start/gear/application | COMPLETE |
+| `/start/` | Новичку | снять неопределённость до первого контакта | как попасть и что подготовить | application | Large hub | hero, contact route, first meeting, preparation, questions, avoid-before-buying, CTA | action/editorial scene | official event-specific requirements unavailable | как попасть в страйкбольную команду | gear/events/application | COMPLETE |
+| `/gear/` | Снаряжение | объяснить комплект как связанную систему | что нужно новичку и как не купить лишнее | application | Large hub | hero, interactive breakdown, observed kit patterns, mobility/compatibility, buying order, pre-event check, CTA | full fighter sequence + real equipment scene | official requirements unavailable | снаряжение для страйкбола | start/application | COMPLETE |
+| `/events/` | Мероприятия | дать понятный поток подтверждённых событий | когда и на какой формат можно приехать | application / VK | Large hub | hero, upcoming/archive state, type filters, event stream, event formats, announcement anatomy, pre-trip check, newcomer transition, CTA | game/team scenes | no verified current event dates | страйкбольные тренировки и игры | start/application | COMPLETE |
+| `/start/application.html` | Познакомиться | conversion | подготовить первое обращение | VK | Utility | context, short form, prepared message, success state, next-step links | restrained editorial hero | manual VK delivery by design | заявка в страйкбольную команду | start/gear | COMPLETE |
 | legacy team pages | — | preserve old links | — | `/team/` | Redirect | — | — | merged | — | team | MERGE |
 | legacy start pages | — | preserve old links | — | `/start/` | Redirect | — | — | merged | — | start | MERGE |
 | legacy gear pages | — | preserve old links | — | `/gear/` | Redirect | — | — | merged | — | gear | MERGE |
 | legacy event pages | — | preserve old links | — | `/events/` | Redirect | — | — | merged | — | events | MERGE |
-| `/journal/*` | — | old prototype | — | home | Redirect | — | — | real publications absent | — | home | REMOVE |
-| `/knowledge/*` | — | old prototype | — | start | Redirect | — | — | substantive verified articles absent | — | start | REMOVE |
+| `/journal/*` | — | old prototype without verified publications | — | home | Redirect | — | — | real publications absent | — | home | REMOVE |
+| `/knowledge/*` | — | old prototype without verified knowledge articles | — | start | Redirect | — | — | substantive verified articles absent | — | start | REMOVE |
 
 ## CONTENT_REQUIRED
-1. Реальная история команды: даты, ключевые этапы, фото-архив, подтверждённые события.
-2. Имена/позывные и роли участников, если состав должен быть публичным.
+
+These items are intentionally not invented and do not block the public shell from working:
+
+1. Реальная история команды: даты, ключевые этапы, подтверждённые события и архивные фотографии.
+2. Имена/позывные и роли участников — только если состав должен быть публичным.
 3. Официальные требования команды к форме, защите, приводу, связи и допускам.
-4. Подтверждённые upcoming events.
-5. Реальный endpoint/канал для автоматической отправки recruitment form, если требуется именно отправка без ручного VK шага.
+4. Подтверждённые upcoming/archive events for `data/events.js`.
+5. Backend endpoint only if the owner later wants automatic form delivery instead of the current explicit VK handoff.
