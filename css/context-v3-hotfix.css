@@ -1,0 +1,43 @@
+/* Context V3 visual corrections after screenshot critic. */
+
+/* Home: preserve the V1 headline without browser word-breaking. */
+body[data-section="home"] .hero h1 span{display:block;white-space:nowrap;overflow-wrap:normal;word-break:normal;text-wrap:nowrap}
+body[data-section="home"] .hero h1 .hero-long{font-size:.72em;letter-spacing:0}
+
+/* Gear title is one visual mark, not two accidental words. */
+.gear-open h1{font-size:clamp(52px,5vw,90px);white-space:nowrap;overflow-wrap:normal;word-break:normal;text-wrap:nowrap}
+
+/* Fighter-centered loadout: one scene, camera focus moves through the kit. */
+.gear-lab__visual{--gear-x:46%;--gear-y:48%;--gear-scale:1;isolation:isolate}
+.gear-lab__visual img{width:100%;height:100%;max-width:none;max-height:none;object-fit:cover;object-position:var(--gear-x) var(--gear-y);transform:scale(var(--gear-scale));transition:transform .7s cubic-bezier(.2,.7,.2,1),object-position .7s cubic-bezier(.2,.7,.2,1),filter .35s ease;filter:saturate(.76) contrast(1.05) brightness(.78)}
+.gear-lab__visual[data-focus="full"]{--gear-x:46%;--gear-y:50%;--gear-scale:1}
+.gear-lab__visual[data-focus="head"]{--gear-x:44%;--gear-y:20%;--gear-scale:1.55}
+.gear-lab__visual[data-focus="chest"]{--gear-x:45%;--gear-y:40%;--gear-scale:1.42}
+.gear-lab__visual[data-focus="belt"]{--gear-x:45%;--gear-y:60%;--gear-scale:1.46}
+.gear-lab__visual[data-focus="pack"]{--gear-x:38%;--gear-y:44%;--gear-scale:1.30}
+.gear-lab__visual[data-focus="base"]{--gear-x:46%;--gear-y:73%;--gear-scale:1.38}
+.gear-lab__visual::before{content:"";position:absolute;z-index:2;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(3,5,3,.32),transparent 28%,transparent 72%,rgba(3,5,3,.22)),linear-gradient(180deg,rgba(3,5,3,.28),transparent 20%,transparent 78%,rgba(3,5,3,.48))}
+
+@media(max-width:720px){
+  body[data-section="home"] .hero-copy{width:100%;max-width:100%}
+  body[data-section="home"] .hero h1{font-size:clamp(46px,14vw,58px);line-height:.88}
+  body[data-section="home"] .hero h1 .hero-long{font-size:.70em}
+  body[data-section="home"] .hero-lead{font-size:15px;max-width:96%}
+
+  .gear-open h1{font-size:clamp(46px,13vw,58px)}
+  .gear-lab__visual{min-height:470px;height:64svh}
+
+  .events-open h1{font-size:clamp(40px,12vw,48px);white-space:nowrap;overflow-wrap:normal;word-break:normal;text-wrap:nowrap;letter-spacing:-.015em}
+  .event-formats .event-format{grid-template-columns:1fr;gap:10px;padding:24px 0}
+  .event-formats .event-format span,.event-formats .event-format strong,.event-formats .event-format p{grid-column:1;max-width:100%}
+  .event-formats .event-format strong{font-size:27px}
+  .event-formats__head{margin-bottom:22px}
+  .event-formats__head h2{font-size:clamp(38px,11vw,50px)}
+}
+
+@media(max-width:390px){
+  body[data-section="home"] .hero h1{font-size:44px}
+  body[data-section="home"] .hero h1 .hero-long{font-size:.68em}
+  .events-open h1{font-size:40px}
+  .gear-open h1{font-size:44px}
+}
