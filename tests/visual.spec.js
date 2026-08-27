@@ -15,6 +15,7 @@ for(const [name,url] of pages){
     fs.mkdirSync('qa-shots',{recursive:true});
     await page.goto(url,{waitUntil:'networkidle'});
     await expect(page.locator('h1')).toBeVisible();
+    await page.evaluate(()=>document.querySelectorAll('.reveal').forEach(el=>el.classList.add('is-visible')));
     await page.screenshot({path:`qa-shots/${testInfo.project.name}-${name}.png`,fullPage:true});
   });
 }
