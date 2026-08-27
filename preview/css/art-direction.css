@@ -1,0 +1,10 @@
+/* Deliberate mobile art direction for long Cyrillic display words. */
+@media(max-width:560px){
+  h1,h2,h3{overflow-wrap:normal;word-break:normal;hyphens:none}
+  .page-hero h1{font-size:clamp(43px,12.5vw,56px);line-height:.9;letter-spacing:-.01em}
+  .page-hero .kicker{margin-bottom:8px}
+  .page-hero p{max-width:94%}
+}
+@media(max-width:390px){
+  .page-hero h1{font-size:clamp(40px,12vw,48px)}
+}
