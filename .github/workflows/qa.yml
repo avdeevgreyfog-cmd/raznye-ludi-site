@@ -15,3 +15,9 @@ jobs:
       - run: npm install
       - run: npx playwright install --with-deps chromium
       - run: npm run qa
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qa-shots
+          path: qa-shots/
+          if-no-files-found: warn
