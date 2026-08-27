@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://avdeevgreyfog-cmd.github.io/raznye-ludi-site/sitemap.xml
