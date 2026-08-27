@@ -26,7 +26,23 @@ test('responsive overflow matrix',async({page},testInfo)=>{
       await page.goto(url,{waitUntil:'networkidle'});
       const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
       expect(overflow,`${url} overflow at ${width}px`).toBeLessThanOrEqual(1);
+      const h1=page.locator('h1');
+      const box=await h1.boundingBox();
+      expect(box,`${url} h1 missing at ${width}px`).toBeTruthy();
+      expect(box.x,`${url} h1 clipped left at ${width}px`).toBeGreaterThanOrEqual(-1);
+      expect(box.x+box.width,`${url} h1 clipped right at ${width}px`).toBeLessThanOrEqual(width+1);
     }
+  }
+});
+
+test('mobile event format content stays in viewport',async({page},testInfo)=>{
+  test.skip(testInfo.project.name!=='mobile');
+  await page.goto('/events/',{waitUntil:'networkidle'});
+  const width=await page.evaluate(()=>innerWidth);
+  for(const el of await page.locator('.event-format').all()){
+    const box=await el.boundingBox();
+    expect(box.x).toBeGreaterThanOrEqual(-1);
+    expect(box.x+box.width).toBeLessThanOrEqual(width+1);
   }
 });
 
@@ -65,13 +81,14 @@ test('event filters and archive state work without data',async({page})=>{
   await expect(training).toHaveClass(/is-active/);
 });
 
-test('gear breakdown switches image and pressed state',async({page})=>{
+test('gear breakdown changes camera focus and pressed state',async({page})=>{
   await page.goto('/gear/');
   const items=page.locator('[data-gear-item]');
   expect(await items.count()).toBeGreaterThan(1);
   await items.nth(1).click();
   await expect(items.nth(1)).toHaveAttribute('aria-pressed','true');
-  await expect(page.locator('[data-gear-image]')).toHaveAttribute('src',/loadout-02\.webp$/);
+  await expect(page.locator('.gear-lab__visual')).toHaveAttribute('data-focus','head');
+  await expect(page.locator('[data-gear-image]')).toHaveAttribute('src',/scene_09\.webp$/);
 });
 
 test('canonical page internal links resolve',async({page,request})=>{
@@ -120,7 +137,8 @@ test('public copy contains no prototype phrases',async()=>{
     'предусмотрена возможность','публичный портал','этот блок спроектирован','каркас','здесь можно разместить',
     'когда появятся материалы','эта страница подготовлена для','погрузитесь в мир','уникальный опыт',
     'больше, чем просто','незабываемые эмоции','новый уровень','характер сайта','сайт не заменяет',
-    'сайт строится вокруг','без претензии на официальный','не превращая наблюдения'
+    'сайт строится вокруг','без претензии на официальный','не превращая наблюдения','не продолжает лендинг',
+    'разделы продолжают лендинг','несуществующего backend','страница мероприятий не должна'
   ];
   for(const file of files){
     const text=fs.readFileSync(path.join(process.cwd(),file),'utf8').toLowerCase();
