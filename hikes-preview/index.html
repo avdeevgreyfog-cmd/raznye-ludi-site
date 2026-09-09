@@ -1,1 +1,34 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#171815"><title>Разные люди — Походы</title><link rel="stylesheet" href="./style.css"></head><body><aside class="side"><div class="sub">Разные люди</div><div class="brand">Походы</div><div style="margin-top:18px;border-top:1px solid #353731;padding-top:15px"><strong>Лыткарино</strong><small style="display:block;color:#aaa69d">поход-тренировка</small></div><nav class="nav" id="nav"></nav><button class="reset" id="reset">Сбросить демо</button></aside><main class="main"><header class="top"><strong>Лыткарино · разведывательный поход</strong><div class="who"><span>Смотреть как</span><select id="who"></select></div></header><div class="wrap" id="app"></div></main><nav class="mobile" id="mobile"></nav><div class="toast" id="toast"></div><script src="./v7-1.js"></script><script src="./v7-2.js"></script><script src="./v7-3.js"></script></body></html>
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#171815">
+  <title>Разные люди — Походы</title>
+  <meta name="description" content="Рабочий модуль подготовки командных походов">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand-block">
+      <div class="brand-mark">РЛ</div>
+      <div><div class="eyebrow">Разные люди</div><div class="brand-title">Походы</div></div>
+    </div>
+    <div class="event-switcher">
+      <div class="event-switcher__label">Текущее мероприятие</div>
+      <button class="event-switcher__button" id="eventSwitcher" type="button"><span><strong>Лыткарино</strong><small>поход-тренировка</small></span><span class="chev">⌄</span></button>
+    </div>
+    <nav class="side-nav" id="nav"></nav>
+    <div class="sidebar-foot"><button class="text-button" id="reset" type="button">Сбросить демо</button><div class="build-label">V2 · локальный тест</div></div>
+  </aside>
+  <main class="workspace">
+    <header class="topbar"><div class="topbar__event"><span class="status-dot"></span><strong>Лыткарино · разведывательный поход</strong></div><div class="viewer"><span>Смотреть как</span><select id="who" aria-label="Смотреть как участник"></select></div></header>
+    <div class="page" id="app"></div>
+  </main>
+  <nav class="mobile-nav" id="mobile"></nav>
+  <div class="mobile-sheet" id="mobileSheet" aria-hidden="true"></div>
+  <div class="modal-layer" id="modalLayer" aria-hidden="true"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./v8.js"></script>
+</body>
+</html>
