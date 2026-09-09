@@ -1,0 +1,22 @@
+const bindV13Base=bind;bind=function(){bindV13Base();
+  document.getElementById('toggleEditorV13')?.addEventListener('click',()=>{editorModeV13=!editorModeV13;selectedV13=null;render()});
+  document.getElementById('undoV13')?.addEventListener('click',undoEditorV13);document.getElementById('redoV13')?.addEventListener('click',redoEditorV13);document.getElementById('exportAtlasV13')?.addEventListener('click',openAtlasPrintV13);document.getElementById('downloadGpxV13')?.addEventListener('click',downloadEditedGpxV13);document.getElementById('resetRouteV13')?.addEventListener('click',()=>{if(confirm('Вернуть маршрут, КП и сетку к исходной PDF-версии?'))resetEditorV13()});document.getElementById('openRouteEditorV13')?.addEventListener('click',()=>{tab='route';editorModeV13=true;render()});
+  document.querySelectorAll('[data-editor-tool-v13]').forEach(b=>b.onclick=()=>{editorToolV13=b.dataset.editorToolV13;selectedV13=null;render()});
+  document.querySelectorAll('[data-delete-vertex-v13]').forEach(b=>b.onclick=()=>deleteVertexV13(+b.dataset.deleteVertexV13));
+  document.querySelectorAll('[data-terrain-v13]').forEach(s=>s.onchange=()=>setTerrainV13(+s.dataset.terrainV13,s.value));
+  document.querySelectorAll('[data-brouter-v13]').forEach(b=>b.onclick=()=>routeSegmentBrouterV13(+b.dataset.brouterV13));
+  document.querySelectorAll('[data-delete-cp-v13]').forEach(b=>b.onclick=()=>deleteCpV13(b.dataset.deleteCpV13));
+  document.querySelectorAll('[data-save-cp-v13]').forEach(b=>b.onclick=()=>{const id=b.dataset.saveCpV13,title=document.querySelector(`[data-cp-title-v13="${id}"]`)?.value.trim(),stopMin=+document.querySelector(`[data-cp-stop-v13="${id}"]`)?.value||0;if(!title){toast('Название КП не может быть пустым');return}updateCpV13(id,{title,stopMin})});
+  document.querySelectorAll('[data-cp-dyn-v13]').forEach(b=>b.onclick=()=>{const cp=editorV13.cps.find(x=>x.id===b.dataset.cpDynV13);if(cp&&routeMapV11){routeMapV11.setView([cp.lat,cp.lon],15,{animate:true});cpLayersV13[cp.id]?.openTooltip()}});
+  document.querySelectorAll('[data-speed-v13]').forEach(i=>i.onchange=()=>{const v=Math.max(.5,Math.min(8,+i.value||4));editorV13.speeds[i.dataset.speedV13]=v;saveEditorV13();render();toast('Скорость обновлена')});
+  document.getElementById('applyGridV13')?.addEventListener('click',()=>{const sel=document.getElementById('gridCellV13'),custom=+document.getElementById('gridCustomV13').value||200,cell=sel.value==='custom'?custom:+sel.value,ox=+document.getElementById('gridOffsetXV13').value||0,oy=+document.getElementById('gridOffsetYV13').value||0;pushHistoryV13();editorV13.grid={cell:Math.max(50,Math.min(1000,cell)),offsetX:ox,offsetY:oy};saveEditorV13();render();toast('Сетка обновлена')});
+  document.getElementById('resetGridV13')?.addEventListener('click',()=>{pushHistoryV13();editorV13.grid={cell:200,offsetX:0,offsetY:0};saveEditorV13();render();toast('Сетка возвращена к PDF')});
+  document.querySelectorAll('[data-grid-toggle-v12]').forEach(b=>b.onclick=()=>{gridEnabledV12=!gridEnabledV12;refreshGridV13();b.classList.toggle('active',gridEnabledV12)});
+  document.querySelectorAll('[data-map-layer-v11]').forEach(b=>b.onclick=()=>{const kind=b.dataset.mapLayerV11;if(kind===routeBaseV11)return;replaceBaseV11(routeMapV11,document.querySelector('.map-shell-v11'),kind,false);document.querySelectorAll('[data-map-layer-v11]').forEach(x=>x.classList.toggle('active',x.dataset.mapLayerV11===kind))});
+  if(tab==='route')requestAnimationFrame(mountRouteMapV13);
+};
+
+const oldResetV13=document.getElementById('reset');if(oldResetV13)oldResetV13.addEventListener('dblclick',resetEditorV13);
+syncEventV13();
+const buildV13=document.querySelector('.build-label');if(buildV13)buildV13.textContent='V7 · редактор маршрута / КП / сетка / PDF';
+render();
