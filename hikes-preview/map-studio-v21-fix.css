@@ -1,0 +1,6 @@
+/* V15.2 UI fixes */
+.map-studio-open-v21 .atlas-modal-v20{z-index:9600}
+.map-studio-open-v21 .toast{z-index:9800}
+@media(max-width:780px){
+  .map-studio-open-v21 .atlas-dialog-v20{height:100dvh}
+}
