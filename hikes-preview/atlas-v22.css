@@ -1,0 +1,4 @@
+/* V16 - atlas constructor UI polish */
+.atlas-auto-note-v22{grid-column:1/-1;color:#8a7040;font-size:10px}
+.atlas-sheet-row-v20{grid-template-columns:92px minmax(0,1fr) 74px}
+@media(max-width:620px){.atlas-sheet-row-v20{grid-template-columns:82px 1fr}.atlas-sheet-row-v20 button{grid-column:1/-1}}
