@@ -6,29 +6,57 @@
   <meta name="theme-color" content="#171815">
   <title>Разные люди — Походы</title>
   <meta name="description" content="Рабочий модуль подготовки командных походов">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./route-v9.css">
 </head>
 <body>
   <aside class="sidebar" id="sidebar">
     <div class="brand-block">
       <div class="brand-mark">РЛ</div>
-      <div><div class="eyebrow">Разные люди</div><div class="brand-title">Походы</div></div>
+      <div>
+        <div class="eyebrow">Разные люди</div>
+        <div class="brand-title">Походы</div>
+      </div>
     </div>
+
     <div class="event-switcher">
       <div class="event-switcher__label">Текущее мероприятие</div>
-      <button class="event-switcher__button" id="eventSwitcher" type="button"><span><strong>Лыткарино</strong><small>поход-тренировка</small></span><span class="chev">⌄</span></button>
+      <button class="event-switcher__button" id="eventSwitcher" type="button">
+        <span><strong>Томинский лесопарк</strong><small>поход-тренировка</small></span>
+        <span class="chev">⌄</span>
+      </button>
     </div>
+
     <nav class="side-nav" id="nav"></nav>
-    <div class="sidebar-foot"><button class="text-button" id="reset" type="button">Сбросить демо</button><div class="build-label">V2 · локальный тест</div></div>
+
+    <div class="sidebar-foot">
+      <button class="text-button" id="reset" type="button">Сбросить демо</button>
+      <div class="build-label">V3 · маршрут подключён</div>
+    </div>
   </aside>
+
   <main class="workspace">
-    <header class="topbar"><div class="topbar__event"><span class="status-dot"></span><strong>Лыткарино · разведывательный поход</strong></div><div class="viewer"><span>Смотреть как</span><select id="who" aria-label="Смотреть как участник"></select></div></header>
+    <header class="topbar">
+      <div class="topbar__event">
+        <span class="status-dot"></span>
+        <strong>Томинский лесопарк · полевой маршрут</strong>
+      </div>
+      <div class="viewer">
+        <span>Смотреть как</span>
+        <select id="who" aria-label="Смотреть как участник"></select>
+      </div>
+    </header>
     <div class="page" id="app"></div>
   </main>
+
   <nav class="mobile-nav" id="mobile"></nav>
   <div class="mobile-sheet" id="mobileSheet" aria-hidden="true"></div>
   <div class="modal-layer" id="modalLayer" aria-hidden="true"></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="./v8.js"></script>
+  <script src="./route-v9.js"></script>
 </body>
 </html>
