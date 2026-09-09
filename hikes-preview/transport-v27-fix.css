@@ -1,0 +1,22 @@
+/* V21.1 — integrate approved transport visual with the surrounding shell. */
+body.tv27-transport-active .sidebar{background:#06161d;border-right-color:#17333d}
+body.tv27-transport-active .brand-block{border-bottom-color:#1c3740}
+body.tv27-transport-active .brand-mark{width:46px;height:46px;border:0;background:url('../assets/final_logo.png') center/contain no-repeat;color:transparent;font-size:0}
+body.tv27-transport-active .brand-title{color:#f3f8f6;text-transform:none;font-size:21px}
+body.tv27-transport-active .eyebrow{color:#7d989f}
+body.tv27-transport-active .event-switcher__label{color:#66828a}
+body.tv27-transport-active .event-switcher__button{background:#0d2731;border-color:#21424d;color:#edf5f2;border-radius:7px}
+body.tv27-transport-active .side-nav{border-top-color:#1b3943}
+body.tv27-transport-active .side-nav button{border-radius:6px;color:#a2b4b8;text-transform:none;letter-spacing:.02em;font-family:var(--body);font-size:12px;padding:10px 12px}
+body.tv27-transport-active .side-nav button::before{display:none}
+body.tv27-transport-active .side-nav button:hover{background:#0d2a34;color:#eef7f4}
+body.tv27-transport-active .side-nav button.active{background:#178c50;color:#fff}
+body.tv27-transport-active .sidebar-foot{border-top-color:#1b3943}
+body.tv27-transport-active .build-label{color:#4f737b}
+body.tv27-transport-active .status-dot{background:#34b66f}
+body.tv27-transport-active .topbar{height:52px}
+body.tv27-transport-active .page{padding-top:12px}
+.tv27-hero{box-shadow:0 8px 32px rgba(0,0,0,.15)}
+.tv27-summary,.tv27-card,.tv27-panel,.tv27-map-panel{box-shadow:0 4px 18px rgba(0,0,0,.08)}
+.tv27-ride{transition:border-color .15s,transform .15s,box-shadow .15s}.tv27-ride:hover{border-color:#9fc4af;box-shadow:0 5px 16px rgba(7,34,24,.1);transform:translateY(-1px)}
+@media(max-width:760px){body.tv27-transport-active .brand-mark{width:38px;height:38px}.tv27-hero{border-radius:8px}.tv27-card,.tv27-panel,.tv27-map-panel{border-radius:8px}}
