@@ -1,0 +1,124 @@
+/* V23 — unified visual system for all hike module tabs. */
+body.rl-unified-shell{
+  background:#07151b;
+  color:#eef6f3;
+  font-family:Inter,"Segoe UI Variable Text","Segoe UI",Arial,sans-serif;
+}
+body.rl-unified-shell .workspace{background:#07151b}
+body.rl-unified-shell .sidebar{background:#06141a;border-right:1px solid #1d3740;color:#eef6f3}
+body.rl-unified-shell .brand-block{border-bottom-color:#1d3740}
+body.rl-unified-shell .brand-mark{width:46px;height:46px;border:0;background:url('../assets/final_logo.png') center/contain no-repeat;color:transparent;font-size:0}
+body.rl-unified-shell .eyebrow{color:#718b92;font-family:inherit;font-size:10px;font-weight:650;letter-spacing:.08em;text-transform:uppercase}
+body.rl-unified-shell .brand-title{font-family:"Segoe UI Variable Display",Inter,"Segoe UI",Arial,sans-serif;font-size:22px;font-weight:760;letter-spacing:-.02em;text-transform:none;color:#f3f8f6}
+body.rl-unified-shell .event-switcher{padding-top:17px}
+body.rl-unified-shell .event-switcher__label{color:#6f8990;font-size:10px;letter-spacing:.06em}
+body.rl-unified-shell .event-switcher__button{background:#0d242d;border-color:#294751;color:#edf5f2;border-radius:10px;padding:11px 12px}
+body.rl-unified-shell .event-switcher__button strong{font-family:inherit;font-size:13px;font-weight:700;text-transform:none;letter-spacing:0}
+body.rl-unified-shell .event-switcher__button small{color:#8fa5ab;font-size:11px}
+body.rl-unified-shell .side-nav{border-top-color:#1d3740;gap:4px}
+body.rl-unified-shell .side-nav button{border-radius:8px;color:#9fb2b7;font-family:inherit;font-size:13px;font-weight:620;letter-spacing:0;text-transform:none;padding:10px 12px}
+body.rl-unified-shell .side-nav button::before{display:none}
+body.rl-unified-shell .side-nav button:hover{background:#0d2933;color:#eef7f4}
+body.rl-unified-shell .side-nav button.active{background:#28ae65;color:#fff;box-shadow:0 5px 18px rgba(40,174,101,.17)}
+body.rl-unified-shell .sidebar-foot{border-top-color:#1d3740}
+body.rl-unified-shell .text-button{color:#7e969c}.rl-unified-shell .text-button:hover{color:#a8dcb9}
+body.rl-unified-shell .build-label{color:#4f7078}
+body.rl-unified-shell .topbar{height:54px;background:rgba(7,21,27,.96);border-bottom:1px solid #203a44;color:#edf5f2;backdrop-filter:blur(18px)}
+body.rl-unified-shell .topbar__event strong{font-size:13px;color:#edf5f2}
+body.rl-unified-shell .status-dot{background:#38ba72}
+body.rl-unified-shell .viewer>span{color:#849ca2;font-size:11px}
+body.rl-unified-shell .viewer select{background:#102731;border:1px solid #2b4650;color:#eef5f3;border-radius:9px;padding:7px 28px 7px 10px}
+body.rl-unified-shell .page{width:min(1560px,calc(100% - 32px));padding:18px 0 76px}
+
+/* Page header shared by all standard tabs. */
+body.rl-unified-shell .page-head{align-items:center;gap:22px;margin:0 0 16px;padding:22px 24px;background:#0d242d;border:1px solid #294751;border-radius:15px;color:#eef6f3}
+body.rl-unified-shell .page-head__copy{max-width:860px}
+body.rl-unified-shell .page-kicker{margin-bottom:7px;color:#78cf98;font-family:inherit;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+body.rl-unified-shell h1,body.rl-unified-shell h2,body.rl-unified-shell h3{font-family:"Segoe UI Variable Display",Inter,"Segoe UI",Arial,sans-serif;text-transform:none;letter-spacing:-.015em}
+body.rl-unified-shell .page-head h1{margin:0;color:#fff;font-size:clamp(34px,3.6vw,50px);font-weight:760;line-height:.98;letter-spacing:-.035em}
+body.rl-unified-shell .page-head p{margin:8px 0 0;color:#91a7ad;font-size:13px;line-height:1.5}
+body.rl-unified-shell .page-head__actions{gap:8px}
+
+/* Shared controls. */
+body.rl-unified-shell .btn{min-height:34px;border:1px solid #31505a;background:#14313b;color:#edf5f2;padding:7px 12px;border-radius:9px;font-family:inherit;font-size:12px;font-weight:650;letter-spacing:0;text-transform:none;box-shadow:none}
+body.rl-unified-shell .btn:hover{transform:none;background:#193a45;border-color:#3b5c66}
+body.rl-unified-shell .btn.sand{background:#28ae65;border-color:#28ae65;color:#fff}.rl-unified-shell .btn.sand:hover{background:#1e9656;border-color:#1e9656}
+body.rl-unified-shell .btn.alt{background:#102a33;border-color:#31505a;color:#edf5f2}
+body.rl-unified-shell .btn.ghost{background:transparent;border-color:transparent;color:#9cafb4}
+body.rl-unified-shell .btn.sm{min-height:30px;padding:5px 9px;font-size:11px}
+body.rl-unified-shell .icon-btn{border:1px solid #31505a;background:#102a33;color:#dfe9e6;border-radius:8px}
+body.rl-unified-shell button:focus-visible,body.rl-unified-shell input:focus-visible,body.rl-unified-shell select:focus-visible,body.rl-unified-shell textarea:focus-visible{outline:2px solid #67ca8b;outline-offset:2px}
+body.rl-unified-shell input,body.rl-unified-shell select,body.rl-unified-shell textarea{font-family:inherit}
+body.rl-unified-shell .status-select{border-color:#35515b;background:#102a33;color:#e9f2ef;border-radius:7px;padding:6px 26px 6px 8px}
+body.rl-unified-shell .tag{border-color:#35515b;color:#b9c9cd;background:#102a33;border-radius:999px;padding:5px 9px;font-family:inherit;font-size:10px;font-weight:650;letter-spacing:0;text-transform:none}
+body.rl-unified-shell .tag.sand{border-color:#2a7048;background:#153e2d;color:#a5e4b9}.rl-unified-shell .tag.ok{border-color:#2a7048;background:#153e2d;color:#a5e4b9}.rl-unified-shell .tag.warn{border-color:#80652d;background:#433617;color:#edc679}.rl-unified-shell .tag.risk{border-color:#814141;background:#482426;color:#efaaaa}
+
+/* Generic content surfaces. */
+body.rl-unified-shell .section{margin-top:20px}
+body.rl-unified-shell .section-head{padding-bottom:10px;border-bottom:1px solid #294751;align-items:center}
+body.rl-unified-shell .section-head h2{margin:0;color:#f1f7f5;font-size:18px;font-weight:720;letter-spacing:-.01em}
+body.rl-unified-shell .section-head p{color:#8fa5ab;font-size:11px}
+body.rl-unified-shell .card{background:#0d242d;border:1px solid #294751;color:#eef6f3;border-radius:13px;padding:17px}
+body.rl-unified-shell .card.dark{background:#0a1e26;border-color:#294751;color:#eef6f3}
+body.rl-unified-shell .card.dark small{color:#91a7ad}
+body.rl-unified-shell .panel{border-color:#294751;padding:16px 0}
+body.rl-unified-shell .panel:first-child{border-top-color:#294751}
+body.rl-unified-shell .list{border-top-color:#294751}
+body.rl-unified-shell .row{border-bottom-color:#233e48;padding:13px 0}
+body.rl-unified-shell .row small{color:#8fa4aa}
+body.rl-unified-shell .row-title b{color:#eef6f3;font-weight:690}
+body.rl-unified-shell .summary-strip{background:#0d242d;border:1px solid #294751;border-radius:12px;overflow:hidden}
+body.rl-unified-shell .metric{padding:15px 16px}.rl-unified-shell .metric+.metric{border-left-color:#294751}
+body.rl-unified-shell .metric small{color:#8fa5ab}.rl-unified-shell .metric strong{color:#fff;font-family:"Segoe UI Variable Display",Inter,"Segoe UI",Arial,sans-serif;font-size:28px;font-weight:760}.rl-unified-shell .metric em{color:#879da3}
+body.rl-unified-shell .progress{background:#19333d;border-radius:999px}.rl-unified-shell .progress i{background:#28ae65}.rl-unified-shell .progress.dark{background:#19333d}.rl-unified-shell .progress.dark i{background:#28ae65}
+body.rl-unified-shell .avatar{border:0;background:#e1ebe6;color:#173028;border-radius:50%;font-family:inherit;font-weight:750}
+
+/* Overview. */
+body.rl-unified-shell .event-hero{min-height:390px;background:#0d242d;border:1px solid #294751;border-radius:16px;overflow:hidden}
+body.rl-unified-shell .hero-copy{padding:30px 30px 28px}
+body.rl-unified-shell .hero-title{margin:22px 0 15px;color:#fff;font-family:"Segoe UI Variable Display",Inter,"Segoe UI",Arial,sans-serif;font-size:clamp(50px,5vw,78px);font-weight:780;line-height:.88;letter-spacing:-.045em;text-transform:none}
+body.rl-unified-shell .hero-lead{color:#96aab0;font-size:14px}
+body.rl-unified-shell .hero-meta{border-top-color:#294751}.rl-unified-shell .hero-meta>div:nth-child(even){border-left-color:#294751}.rl-unified-shell .hero-meta small{color:#82999f}.rl-unified-shell .hero-meta strong{color:#eaf2ef}
+body.rl-unified-shell .map-panel{background:#101f26;border-left-color:#294751}
+body.rl-unified-shell .map-caption{color:#c0cfd2}.rl-unified-shell .map-caption small{color:#789097}.rl-unified-shell .map-actions .btn{background:#102a33;border-color:#34515b}
+body.rl-unified-shell .rsvp-summary{border-bottom-color:#294751;color:#8fa5ab}.rl-unified-shell .rsvp-summary strong{color:#eef6f3}
+body.rl-unified-shell .deadline-note{border-color:#294751}.rl-unified-shell .deadline-note span{color:#8fa5ab}
+body.rl-unified-shell .attention-group{border-top-color:#294751}.rl-unified-shell .attention-group__head strong{font-family:inherit;font-size:12px;letter-spacing:0;text-transform:none}.rl-unified-shell .attention-count{border-color:#35515b;border-radius:7px}.rl-unified-shell .attention-item{border-top-color:#203b45}.rl-unified-shell .my-prep{border-color:#294751}.rl-unified-shell .prep-primary{border-right-color:#294751}.rl-unified-shell .prep-person{font-family:"Segoe UI Variable Display",Inter,"Segoe UI",Arial,sans-serif;font-size:25px;text-transform:none}.rl-unified-shell .prep-role{color:#7fd49d}.rl-unified-shell .prep-line,.rl-unified-shell .prep-task{border-top-color:#294751}.rl-unified-shell .prep-line small{color:#82999f}
+
+/* Plan — remove the old beige subsystem. */
+body.rl-unified-shell .plan-auto-summary-v23{background:#0d242d;border:1px solid #294751;border-radius:12px;overflow:hidden;margin-bottom:16px}
+body.rl-unified-shell .plan-auto-summary-v23>div{border-right-color:#294751;padding:13px 14px}.rl-unified-shell .plan-auto-summary-v23 small{color:#8ba1a7;font-size:10px;letter-spacing:.04em;text-transform:none}.rl-unified-shell .plan-auto-summary-v23 strong{color:#fff;font-size:20px}
+body.rl-unified-shell .plan-start-reserve-v23 label{color:#9aadb2;font-size:11px}.rl-unified-shell .plan-start-reserve-v23 input,.rl-unified-shell .speed-cards-v23 input,.rl-unified-shell .plan-break-main-v23 input{border:1px solid #35515b;background:#102a33;color:#eef6f3;border-radius:8px;padding:8px 10px}
+body.rl-unified-shell .plan-start-reserve-v23 span{color:#7f979d}
+body.rl-unified-shell .pace-profiles-v23 button{border:1px solid #35515b;background:#0d242d;color:#c3d0d3;border-radius:10px;padding:12px}.rl-unified-shell .pace-profiles-v23 button.active{background:#28ae65;border-color:#28ae65;color:#fff}.rl-unified-shell .pace-profiles-v23 b{font-size:13px}.rl-unified-shell .pace-profiles-v23 small{color:inherit}
+body.rl-unified-shell .speed-cards-v23 label{border-bottom-color:#294751}.rl-unified-shell .speed-cards-v23 label b{color:#eef6f3}.rl-unified-shell .speed-cards-v23 label small{color:#849ba1}.rl-unified-shell .speed-cards-v23 em{color:#9fb0b4}
+body.rl-unified-shell .speed-fallback-v23,.rl-unified-shell .breaks-note-v23{background:#302a18;border-left-color:#d7a743;color:#d9c99e;border-radius:0 8px 8px 0}
+body.rl-unified-shell .plan-cp-v23,.rl-unified-shell .plan-break-v23{border-bottom-color:#294751}.rl-unified-shell .plan-break-v23{background:#102a31;border-left-color:#d7a743}.rl-unified-shell .plan-time-v23{color:#eaf2ef}.rl-unified-shell .plan-time-v23 small{color:#80969c}.rl-unified-shell .plan-dot-v23{border-color:#4b7fe4;background:#0d242d;color:#dfe9f6}.rl-unified-shell .plan-dot-v23.endpoint{background:#28ae65;border-color:#28ae65;box-shadow:none}.rl-unified-shell .plan-break-icon-v23{border-color:#d7a743;background:#d7a743;color:#14221c}.rl-unified-shell .plan-main-v23 span,.rl-unified-shell .plan-break-main-v23>span{color:#83999f}
+body.rl-unified-shell .plan-coords-v23 code,.rl-unified-shell .cp-coordline-v23 code,.rl-unified-shell .studio-coordinate-actions-v23 code{background:#102a33;border-color:#35515b;color:#dce8e5;border-radius:7px}.rl-unified-shell .plan-coords-v23 button,.rl-unified-shell .cp-coordline-v23 button,.rl-unified-shell .studio-coordinate-actions-v23 button,.rl-unified-shell .plan-add-break-v23,.rl-unified-shell .plan-break-actions-v23 button{border:1px solid #35515b;background:#102a33;color:#dce8e5;border-radius:7px}.rl-unified-shell .cp-row-v23{border-bottom-color:#294751}.rl-unified-shell .cp-focus-v23:hover{background:#102a33}.rl-unified-shell .plan-drop-v23.over{background:#24301f;border-color:#d7a743;color:#dbc88c}
+
+/* Route editor. */
+body.rl-unified-shell .editor-tools-v13,body.rl-unified-shell .route-toolgroup-v15{border-color:#35515b;background:#102a33;border-radius:9px;overflow:hidden}
+body.rl-unified-shell .editor-tool-v13,body.rl-unified-shell .route-tool-v15{border-right-color:#35515b;color:#a9bbc0;background:transparent;font-family:inherit;font-size:10px;letter-spacing:0;text-transform:none}.rl-unified-shell .editor-tool-v13.active,.rl-unified-shell .route-tool-v15.active{background:#28ae65;color:#fff}.rl-unified-shell .route-tool-v15.path.active{background:#4f7bd8;border-color:#4f7bd8}
+body.rl-unified-shell .editor-state-v15{border-color:#35515b;background:#0d242d;color:#91a7ad;border-radius:9px;font-family:inherit;letter-spacing:0;text-transform:none}.rl-unified-shell .editor-state-v15.dirty{border-color:#9b7736;color:#e0bb68}.rl-unified-shell .editor-save-v15{background:#28ae65!important;color:#fff!important;border-color:#28ae65!important}
+body.rl-unified-shell .route-toolstrip-v15{background:#0d242d;border-color:#294751;border-radius:12px}.rl-unified-shell .route-hint-v15{color:#8fa5ab}.rl-unified-shell .path-progress-v15{background:#172f45;color:#a9c8f8;border-radius:7px}
+body.rl-unified-shell .route-editor-panel-v13,body.rl-unified-shell .route-editor-panel-v15{color:#eef6f3}.rl-unified-shell .editor-summary-v13{border-bottom-color:#294751}.rl-unified-shell .editor-stat-v13{border-right-color:#294751}.rl-unified-shell .editor-stat-v13 span{color:#83999f}.rl-unified-shell .editor-stat-v13 strong{font-family:"Segoe UI Variable Display",Inter,"Segoe UI",Arial,sans-serif;color:#fff;font-weight:750}.rl-unified-shell .editor-card-v13,.rl-unified-shell .editor-empty-v13{border-top-color:#28ae65}.rl-unified-shell .editor-card-v13>small,.rl-unified-shell .editor-card-v13 label,.rl-unified-shell .editor-card-v13 p,.rl-unified-shell .editor-empty-v13 p{color:#8fa5ab}.rl-unified-shell .editor-card-v13>strong{font-family:inherit;color:#eef6f3}.rl-unified-shell .editor-card-v13 input,.rl-unified-shell .editor-card-v13 select{border-color:#35515b;background:#102a33;color:#eef6f3;border-radius:8px}
+body.rl-unified-shell .editor-help-v15{background:#102a31;border-left-color:#28ae65;color:#a9babc}.rl-unified-shell .loop-toggle-v15,.rl-unified-shell .snap-toggle-v15{border-color:#35515b;background:#0d242d;border-radius:9px}.rl-unified-shell .loop-toggle-v15 b,.rl-unified-shell .snap-toggle-v15 b{color:#eaf2ef}.rl-unified-shell .loop-toggle-v15 small,.rl-unified-shell .snap-toggle-v15 small{color:#81989e}
+body.rl-unified-shell .route-form-v15{border-color:#294751;background:#0d242d;border-radius:11px;overflow:auto}.rl-unified-shell .route-form-table-v15 th{background:#102a33;color:#92a8ae;border-bottom-color:#35515b}.rl-unified-shell .route-form-table-v15 td{border-bottom-color:#233e48;color:#e8f0ee}.rl-unified-shell .route-form-table-v15 td small{color:#849ba1}
+body.rl-unified-shell .route-plan-start-v15{background:#0d242d;border-color:#294751;border-radius:10px}.rl-unified-shell .route-plan-start-v15 label{color:#83999f}.rl-unified-shell .route-plan-start-v15 input,.rl-unified-shell .speed-row-v15 input{border-color:#35515b;background:#102a33;color:#eef6f3;border-radius:7px}.rl-unified-shell .speed-row-v15{background:#294751;border-color:#294751}.rl-unified-shell .speed-row-v15 label{background:#0d242d}.rl-unified-shell .speed-row-v15 span{color:#879da3}.rl-unified-shell .route-unsaved-banner-v15{background:#342d18;border-color:#8b6a2f;color:#e1c474;border-radius:8px}.rl-unified-shell .route-unsaved-banner-v15 strong{color:#f0d28a}
+body.rl-unified-shell .path-steps-v16 span{border-color:#35515b;background:#0d242d;color:#8fa5ab;border-radius:8px;letter-spacing:0;text-transform:none}.rl-unified-shell .path-steps-v16 span b{background:#173640;color:#c7d6d9}.rl-unified-shell .path-steps-v16 span.active{border-color:#28ae65;color:#dff6e7}.rl-unified-shell .path-steps-v16 span.done{border-color:#4f7bd8;color:#dfe8fa}.rl-unified-shell .path-steps-v16 span.done b{background:#4f7bd8}
+
+/* Fullscreen cartographic workspace: same product language. */
+body.rl-unified-shell .map-studio-v21{background:#07151b;font-family:Inter,"Segoe UI Variable Text","Segoe UI",Arial,sans-serif}
+body.rl-unified-shell .studio-top-v21{background:#07151b;border-bottom-color:#294751;color:#eef6f3}.rl-unified-shell .studio-title-v21 small{color:#78cf98}.rl-unified-shell .studio-title-v21 strong{font-family:"Segoe UI Variable Display",Inter,"Segoe UI",Arial,sans-serif;font-size:18px;font-weight:740;text-transform:none}.rl-unified-shell .studio-icon-btn-v21{border-color:#35515b;color:#eef6f3;border-radius:9px}.rl-unified-shell .studio-base-switch-v21 button{border-color:#35515b;background:#0d242d;color:#adbec2;border-radius:0}.rl-unified-shell .studio-base-switch-v21 button:first-child{border-radius:9px 0 0 9px}.rl-unified-shell .studio-base-switch-v21 button:last-child{border-radius:0 9px 9px 0}.rl-unified-shell .studio-base-switch-v21 button.active{background:#28ae65;border-color:#28ae65;color:#fff}.rl-unified-shell .studio-base-switch-v21 button.active small{color:#dff5e6}.rl-unified-shell .studio-btn-v21{border-color:#35515b;background:#102a33;color:#eef6f3;border-radius:8px;font-family:inherit}.rl-unified-shell .studio-btn-v21.primary,.rl-unified-shell .studio-btn-v21.sand{background:#28ae65;border-color:#28ae65;color:#fff}.rl-unified-shell .studio-btn-v21.ghost{background:transparent;color:#dce7e4}.rl-unified-shell .studio-tools-v21{background:#091c23;border-right-color:#294751}.rl-unified-shell .studio-tools-v21 button{color:#9eb0b5;border-radius:8px}.rl-unified-shell .studio-tools-v21 button.active{background:#28ae65;color:#fff}.rl-unified-shell .studio-tools-v21 button>span{font-family:inherit}.rl-unified-shell .studio-inspector-v21{background:#0d242d;border-left-color:#294751;color:#eef6f3}.rl-unified-shell .studio-ins-head-v21{border-bottom-color:#294751}.rl-unified-shell .studio-ins-head-v21 small{color:#78cf98}.rl-unified-shell .studio-ins-head-v21 h3{font-family:"Segoe UI Variable Display",Inter,"Segoe UI",Arial,sans-serif;text-transform:none}.rl-unified-shell .studio-inspector-v21 label{color:#91a7ad;letter-spacing:0;text-transform:none}.rl-unified-shell .studio-inspector-v21 input,.rl-unified-shell .studio-inspector-v21 select,.rl-unified-shell .studio-inspector-v21 textarea{border-color:#35515b;background:#102a33;color:#eef6f3;border-radius:8px}.rl-unified-shell .studio-help-v21{border-top-color:#294751;color:#91a7ad}.rl-unified-shell .studio-kpis-v21 div,.rl-unified-shell .studio-stat-card-v21{border-color:#35515b;background:#102a33}.rl-unified-shell .studio-kpis-v21 span,.rl-unified-shell .studio-stat-card-v21 span{color:#81989e}.rl-unified-shell .studio-step-v21{border-bottom-color:#294751}.rl-unified-shell .studio-step-v21 b{border-color:#45616a;border-radius:7px}.rl-unified-shell .studio-step-v21.done b{background:#173640;color:#eef6f3}.rl-unified-shell .studio-step-v21.ready b{background:#28ae65;border-color:#28ae65;color:#fff}.rl-unified-shell .studio-status-v21{background:#07151b;border-top-color:#294751;color:#8fa5ab}
+
+/* Transport is now another tab in the same shell, not a separate site. */
+body.rl-unified-shell .tv27-hero{min-height:132px;background:#0d242d!important;border:1px solid #294751;border-radius:15px;box-shadow:none}
+body.rl-unified-shell .tv27-hero:before,body.rl-unified-shell .tv27-hero:after{display:none}
+body.rl-unified-shell .tv27-hero-inner{padding:22px 24px;align-items:center}.rl-unified-shell .tv27-back{display:none}.rl-unified-shell .tv27-title{font-family:"Segoe UI Variable Display",Inter,"Segoe UI",Arial,sans-serif;font-size:clamp(34px,3.6vw,50px);font-weight:760;line-height:.98;letter-spacing:-.035em}.rl-unified-shell .tv27-meta{margin-top:9px;color:#91a7ad;font-size:12px}.rl-unified-shell .tv27-summary,.rl-unified-shell .tv27-card,.rl-unified-shell .tv27-panel{background:#0d242d;border-color:#294751}.rl-unified-shell .tv27-map-panel{border-color:#294751}.rl-unified-shell .tv27-shell{gap:14px}.rl-unified-shell .tv27-workgrid{grid-template-columns:minmax(0,1.18fr) minmax(470px,.82fr)}
+
+/* Modals and mobile shell. */
+body.rl-unified-shell .modal{background:#0d242d;color:#eef6f3;border:1px solid #294751;border-radius:14px}.rl-unified-shell .modal-head,.rl-unified-shell .modal-foot{border-color:#294751}.rl-unified-shell .modal-head strong{font-family:"Segoe UI Variable Display",Inter,"Segoe UI",Arial,sans-serif;color:#fff}.rl-unified-shell .modal label{color:#9aadb2}.rl-unified-shell .modal input,.rl-unified-shell .modal select,.rl-unified-shell .modal textarea{border-color:#35515b;background:#102a33;color:#eef6f3;border-radius:8px}
+body.rl-unified-shell .mobile-nav{background:#07151b;border-top-color:#294751}.rl-unified-shell .mobile-nav button{color:#8fa5ab}.rl-unified-shell .mobile-nav button.active{color:#76d197}.rl-unified-shell .mobile-sheet{background:#0d242d;color:#eef6f3;border-color:#294751}
+
+@media(max-width:1180px){body.rl-unified-shell .page{width:min(100% - 24px,1560px)}body.rl-unified-shell .event-hero{grid-template-columns:1fr}.rl-unified-shell .map-panel{border-left:0;border-top:1px solid #294751;min-height:360px}}
+@media(max-width:760px){body.rl-unified-shell .brand-mark{width:38px;height:38px}body.rl-unified-shell .page{width:calc(100% - 20px);padding-top:12px}.rl-unified-shell .page-head{padding:18px;border-radius:12px;align-items:flex-start}.rl-unified-shell .page-head h1{font-size:34px}.rl-unified-shell .page-head__actions{width:100%;justify-content:flex-start}.rl-unified-shell .event-hero{border-radius:12px}.rl-unified-shell .hero-copy{padding:22px}.rl-unified-shell .hero-title{font-size:50px}.rl-unified-shell .summary-strip{grid-template-columns:1fr 1fr}.rl-unified-shell .metric+.metric{border-left:0}.rl-unified-shell .metric{border-bottom:1px solid #294751}.rl-unified-shell .my-prep{grid-template-columns:1fr}.rl-unified-shell .prep-primary{border-right:0;border-bottom:1px solid #294751;padding-right:0}.rl-unified-shell .prep-side{padding-left:0}.rl-unified-shell .tv27-hero{min-height:118px}.rl-unified-shell .tv27-hero-inner{padding:18px}.rl-unified-shell .tv27-title{font-size:34px}}
