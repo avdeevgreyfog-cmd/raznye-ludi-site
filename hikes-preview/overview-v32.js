@@ -165,6 +165,6 @@
   const baseBindV32=bind;
   bind=function(){baseBindV32();if(tab!=='overview'){document.body.classList.remove('ov32-active');return}bindOverviewV32()};
   overview=overviewV32;
-  document.querySelector('.build-label')?.replaceChildren(document.createTextNode('V28 · обзор · командный штаб'));
+  document.querySelector('.build-label')?.replaceChildren(document.createTextNode('V29 · полевой командный центр'));
   render();
 })();

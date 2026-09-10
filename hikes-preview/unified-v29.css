@@ -16,14 +16,14 @@ body.rl-unified-shell .event-switcher__button{background:#0d242d;border-color:#2
 body.rl-unified-shell .event-switcher__button strong{font-family:inherit;font-size:13px;font-weight:700;text-transform:none;letter-spacing:0}
 body.rl-unified-shell .event-switcher__button small{color:#8fa5ab;font-size:11px}
 body.rl-unified-shell .side-nav{border-top-color:#1d3740;gap:4px}
-body.rl-unified-shell .side-nav button{border-radius:8px;color:#9fb2b7;font-family:inherit;font-size:13px;font-weight:620;letter-spacing:0;text-transform:none;padding:10px 12px}
+body.rl-unified-shell .side-nav button{border-left:2px solid transparent;border-radius:0;color:#9fb2b7;font-family:inherit;font-size:13px;font-weight:620;letter-spacing:0;text-transform:none;padding:10px 12px}
 body.rl-unified-shell .side-nav button::before{display:none}
 body.rl-unified-shell .side-nav button:hover{background:#0d2933;color:#eef7f4}
-body.rl-unified-shell .side-nav button.active{background:#28ae65;color:#fff;box-shadow:0 5px 18px rgba(40,174,101,.17)}
+body.rl-unified-shell .side-nav button.active{border-left-color:#55d98b;background:#102d35;color:#fff;box-shadow:none}
 body.rl-unified-shell .sidebar-foot{border-top-color:#1d3740}
 body.rl-unified-shell .text-button{color:#7e969c}.rl-unified-shell .text-button:hover{color:#a8dcb9}
 body.rl-unified-shell .build-label{color:#4f7078}
-body.rl-unified-shell .topbar{height:54px;background:rgba(7,21,27,.96);border-bottom:1px solid #203a44;color:#edf5f2;backdrop-filter:blur(18px)}
+body.rl-unified-shell .topbar{height:54px;background:#07151b;border-bottom:1px solid #203a44;color:#edf5f2}
 body.rl-unified-shell .topbar__event strong{font-size:13px;color:#edf5f2}
 body.rl-unified-shell .status-dot{background:#38ba72}
 body.rl-unified-shell .viewer>span{color:#849ca2;font-size:11px}
@@ -31,11 +31,11 @@ body.rl-unified-shell .viewer select{background:#102731;border:1px solid #2b4650
 body.rl-unified-shell .page{width:min(1560px,calc(100% - 32px));padding:18px 0 76px}
 
 /* Page header shared by all standard tabs. */
-body.rl-unified-shell .page-head{align-items:center;gap:22px;margin:0 0 16px;padding:22px 24px;background:#0d242d;border:1px solid #294751;border-radius:15px;color:#eef6f3}
+body.rl-unified-shell .page-head{align-items:center;gap:22px;margin:0 0 16px;padding:20px 0 16px;background:transparent;border:0;border-bottom:1px solid #294751;border-radius:0;color:#eef6f3}
 body.rl-unified-shell .page-head__copy{max-width:860px}
 body.rl-unified-shell .page-kicker{margin-bottom:7px;color:#78cf98;font-family:inherit;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
 body.rl-unified-shell h1,body.rl-unified-shell h2,body.rl-unified-shell h3{font-family:"Segoe UI Variable Display",Inter,"Segoe UI",Arial,sans-serif;text-transform:none;letter-spacing:-.015em}
-body.rl-unified-shell .page-head h1{margin:0;color:#fff;font-size:clamp(34px,3.6vw,50px);font-weight:760;line-height:.98;letter-spacing:-.035em}
+body.rl-unified-shell .page-head h1{margin:0;color:#fff;font-size:clamp(32px,3.3vw,46px);font-weight:760;line-height:1.02;letter-spacing:-.035em}
 body.rl-unified-shell .page-head p{margin:8px 0 0;color:#91a7ad;font-size:13px;line-height:1.5}
 body.rl-unified-shell .page-head__actions{gap:8px}
 
@@ -58,7 +58,7 @@ body.rl-unified-shell .section{margin-top:20px}
 body.rl-unified-shell .section-head{padding-bottom:10px;border-bottom:1px solid #294751;align-items:center}
 body.rl-unified-shell .section-head h2{margin:0;color:#f1f7f5;font-size:18px;font-weight:720;letter-spacing:-.01em}
 body.rl-unified-shell .section-head p{color:#8fa5ab;font-size:11px}
-body.rl-unified-shell .card{background:#0d242d;border:1px solid #294751;color:#eef6f3;border-radius:13px;padding:17px}
+body.rl-unified-shell .card{background:#0d242d;border:1px solid #294751;color:#eef6f3;border-radius:9px;padding:17px}
 body.rl-unified-shell .card.dark{background:#0a1e26;border-color:#294751;color:#eef6f3}
 body.rl-unified-shell .card.dark small{color:#91a7ad}
 body.rl-unified-shell .panel{border-color:#294751;padding:16px 0}
@@ -67,7 +67,7 @@ body.rl-unified-shell .list{border-top-color:#294751}
 body.rl-unified-shell .row{border-bottom-color:#233e48;padding:13px 0}
 body.rl-unified-shell .row small{color:#8fa4aa}
 body.rl-unified-shell .row-title b{color:#eef6f3;font-weight:690}
-body.rl-unified-shell .summary-strip{background:#0d242d;border:1px solid #294751;border-radius:12px;overflow:hidden}
+body.rl-unified-shell .summary-strip{background:#0d242d;border:1px solid #294751;border-radius:0;overflow:hidden}
 body.rl-unified-shell .metric{padding:15px 16px}.rl-unified-shell .metric+.metric{border-left-color:#294751}
 body.rl-unified-shell .metric small{color:#8fa5ab}.rl-unified-shell .metric strong{color:#fff;font-family:"Segoe UI Variable Display",Inter,"Segoe UI",Arial,sans-serif;font-size:28px;font-weight:760}.rl-unified-shell .metric em{color:#879da3}
 body.rl-unified-shell .progress{background:#19333d;border-radius:999px}.rl-unified-shell .progress i{background:#28ae65}.rl-unified-shell .progress.dark{background:#19333d}.rl-unified-shell .progress.dark i{background:#28ae65}
