@@ -1,0 +1,12 @@
+/* V34 — Yandex JS API sits below Leaflet so route, grid and editing handles keep their existing behavior. */
+.studio-map-wrap-v21 .studio-yandex-v34{position:absolute;inset:0;z-index:0;display:none;background:#edf2ef;overflow:hidden}
+.studio-map-wrap-v21.is-yandex-v34 .studio-yandex-v34{display:block}
+.studio-map-wrap-v21 .studio-map-v21{z-index:2}
+.studio-map-wrap-v21.is-yandex-v34 .studio-map-v21{background:transparent!important}
+.studio-map-wrap-v21.is-yandex-v34 .studio-map-v21 .leaflet-tile-pane{opacity:0!important;pointer-events:none!important}
+.studio-yandex-status-v34{position:absolute;left:50%;top:14px;z-index:850;display:none;transform:translateX(-50%);max-width:min(460px,calc(100% - 32px));padding:8px 12px;border:1px solid #c7d7ce;border-radius:10px;background:rgba(255,255,255,.96);box-shadow:0 6px 24px rgba(24,53,46,.12);color:#52645e;font:600 12px/1.35 var(--rl-font-body,Inter,"Segoe UI",Arial,sans-serif);text-align:center;pointer-events:none}
+.studio-yandex-status-v34.is-visible{display:block}
+.studio-yandex-status-v34.is-loading{color:#285d43}
+.studio-yandex-status-v34.is-error{border-color:#e5bbbb;background:#fff4f4;color:#a43b3b}
+.studio-map-wrap-v21.is-yandex-v34 .leaflet-control-attribution{background:rgba(255,255,255,.88)}
+@media(max-width:780px){.studio-yandex-status-v34{top:92px;font-size:11px}}
