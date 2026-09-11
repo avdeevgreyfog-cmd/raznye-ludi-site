@@ -1,6 +1,14 @@
 (() => {
   'use strict';
 
+  const systemHref = new URL('../css/rl-system.css', document.currentScript?.src || location.href).href;
+  if (!document.querySelector(`link[href="${systemHref}"]`)) {
+    const systemLink = document.createElement('link');
+    systemLink.rel = 'stylesheet';
+    systemLink.href = systemHref;
+    document.head.appendChild(systemLink);
+  }
+
   const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
   const nav = document.getElementById('gearNav');
   const menuButton = document.querySelector('.gear-nav__menu');
