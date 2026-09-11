@@ -3,46 +3,14 @@
   'use strict';
 
   const COPY = {
-    overview: {
-      kicker: 'Поход',
-      title: 'Обзор',
-      desc: 'Сводка по готовности команды, маршруту, транспорту, снаряжению и питанию.'
-    },
-    participants: {
-      kicker: 'Команда',
-      title: 'Участники',
-      desc: 'Статусы участия и краткая готовность каждого участника.'
-    },
-    roles: {
-      kicker: 'Команда',
-      title: 'Роли',
-      desc: 'Основные зоны ответственности и дополнительные компетенции участников.'
-    },
-    gear: {
-      kicker: 'Подготовка',
-      title: 'Снаряжение',
-      desc: 'Что нужно взять, что уже готово и как распределено групповое имущество.'
-    },
-    food: {
-      kicker: 'Подготовка',
-      title: 'Питание',
-      desc: 'Меню, продукты, закупки и распределение воды на команду.'
-    },
-    transport: {
-      kicker: 'Логистика',
-      title: 'Транспорт',
-      desc: 'Как команда добирается на мероприятие и возвращается обратно.'
-    },
-    route: {
-      kicker: 'Навигация',
-      title: 'Маршрут',
-      desc: 'Линия маршрута, контрольные точки, карта и навигационные материалы.'
-    },
-    plan: {
-      kicker: 'Навигация',
-      title: 'План',
-      desc: 'Время старта, темп, перерывы и последовательность этапов похода.'
-    }
+    overview: { kicker: 'Поход', title: 'Обзор', desc: 'Сводка по готовности команды, маршруту, транспорту, снаряжению и питанию.' },
+    participants: { kicker: 'Команда', title: 'Участники', desc: 'Статусы участия и краткая готовность каждого участника.' },
+    roles: { kicker: 'Команда', title: 'Роли', desc: 'Основные зоны ответственности и дополнительные компетенции участников.' },
+    gear: { kicker: 'Подготовка', title: 'Снаряжение', desc: 'Что нужно взять, что уже готово и как распределено групповое имущество.' },
+    food: { kicker: 'Подготовка', title: 'Питание', desc: 'Меню, продукты, закупки и распределение воды на команду.' },
+    transport: { kicker: 'Логистика', title: 'Транспорт', desc: 'Как команда добирается на мероприятие и возвращается обратно.' },
+    route: { kicker: 'Навигация', title: 'Маршрут', desc: 'Линия маршрута, контрольные точки, карта и навигационные материалы.' },
+    plan: { kicker: 'Навигация', title: 'План', desc: 'Время старта, темп, перерывы и последовательность этапов похода.' }
   };
 
   const basePageHeadV37 = pageHead;
@@ -52,8 +20,6 @@
     return basePageHeadV37(copy.kicker, copy.title, copy.desc, actions);
   };
 
-  /* Transport used a separate photographic page header. Keep its functions, but
-     use the same page header as every other tab so navigation feels continuous. */
   const baseTransportPageV37 = transportPage;
   transportPage = function transportPageV37() {
     const html = baseTransportPageV37();
@@ -76,9 +42,6 @@
     document.body.dataset.hikeTab = tab;
     const app = document.getElementById('app');
     if (app) app.dataset.hikeTab = tab;
-
-    /* Short, repeatable section vocabulary. Detailed explanation remains in the
-       supporting copy; the visible labels stay easy to scan. */
     const replacements = new Map([
       ['Когда и как питаемся', 'План питания'],
       ['Мне нужно сделать', 'Ближайшие действия'],
@@ -92,7 +55,6 @@
       const next = replacements.get(el.textContent.trim());
       if (next) el.textContent = next;
     });
-
     syncOverviewRolesV37();
   }
 
@@ -112,21 +74,4 @@
   };
 
   render();
-})();
-
-/* V38 is loaded from here to avoid another legacy index dependency. */
-(() => {
-  if (!document.querySelector('link[data-v38-profile]')) {
-    const css = document.createElement('link');
-    css.rel = 'stylesheet';
-    css.href = './profile-v38.css?v=38-20260911';
-    css.dataset.v38Profile = '1';
-    document.head.appendChild(css);
-  }
-  if (!document.querySelector('script[data-v38-profile]')) {
-    const js = document.createElement('script');
-    js.src = './profile-v38.js?v=38-20260911';
-    js.dataset.v38Profile = '1';
-    document.body.appendChild(js);
-  }
 })();
