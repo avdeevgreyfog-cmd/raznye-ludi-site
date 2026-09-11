@@ -1,3 +1,5 @@
+@import url('./rl-system.css');
+
 /* Final sequencing layer: content pages read top-to-bottom, not as side-panel layouts. */
 .portal-content-layout{display:block!important;max-width:1080px;margin:0 auto;justify-content:initial!important}
 .portal-toc{position:sticky!important;z-index:70;top:126px!important;display:flex!important;align-items:center;gap:22px;overflow-x:auto;margin:0 0 58px;padding:0;border-top:1px solid rgba(223,183,102,.22)!important;border-bottom:1px solid rgba(255,255,255,.07);background:rgba(5,8,5,.94);backdrop-filter:blur(10px);scrollbar-width:none}
