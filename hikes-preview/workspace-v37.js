@@ -113,3 +113,20 @@
 
   render();
 })();
+
+/* V38 is loaded from here to avoid another legacy index dependency. */
+(() => {
+  if (!document.querySelector('link[data-v38-profile]')) {
+    const css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = './profile-v38.css?v=38-20260911';
+    css.dataset.v38Profile = '1';
+    document.head.appendChild(css);
+  }
+  if (!document.querySelector('script[data-v38-profile]')) {
+    const js = document.createElement('script');
+    js.src = './profile-v38.js?v=38-20260911';
+    js.dataset.v38Profile = '1';
+    document.body.appendChild(js);
+  }
+})();
