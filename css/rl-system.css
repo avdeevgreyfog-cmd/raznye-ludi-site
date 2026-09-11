@@ -1,0 +1,313 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Condensed:wght@500;600;700&display=swap');
+
+/*
+ * RL Design System
+ * Shared visual language for the public portal, interactive gear and hike workspace.
+ * Special pages may keep their composition, but typography, semantic colour, controls,
+ * borders and radii come from this layer.
+ */
+:root{
+  --rl-font-body:"Inter","Segoe UI",Arial,sans-serif;
+  --rl-font-display:"Roboto Condensed","Arial Narrow","Segoe UI",Arial,sans-serif;
+
+  --rl-radius-sm:6px;
+  --rl-radius-md:9px;
+  --rl-radius-lg:14px;
+  --rl-control-h:42px;
+
+  --rl-public-bg:#060906;
+  --rl-public-panel:#0b100c;
+  --rl-public-ink:#eee9df;
+  --rl-public-text:#b9b4aa;
+  --rl-public-muted:#888278;
+  --rl-public-accent:#d3ad63;
+  --rl-public-green:#7d9665;
+  --rl-public-line:rgba(211,173,99,.22);
+  --rl-public-line-soft:rgba(255,255,255,.085);
+
+  --rl-work-bg:#f4f6f4;
+  --rl-work-surface:#ffffff;
+  --rl-work-surface-soft:#f8faf8;
+  --rl-work-text:#244039;
+  --rl-work-secondary:#50665f;
+  --rl-work-muted:#718079;
+  --rl-work-line:#d9e1dc;
+  --rl-work-line-strong:#c7d2cc;
+  --rl-work-green:#35694f;
+  --rl-work-green-strong:#295a42;
+  --rl-work-green-soft:#e9f0eb;
+  --rl-work-amber:#936400;
+  --rl-work-amber-soft:#fff5d9;
+  --rl-work-red:#a84b4b;
+  --rl-work-red-soft:#fff1f1;
+  --rl-work-blue:#3b6f93;
+  --rl-work-blue-soft:#eaf2f7;
+
+  /* Legacy aliases. Existing modules now resolve to the same tokens. */
+  --portal-bg:var(--rl-public-bg);
+  --portal-bg-2:#090d09;
+  --portal-panel:var(--rl-public-panel);
+  --portal-ink:var(--rl-public-ink);
+  --portal-text:var(--rl-public-text);
+  --portal-muted:var(--rl-public-muted);
+  --portal-sand:var(--rl-public-accent);
+  --portal-sand-2:#b78d49;
+  --portal-green:var(--rl-public-green);
+  --portal-line:var(--rl-public-line);
+  --portal-soft-line:var(--rl-public-line-soft);
+  --portal-display:var(--rl-font-display);
+  --portal-body:var(--rl-font-body);
+
+  --display:var(--rl-font-display);
+  --body:var(--rl-font-body);
+  --bg:var(--rl-public-bg);
+  --panel:var(--rl-public-panel);
+  --text:var(--rl-public-ink);
+  --muted:var(--rl-public-text);
+  --sand:var(--rl-public-accent);
+  --line:var(--rl-public-line);
+
+  --gear-bg:var(--rl-public-bg);
+  --gear-bg-2:#090d09;
+  --gear-panel:rgba(10,15,11,.78);
+  --gear-ink:var(--rl-public-ink);
+  --gear-text:var(--rl-public-text);
+  --gear-muted:var(--rl-public-muted);
+  --gear-sand:var(--rl-public-accent);
+  --gear-sand-soft:#ad884a;
+  --gear-green:var(--rl-public-green);
+  --gear-line:var(--rl-public-line);
+  --gear-line-soft:var(--rl-public-line-soft);
+}
+
+/* ---------- Public portal ---------- */
+body.portal-body,
+body.gear-body{
+  font-family:var(--rl-font-body)!important;
+  font-size:16px;
+  font-weight:400;
+  letter-spacing:-.005em;
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+}
+
+.portal-brand strong,.portal-nav__link,.portal-dropdown__eyebrow,.portal-dropdown__overview,
+.portal-join,.portal-kicker,.portal-page-hero h1,.portal-section-head h2,.portal-card h3,
+.portal-card__index,.portal-card__link,.portal-prose h1,.portal-prose h2,.portal-prose h3,
+.portal-news-card h3,.portal-event-card h3,.portal-event-card__date,.portal-btn,
+.portal-toolbar button,.portal-category h3,.portal-footer h4,.portal-footer__brand strong,
+.home-hero h1,.home-hero__eyebrow,.home-visual-split h2,.home-feature h3,.home-event h3,
+.home-gear-teaser h2,.home-final h2,
+.gear-brand strong,.gear-nav__links a,.gear-eyebrow,.gear-hero h1,.gear-hero__brief-label,
+.gear-hero__brief strong,.gear-scroll-link,.loadout-topline,.loadout-stage__index,.loadout-stage h2,
+.loadout-stage__cta,.gear-kicker,.gear-catalog h2,.gear-final h2,.gear-filter button,.gear-item__num,
+.gear-item small,.gear-item h3,.gear-small-kit strong{
+  font-family:var(--rl-font-display)!important;
+}
+
+.portal-page-hero__lead,.portal-section-head p,.portal-card p,.portal-prose p,.portal-prose li,
+.portal-news-card p,.portal-event-card p,.portal-footer p,
+.home-hero__lead,.home-visual-split p,.home-feature p,.home-event p,.home-gear-teaser p,.home-final p,
+.gear-hero__lead,.gear-hero__brief p,.loadout-stage p,.loadout-stage li,.gear-catalog__head>p,.gear-item p,.gear-final p{
+  font-family:var(--rl-font-body)!important;
+  color:var(--rl-public-text);
+}
+
+.portal-page-hero h1,.portal-section-head h2,.portal-card h3,.portal-prose h2,.portal-prose h3,
+.portal-news-card h3,.portal-event-card h3,.home-hero h1,.home-visual-split h2,.home-feature h3,
+.home-event h3,.home-gear-teaser h2,.home-final h2,.gear-hero h1,.loadout-stage h2,
+.gear-catalog h2,.gear-final h2,.gear-item h3{
+  color:var(--rl-public-ink);
+  font-weight:600;
+  letter-spacing:-.015em;
+}
+
+.portal-nav__link,.portal-join,.portal-btn,.portal-toolbar button,.portal-status,
+.gear-nav__links a,.gear-filter button,.loadout-stage__cta{
+  border-radius:var(--rl-radius-sm);
+}
+
+.portal-join,.portal-btn,.gear-filter button,.loadout-stage__cta{
+  min-height:40px;
+}
+
+.portal-search input,
+.portal-form input,.portal-form select,.portal-form textarea,
+.gear-body input,.gear-body select,.gear-body textarea{
+  font-family:var(--rl-font-body)!important;
+  border-radius:var(--rl-radius-sm);
+}
+
+.portal-status{
+  font-family:var(--rl-font-body)!important;
+  font-weight:600;
+  letter-spacing:.055em;
+}
+
+/* Keep decorative accent secondary to content. */
+.portal-kicker,.portal-news-card__meta,.portal-card__link,.portal-dropdown__overview,
+.gear-kicker,.gear-hero__brief-label,.loadout-stage__index,.gear-scroll-link{
+  color:var(--rl-public-accent);
+}
+
+/* Interactive gear uses the same header proportions and typography as the portal. */
+.gear-nav__inner{height:78px;width:min(1480px,92%)}
+.gear-brand strong{font-size:17px;font-weight:600;letter-spacing:.035em}
+.gear-brand small{font-family:var(--rl-font-body);font-size:9px;letter-spacing:.12em;color:var(--rl-public-muted)}
+.gear-nav__links{gap:26px}.gear-nav__links a{font-size:11px;font-weight:600;letter-spacing:.085em}
+.gear-nav__menu{border-radius:var(--rl-radius-sm)}
+.gear-hero__meta span,.loadout-tags span{font-family:var(--rl-font-body);letter-spacing:.055em;border-radius:var(--rl-radius-sm)}
+
+/* ---------- Hike workspace ---------- */
+body.rl-unified-shell{
+  --bg:var(--rl-work-bg);
+  --panel:var(--rl-work-surface);
+  --panel-2:var(--rl-work-surface-soft);
+  --white:var(--rl-work-surface);
+  --text:var(--rl-work-text);
+  --ink:var(--rl-work-text);
+  --muted:var(--rl-work-muted);
+  --line:var(--rl-work-line);
+  --green:var(--rl-work-green);
+  --green-2:var(--rl-work-green-strong);
+  --green-soft:var(--rl-work-green-soft);
+  --amber:var(--rl-work-amber);
+  --red:var(--rl-work-red);
+  background:var(--rl-work-bg)!important;
+  color:var(--rl-work-text)!important;
+  font-family:var(--rl-font-body)!important;
+  font-size:14px;
+  letter-spacing:-.004em;
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+}
+
+.rl-unified-shell .workspace,.rl-unified-shell .page{background:var(--rl-work-bg)}
+.rl-unified-shell .sidebar,.rl-unified-shell .topbar{background:var(--rl-work-surface);border-color:var(--rl-work-line)}
+
+.rl-unified-shell h1,.rl-unified-shell h2,.rl-unified-shell h3,
+.rl-unified-shell .brand-title,.rl-unified-shell .page-title,
+.rl-unified-shell .section-title,.rl-unified-shell .panel-title{
+  font-family:var(--rl-font-display)!important;
+  color:var(--rl-work-text);
+  font-weight:600;
+  letter-spacing:-.012em;
+}
+
+.rl-unified-shell p,.rl-unified-shell li,.rl-unified-shell label,
+.rl-unified-shell small,.rl-unified-shell .muted,.rl-unified-shell .subtle{
+  font-family:var(--rl-font-body)!important;
+}
+
+.rl-unified-shell button,.rl-unified-shell input,.rl-unified-shell select,.rl-unified-shell textarea{
+  font-family:var(--rl-font-body)!important;
+  border-radius:var(--rl-radius-md);
+}
+
+.rl-unified-shell button{
+  font-weight:600;
+  letter-spacing:-.005em;
+}
+
+.rl-unified-shell input,.rl-unified-shell select,.rl-unified-shell textarea{
+  color:var(--rl-work-text);
+  border-color:var(--rl-work-line-strong);
+  background:var(--rl-work-surface);
+}
+
+.rl-unified-shell .event-switcher__button,.rl-unified-shell .viewer select,
+.rl-unified-shell .btn,.rl-unified-shell .segmented,
+.rl-unified-shell .side-nav button,.rl-unified-shell .mobile-nav button{
+  min-height:40px;
+}
+
+.rl-unified-shell .event-switcher__label,.rl-unified-shell .eyebrow,.rl-unified-shell .build-label,
+.rl-unified-shell .viewer>span{
+  color:var(--rl-work-muted)!important;
+  font-family:var(--rl-font-body)!important;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.035em;
+  text-transform:none;
+}
+
+.rl-unified-shell .brand-mark{
+  border-radius:var(--rl-radius-md);
+  font-family:var(--rl-font-display)!important;
+  font-weight:700;
+}
+
+.rl-unified-shell .side-nav button.active,
+.rl-unified-shell .segmented button.active,
+.rl-unified-shell .g30-tabs button.active,
+.rl-unified-shell .f31-tabs button.active{
+  background:var(--rl-work-green-soft)!important;
+  border-color:#b7cabb!important;
+  color:var(--rl-work-green-strong)!important;
+  box-shadow:none!important;
+}
+
+.rl-unified-shell .btn.sand,.rl-unified-shell .btn.primary,
+.rl-unified-shell .studio-btn-v21.primary,.rl-unified-shell .studio-btn-v21.sand{
+  background:var(--rl-work-green-soft)!important;
+  border-color:#b7cabb!important;
+  color:var(--rl-work-green-strong)!important;
+  box-shadow:none!important;
+}
+
+.rl-unified-shell .btn.alt,.rl-unified-shell .btn.ghost{
+  background:var(--rl-work-surface)!important;
+  border-color:var(--rl-work-line-strong)!important;
+  color:var(--rl-work-secondary)!important;
+  box-shadow:none!important;
+}
+
+.rl-unified-shell .btn.risk{
+  background:var(--rl-work-red-soft)!important;
+  border-color:#e5c2c2!important;
+  color:var(--rl-work-red)!important;
+  box-shadow:none!important;
+}
+
+.rl-unified-shell .tag.ok,.rl-unified-shell .tag.sand{
+  background:var(--rl-work-green-soft);
+  color:var(--rl-work-green-strong)!important;
+}
+.rl-unified-shell .tag.warn{background:var(--rl-work-amber-soft);color:var(--rl-work-amber)!important}
+.rl-unified-shell .tag.risk{background:var(--rl-work-red-soft);color:var(--rl-work-red)!important}
+
+/* Common independent surfaces: same radius and border logic across tabs. */
+.rl-unified-shell .panel,.rl-unified-shell .card,.rl-unified-shell .summary-card,
+.rl-unified-shell .tv27-card,.rl-unified-shell .tv27-panel,.rl-unified-shell .tv27-summary,
+.rl-unified-shell .g30-card,.rl-unified-shell .f31-card{
+  border-color:var(--rl-work-line)!important;
+  border-radius:var(--rl-radius-lg)!important;
+  box-shadow:none!important;
+}
+
+/* Transport owns its own token scope: map it back to RL workspace tokens. */
+.rl-unified-shell .tv27-shell{
+  --bg:var(--rl-work-bg)!important;
+  --panel:var(--rl-work-surface)!important;
+  --panel-2:var(--rl-work-surface-soft)!important;
+  --line:var(--rl-work-line)!important;
+  --muted:var(--rl-work-muted)!important;
+  --text:var(--rl-work-text)!important;
+  --green:var(--rl-work-green)!important;
+  --green-2:var(--rl-work-green-strong)!important;
+  --green-soft:var(--rl-work-green-soft)!important;
+  --ink:var(--rl-work-text)!important;
+  --red:var(--rl-work-red)!important;
+  --amber:var(--rl-work-amber)!important;
+  font-family:var(--rl-font-body)!important;
+}
+
+@media(max-width:900px){
+  :root{--rl-radius-lg:12px}
+  body.rl-unified-shell{font-size:14px}
+  .gear-nav__inner{width:90%}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
+}
