@@ -61,17 +61,26 @@
     return `${pageHead('Логистика', 'Транспорт', COPY.transport.desc)}${withoutLegacyHero}`;
   };
 
+  function syncOverviewRolesV37() {
+    if (tab !== 'overview' || !S.rolesV36?.roles) return;
+    const list = document.querySelector('.ov32-responsibles');
+    if (!list) return;
+    list.innerHTML = S.rolesV36.roles.map(role => `<button type="button" class="${role.p ? '' : 'missing'}"><span>${esc(role.title)}</span><b>${esc(role.p ? pn(role.p) : 'Не назначено')}</b></button>`).join('');
+    list.querySelectorAll('button').forEach(button => button.onclick = () => { tab = 'roles'; render(); });
+    const panel = list.closest('.ov32-panel');
+    const kicker = panel?.querySelector('.page-kicker');
+    if (kicker) kicker.textContent = 'Ответственность';
+  }
+
   function normalizeTabCopyV37() {
     document.body.dataset.hikeTab = tab;
     const app = document.getElementById('app');
     if (app) app.dataset.hikeTab = tab;
 
-    /* Short, repeatable section vocabulary. The detailed explanation stays in
-       body copy; section labels themselves remain scannable. */
+    /* Short, repeatable section vocabulary. Detailed explanation remains in the
+       supporting copy; the visible labels stay easy to scan. */
     const replacements = new Map([
       ['Когда и как питаемся', 'План питания'],
-      ['Готовность команды', 'Готовность команды'],
-      ['Моя подготовка', 'Моя подготовка'],
       ['Мне нужно сделать', 'Ближайшие действия'],
       ['Организационная сводка', 'Сводка'],
       ['Рейсы на мероприятие', 'Рейсы туда'],
@@ -83,6 +92,8 @@
       const next = replacements.get(el.textContent.trim());
       if (next) el.textContent = next;
     });
+
+    syncOverviewRolesV37();
   }
 
   const baseRenderV37 = render;
