@@ -39,6 +39,7 @@
   <link rel="stylesheet" href="./onboarding-v39.css?v=41-20260911">
   <link rel="stylesheet" href="./transport-v40.css?v=41-20260911">
   <link rel="stylesheet" href="./plan-v41.css?v=41-20260911">
+  <link rel="stylesheet" href="./supabase-v42.css?v=42-20260912">
 </head>
 <body>
   <aside class="sidebar" id="sidebar">
@@ -58,14 +59,14 @@
     </div>
     <nav class="side-nav" id="nav"></nav>
     <div class="sidebar-foot">
-      <button class="text-button" id="reset" type="button">Сбросить демо</button>
-      <div class="build-label">V41 · единый план дня</div>
+      <button class="text-button" id="reset" type="button">Сбросить локальную копию</button>
+      <div class="build-label">V42 · командный доступ</div>
     </div>
   </aside>
   <main class="workspace">
     <header class="topbar">
       <div class="topbar__event"><span class="status-dot"></span><strong>Томинский лесопарк · полевой маршрут</strong></div>
-      <div class="viewer"><span>Смотреть как</span><select id="who" aria-label="Смотреть как участник"></select></div>
+      <div class="viewer hike-auth-bar" id="hikeAuthBar"><span id="hikeAuthLabel">Гость</span><button class="btn alt sm" id="hikeAuthButton" type="button">Войти</button><button class="btn alt sm" id="hikeSettingsButton" type="button" hidden>Настройки</button><button class="text-button" id="hikeSignoutButton" type="button" hidden>Выйти</button><select id="who" aria-label="Текущий участник"></select></div>
     </header>
     <div class="page" id="app"></div>
   </main>
@@ -117,5 +118,6 @@
   <script src="./onboarding-v40-fix.js?v=41-20260911"></script>
   <script src="./transport-v40.js?v=41-20260911"></script>
   <script src="./plan-v41.js?v=41-20260911"></script>
+  <script src="./supabase-v42.js?v=42-20260912"></script>
 </body>
 </html>
