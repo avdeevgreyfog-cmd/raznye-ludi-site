@@ -134,12 +134,33 @@
     document.getElementById('eventSwitcher').onclick = () => isOrganizer ? settingsModal() : toast('Сейчас открыт один поход. Войти можно по ссылке из письма.');
     document.getElementById('reset').onclick = () => toast('Данные похода не сбрасываются с устройства: рабочая версия хранится у команды централизованно.');
   }
+  function wireMembershipActions() {
+    document.querySelectorAll('.status-select[data-rsvp]').forEach(control => {
+      control.disabled = !isOrganizer;
+      if (!isOrganizer) return;
+      control.addEventListener('change', async () => {
+        const userId = control.dataset.rsvp;
+        if (!/^[0-9a-f-]{36}$/i.test(userId)) return;
+        const status = control.value === 'yes' ? 'approved' : control.value === 'no' ? 'declined' : 'requested';
+        try {
+          await request(`/rest/v1/hike_members?event_id=eq.${event.id}&user_id=eq.${userId}`, { method: 'PATCH', headers: { Prefer: 'return=representation' }, body: { status } });
+          toast(status === 'approved' ? 'Участие подтверждено' : status === 'declined' ? 'Заявка отклонена' : 'Заявка оставлена на рассмотрении');
+        } catch (error) { toast('Не удалось обновить заявку: ' + error.message); }
+      });
+    });
+  }
+  const baseRenderWithMembership = render;
+  render = function renderWithMembership() {
+    const result = baseRenderWithMembership();
+    wireMembershipActions();
+    return result;
+  };
   async function start() {
     wrapStorage(); attachControls(); if (!(await ensureSession())) { updateAuthUI(); return; }
     await getEvent(); await getMembership(); if (!membership) { updateAuthUI(); await ensureProfileAndRequest(); return; }
     await loadCloudDocument();
     const profileRows = await request(`/rest/v1/profiles?id=eq.${session.user.id}&select=display_name`), displayName = profileRows?.[0]?.display_name || session.user.email?.split('@')[0];
-    ensureCurrentParticipant(displayName, isOrganizer); await syncOrganizerRoster(); applyEventToApp(); cloudReady = true; if (isOrganizer) window.scheduleCloudSync(true); updateAuthUI(); render();
+    ensureCurrentParticipant(displayName, isOrganizer); await syncOrganizerRoster(); applyEventToApp(); cloudReady = true; if (isOrganizer) window.scheduleCloudSync(true); updateAuthUI(); render(); wireMembershipActions();
     setInterval(async () => { if (!membership || isOrganizer || document.hidden) return; try { const rows = await request(`/rest/v1/hike_documents?event_id=eq.${event.id}&select=updated_at`); if (rows?.[0]?.updated_at && rows[0].updated_at !== lastRevision) location.reload(); } catch (e) {} }, 45000);
   }
   start().catch(error => { console.error(error); toast('Не удалось подключить командные данные: ' + (error.message || 'проверь соединение')); updateAuthUI(); });
