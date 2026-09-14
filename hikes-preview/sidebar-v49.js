@@ -1,10 +1,11 @@
-/* V51 — sidebar grouping + current workspace modules. */
+/* V54 — sidebar grouping + deterministic current workspace modules. */
 (() => {
   'use strict';
-  [['overview-v45','45'],['overview-v46','46'],['access-v47','47'],['preview-v48','49'],['preview-v51','51'],['participants-v50','53'],['participants-v53','53']].forEach(([name,version])=>{
+  const RELEASE='54-20260914a';
+  [['access-v47'],['preview-v48'],['preview-v51']].forEach(([name])=>{
     const key=`data-${name}`;
     if(document.querySelector(`link[${key}]`))return;
-    const link=document.createElement('link');link.rel='stylesheet';link.href=`./${name}.css?v=${version}-20260914`;link.setAttribute(key,'1');document.head.appendChild(link);
+    const link=document.createElement('link');link.rel='stylesheet';link.href=`./${name}.css?r=${RELEASE}`;link.setAttribute(key,'1');document.head.appendChild(link);
   });
   const GROUPS=[['Поход',['overview','participants','roles']],['Подготовка',['gear','food','transport','documents']],['На местности',['route','plan']]];
   const ICONS={
@@ -28,7 +29,16 @@
   function decorateSidebar(){document.getElementById('sidebar')?.classList.add('sidebar-v43-ready');decorateNav()}
   const originalRenderNav=window.renderNav;if(typeof originalRenderNav==='function')window.renderNav=function(){originalRenderNav.apply(this,arguments);decorateNav()};requestAnimationFrame(decorateSidebar);
   window.addEventListener('load',()=>{
-    const scripts=['./access-v47-docs.js?v=47-20260914','./access-v47-core.js?v=49-20260914','./access-v47-cloud.js?v=47-20260914','./preview-v48.js?v=49-20260914','./event-v49.js?v=49-20260914','./participants-v50.js?v=50-20260914','./participants-v50-actions.js?v=50-20260914','./preview-v51.js?v=51-20260914'];
-    const next=index=>{if(index>=scripts.length){window.V47Cloud?.load?.();if(typeof render==='function')render();return}const script=document.createElement('script');script.src=scripts[index];script.async=false;script.onload=()=>next(index+1);script.onerror=()=>console.warn('Workspace module failed:',scripts[index]);document.body.appendChild(script)};next(0);
+    const modules=['access-v47-docs','access-v47-core','access-v47-cloud','preview-v48','event-v49','participants-v50','participants-v50-actions','preview-v51'];
+    const next=index=>{
+      if(index>=modules.length){
+        window.V47Cloud?.load?.();
+        if(typeof render==='function')render();
+        const build=document.querySelector('.build-label');if(build)build.textContent='V54 · стабильная сборка';
+        return;
+      }
+      const script=document.createElement('script');script.src=`./${modules[index]}.js?r=${RELEASE}`;script.async=false;script.onload=()=>next(index+1);script.onerror=()=>{console.warn('Workspace module failed:',modules[index]);next(index+1)};document.body.appendChild(script);
+    };
+    next(0);
   },{once:true});
 })();
