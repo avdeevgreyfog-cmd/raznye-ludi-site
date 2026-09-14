@@ -1,4 +1,4 @@
-/* V51 — prominent organizer preview controls on every workspace page. */
+/* V55 — prominent organizer preview controls on every workspace page. */
 (() => {
   'use strict';
   const people=()=>Array.isArray(S?.participants)?S.participants:[];
@@ -33,12 +33,31 @@
     document.querySelectorAll('[data-v51-mode]').forEach(btn=>btn.addEventListener('click',()=>api.set(btn.dataset.v51Mode)));
     document.getElementById('hikeRolePreviewProfile')?.addEventListener('change',e=>{if(e.target.value)api.set(e.target.value)});
   }
+
+  function directPreviewControl(event){
+    const api=preview();if(!api)return;
+    const button=event.target?.closest?.('[data-v51-mode]');
+    if(button){
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      api.set(button.dataset.v51Mode||'organizer');
+      return;
+    }
+    if(event.type==='change'&&event.target?.id==='hikeRolePreviewProfile'&&event.target.value){
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      api.set(event.target.value);
+    }
+  }
+
   function boot(){
     patchPreviewAccess();
     if(typeof render==='function'&&!render.__v51Wrapped){const base=render;const wrapped=function(){const result=base.apply(this,arguments);queueMicrotask(toolbar);return result};wrapped.__v51Wrapped=true;render=wrapped}
     toolbar();
     const observer=new MutationObserver(()=>toolbar());observer.observe(document.body,{attributes:true,attributeFilter:['class']});
   }
+  window.addEventListener('click',directPreviewControl,true);
+  window.addEventListener('change',directPreviewControl,true);
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
   window.HikeRolePreviewV51={refresh:toolbar};
 })();
