@@ -26,6 +26,14 @@
     document.head.appendChild(link);
   }
 
+  if (!document.querySelector('link[data-preview-v48]')) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = './preview-v48.css?v=48-20260914';
+    link.dataset.previewV48 = '1';
+    document.head.appendChild(link);
+  }
+
   const GROUPS = [
     ['Поход', ['overview', 'participants', 'roles']],
     ['Подготовка', ['gear', 'food', 'transport', 'documents']],
@@ -84,7 +92,7 @@
   requestAnimationFrame(decorateSidebar);
 
   window.addEventListener('load', () => {
-    const scripts = ['./access-v47-docs.js?v=47-20260914','./access-v47-core.js?v=47-20260914','./access-v47-cloud.js?v=47-20260914'];
+    const scripts = ['./access-v47-docs.js?v=47-20260914','./access-v47-core.js?v=48-20260914','./access-v47-cloud.js?v=47-20260914','./preview-v48.js?v=48-20260914'];
     const next = index => {
       if (index >= scripts.length) {
         window.V47Cloud?.load?.();
@@ -94,7 +102,7 @@
       const script = document.createElement('script');
       script.src = scripts[index]; script.async = false;
       script.onload = () => next(index + 1);
-      script.onerror = () => console.warn('V47 module failed:', scripts[index]);
+      script.onerror = () => console.warn('Workspace module failed:', scripts[index]);
       document.body.appendChild(script);
     };
     next(0);
