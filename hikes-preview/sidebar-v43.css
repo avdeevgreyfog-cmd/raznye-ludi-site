@@ -1,0 +1,373 @@
+/* V43 — atmospheric sidebar for «Разные люди · Походы».
+   Visual-only layer based on the approved sidebar reference. */
+@media (min-width: 901px){
+  body.rl-unified-shell{
+    --sidebar:284px!important;
+    --v43-paper:#f7f6f0;
+    --v43-card:#fbfaf6;
+    --v43-soft:#e7eee7;
+    --v43-line:#d8ded8;
+    --v43-line-strong:#c5d0c8;
+    --v43-ink:#173c34;
+    --v43-text:#35564c;
+    --v43-muted:#73817b;
+    --v43-green:#2f6650;
+    --v43-green-strong:#255843;
+  }
+
+  body.rl-unified-shell .sidebar{
+    isolation:isolate;
+    overflow-x:hidden;
+    overflow-y:auto;
+    width:var(--sidebar)!important;
+    padding:0 18px 18px!important;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='284' height='760' viewBox='0 0 284 760'%3E%3Cg fill='none' stroke='%23889a90' stroke-opacity='.13' stroke-width='1'%3E%3Cpath d='M-38 150c48-40 84-30 112 2s65 40 103 14 86-20 126 15'/%3E%3Cpath d='M-42 173c48-40 88-32 116 1s64 41 104 14 86-18 130 17'/%3E%3Cpath d='M-45 196c53-42 91-33 121-1s66 43 107 15 86-16 129 18'/%3E%3Cpath d='M198 548c-35-30-29-60 4-78s45-50 26-82'/%3E%3Cpath d='M219 558c-36-31-31-63 2-82s48-52 29-86'/%3E%3Cpath d='M239 570c-37-32-33-66 0-85s51-55 32-90'/%3E%3Cellipse cx='64' cy='110' rx='28' ry='15'/%3E%3Cellipse cx='64' cy='110' rx='43' ry='27'/%3E%3Cellipse cx='226' cy='632' rx='31' ry='18'/%3E%3Cellipse cx='226' cy='632' rx='48' ry='31'/%3E%3C/g%3E%3C/svg%3E") center 118px / 284px 760px repeat-y,
+      var(--v43-paper)!important;
+    border-right:1px solid #d2d9d3!important;
+    color:var(--v43-ink)!important;
+    box-shadow:10px 0 34px rgba(32,62,51,.035);
+  }
+
+  body.rl-unified-shell .sidebar::before{
+    content:"";
+    position:absolute;
+    z-index:-2;
+    top:0;
+    left:0;
+    width:100%;
+    height:286px;
+    background:
+      linear-gradient(180deg,rgba(247,246,240,.08) 0%,rgba(247,246,240,.18) 47%,var(--v43-paper) 96%),
+      url("./assets/sidebar-v43-hero.webp") 67% 42%/cover no-repeat;
+    pointer-events:none;
+  }
+
+  body.rl-unified-shell .sidebar::after{
+    content:"";
+    position:absolute;
+    z-index:-1;
+    left:0;
+    right:0;
+    bottom:95px;
+    height:165px;
+    opacity:.15;
+    background:
+      linear-gradient(180deg,var(--v43-paper) 0%,rgba(247,246,240,.22) 28%,rgba(247,246,240,.06) 52%,var(--v43-paper) 100%),
+      url("./assets/sidebar-v43-hero.webp") 54% 76%/cover no-repeat;
+    filter:saturate(.55) contrast(.82);
+    -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 32%,#000 72%,transparent 100%);
+    mask-image:linear-gradient(180deg,transparent 0%,#000 32%,#000 72%,transparent 100%);
+    pointer-events:none;
+  }
+
+  body.rl-unified-shell .brand-block{
+    position:relative;
+    z-index:2;
+    min-height:122px;
+    gap:12px!important;
+    margin:0!important;
+    padding:25px 5px 42px!important;
+    border:0!important;
+  }
+
+  body.rl-unified-shell .brand-mark{
+    width:42px!important;
+    height:42px!important;
+    flex:0 0 42px;
+    background:url("../assets/final_logo.png") center/contain no-repeat!important;
+    border:0!important;
+    color:transparent!important;
+    font-size:0!important;
+    filter:drop-shadow(0 2px 8px rgba(27,59,48,.08));
+  }
+
+  body.rl-unified-shell .brand-block .eyebrow{
+    margin-bottom:2px!important;
+    color:#5f736c!important;
+    font:700 10px/1.15 Inter,"Segoe UI",Arial,sans-serif!important;
+    letter-spacing:.1em!important;
+    text-transform:uppercase!important;
+  }
+
+  body.rl-unified-shell .brand-block .brand-title{
+    color:#123c33!important;
+    font:760 26px/.98 "Segoe UI Variable Display",Inter,"Segoe UI",Arial,sans-serif!important;
+    letter-spacing:-.035em!important;
+    text-transform:none!important;
+  }
+
+  body.rl-unified-shell .event-switcher{
+    position:relative;
+    z-index:3;
+    padding:0!important;
+    margin:-3px 5px 18px!important;
+  }
+
+  body.rl-unified-shell .event-switcher::before{
+    content:"Ближе\A к настоящему";
+    white-space:pre;
+    display:block;
+    width:max-content;
+    margin:-29px 0 10px 7px;
+    color:rgba(70,92,82,.78);
+    font:italic 18px/.9 "Segoe Script","Bradley Hand","Comic Sans MS",cursive;
+    letter-spacing:-.04em;
+    transform:rotate(-2deg);
+    text-shadow:0 1px rgba(255,255,255,.45);
+  }
+
+  body.rl-unified-shell .event-switcher::after{
+    content:"";
+    display:block;
+    width:24px;
+    height:1px;
+    margin:7px 0 0 8px;
+    background:#769184;
+    opacity:.7;
+  }
+
+  body.rl-unified-shell .event-switcher__label{
+    margin:0 0 8px 1px!important;
+    color:#65766f!important;
+    font:700 9px/1.2 Inter,"Segoe UI",Arial,sans-serif!important;
+    letter-spacing:.07em!important;
+    text-transform:none!important;
+  }
+
+  body.rl-unified-shell .event-switcher__button{
+    width:100%!important;
+    min-height:78px!important;
+    gap:10px!important;
+    padding:13px 13px!important;
+    border:1px solid rgba(177,193,183,.92)!important;
+    border-radius:14px!important;
+    background:rgba(251,250,246,.92)!important;
+    color:var(--v43-ink)!important;
+    box-shadow:0 9px 24px rgba(37,72,59,.055)!important;
+    backdrop-filter:blur(7px);
+  }
+
+  body.rl-unified-shell .event-switcher__button:hover{
+    border-color:#9fb5a7!important;
+    background:#fdfcf8!important;
+  }
+
+  body.rl-unified-shell .event-switcher__button > span:first-child{
+    min-width:0;
+  }
+
+  body.rl-unified-shell .event-switcher__button strong{
+    overflow:hidden;
+    color:#183f36!important;
+    font:720 14px/1.2 Inter,"Segoe UI",Arial,sans-serif!important;
+    letter-spacing:-.015em!important;
+    text-overflow:ellipsis;
+    text-transform:none!important;
+    white-space:nowrap;
+  }
+
+  body.rl-unified-shell .event-switcher__button small{
+    margin-top:4px!important;
+    color:#687c73!important;
+    font-size:10.5px!important;
+    line-height:1.2!important;
+  }
+
+  body.rl-unified-shell .event-switcher__button .chev{
+    color:#60776e!important;
+    font-size:16px!important;
+  }
+
+  body.rl-unified-shell .side-nav{
+    position:relative;
+    z-index:2;
+    display:block!important;
+    margin:3px 0 0!important;
+    padding:0 0 9px!important;
+    border:0!important;
+  }
+
+  body.rl-unified-shell .sidebar-nav-group{
+    margin:0 0 15px;
+  }
+
+  body.rl-unified-shell .sidebar-nav-group__title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:0 8px 6px;
+    color:#708078;
+    font:750 9px/1 Inter,"Segoe UI",Arial,sans-serif;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+  }
+
+  body.rl-unified-shell .sidebar-nav-group__title::after{
+    content:"";
+    height:1px;
+    flex:1;
+    background:#d5dcd6;
+  }
+
+  body.rl-unified-shell .sidebar-nav-group__items{
+    display:grid;
+    gap:2px;
+  }
+
+  body.rl-unified-shell .side-nav button{
+    position:relative!important;
+    display:flex!important;
+    align-items:center!important;
+    min-height:42px!important;
+    gap:10px!important;
+    width:100%!important;
+    padding:8px 10px 8px 13px!important;
+    border:0!important;
+    border-left:2px solid transparent!important;
+    border-radius:0 8px 8px 0!important;
+    background:transparent!important;
+    color:#365a50!important;
+    font:650 13px/1.2 Inter,"Segoe UI",Arial,sans-serif!important;
+    letter-spacing:0!important;
+    text-transform:none!important;
+    transition:background .15s ease,color .15s ease,border-color .15s ease!important;
+  }
+
+  body.rl-unified-shell .side-nav button::before{display:none!important}
+
+  body.rl-unified-shell .side-nav button:hover{
+    background:rgba(231,238,231,.72)!important;
+    color:#214b40!important;
+  }
+
+  body.rl-unified-shell .side-nav button.active{
+    border-left-color:#2d7a57!important;
+    background:linear-gradient(90deg,#deeadf 0%,rgba(229,237,229,.88) 76%,rgba(229,237,229,.42) 100%)!important;
+    color:#144a38!important;
+    box-shadow:none!important;
+  }
+
+  body.rl-unified-shell .sidebar-v43-icon{
+    width:21px;
+    height:21px;
+    flex:0 0 21px;
+    color:#315f52;
+    opacity:.94;
+  }
+
+  body.rl-unified-shell .side-nav button.active .sidebar-v43-icon{
+    color:#1f6648;
+  }
+
+  body.rl-unified-shell .sidebar-v43-icon svg{
+    display:block;
+    width:100%;
+    height:100%;
+    fill:none;
+    stroke:currentColor;
+    stroke-width:1.65;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+  }
+
+  body.rl-unified-shell .v38-profile-entry{
+    position:relative;
+    z-index:2;
+    margin:auto 0 0!important;
+    padding:14px 4px 0!important;
+    border-top:1px solid #d2dbd4!important;
+  }
+
+  body.rl-unified-shell .v38-profile-nav{
+    min-height:58px!important;
+    grid-template-columns:38px minmax(0,1fr) 14px!important;
+    gap:10px!important;
+    padding:7px 9px!important;
+    border:1px solid transparent!important;
+    border-radius:11px!important;
+    background:rgba(247,246,240,.7)!important;
+    color:#183f36!important;
+  }
+
+  body.rl-unified-shell .v38-profile-nav:hover,
+  body.rl-unified-shell .v38-profile-nav.active{
+    border-color:#c8d4cc!important;
+    background:rgba(232,239,233,.94)!important;
+    color:#245d46!important;
+  }
+
+  body.rl-unified-shell .v38-profile-nav .avatar{
+    width:38px!important;
+    height:38px!important;
+    background:#e0ebe3!important;
+    color:#2c684f!important;
+    font-size:11px!important;
+  }
+
+  body.rl-unified-shell .v38-profile-nav b{
+    color:inherit!important;
+    font-size:11.5px!important;
+    font-weight:720!important;
+  }
+
+  body.rl-unified-shell .v38-profile-nav small{
+    color:#74847d!important;
+    font-size:8.7px!important;
+  }
+
+  body.rl-unified-shell .v38-profile-nav i{
+    color:#8aa096!important;
+    font-size:20px!important;
+  }
+
+  body.rl-unified-shell .sidebar-foot{
+    position:relative;
+    z-index:2;
+    margin-top:8px!important;
+    padding:12px 8px 0!important;
+    border-top:1px solid #d9dfda!important;
+    background:linear-gradient(180deg,rgba(247,246,240,.2),rgba(247,246,240,.9) 38%)!important;
+  }
+
+  body.rl-unified-shell .sidebar-foot .text-button{
+    color:#7b8983!important;
+    font-size:9.5px!important;
+  }
+
+  body.rl-unified-shell .sidebar-foot .text-button:hover{
+    color:#375f52!important;
+  }
+
+  body.rl-unified-shell .sidebar-foot .build-label{
+    margin-top:7px!important;
+    color:#8b9691!important;
+    font-size:8px!important;
+    font-weight:600!important;
+    letter-spacing:.045em!important;
+    text-transform:none!important;
+  }
+
+  body.rl-unified-shell .workspace{
+    margin-left:var(--sidebar)!important;
+  }
+}
+
+@media (min-width:901px) and (max-height:760px){
+  body.rl-unified-shell .brand-block{min-height:96px;padding-top:17px!important;padding-bottom:29px!important}
+  body.rl-unified-shell .sidebar::before{height:226px}
+  body.rl-unified-shell .event-switcher::before{display:none}
+  body.rl-unified-shell .event-switcher{margin-top:-7px!important;margin-bottom:11px!important}
+  body.rl-unified-shell .event-switcher__button{min-height:66px!important;padding:10px 12px!important}
+  body.rl-unified-shell .sidebar-nav-group{margin-bottom:8px}
+  body.rl-unified-shell .sidebar-nav-group__title{margin-bottom:3px}
+  body.rl-unified-shell .side-nav button{min-height:36px!important;padding-top:6px!important;padding-bottom:6px!important}
+  body.rl-unified-shell .sidebar::after{display:none}
+  body.rl-unified-shell .v38-profile-entry{padding-top:8px!important}
+  body.rl-unified-shell .sidebar-foot{padding-top:8px!important}
+}
+
+@media (max-width:900px){
+  .sidebar-nav-group__title{display:none}
+  .sidebar-v43-icon{display:none}
+}
