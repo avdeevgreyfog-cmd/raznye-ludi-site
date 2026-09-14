@@ -8,7 +8,10 @@
   const safe=v=>typeof esc==='function'?esc(v):String(v??'');
   const current=()=> (S.participants||[]).find(p=>p.id===S.current)||(S.participants||[])[0]||null;
   const signed=()=>{try{return !!JSON.parse(localStorage.getItem('rl_hike_auth_v42')||'null')?.access_token}catch(e){return false}};
-  const organizer=()=>document.body.classList.contains('hike-organizer')||(!signed()&&current()?.id==='p1');
+  const organizer=()=>{
+    if(window.HikePreviewV48?.active)return false;
+    return document.body.classList.contains('hike-organizer')||(!signed()&&current()?.id==='p1');
+  };
   function roles(pid=current()?.id){
     const rows=[];
     if(Array.isArray(S.rolesV36?.roles)&&S.rolesV36.roles.length){
@@ -72,10 +75,11 @@
   }
   function applyOverview(){
     if(tab!=='overview')return;const a=access();document.body.dataset.hikeAccess=a.admin?'organizer':a.roles.length?'responsible':'participant';document.querySelector('.ov44-hero-copy p')?.remove();
+    const heroKicker=document.querySelector('.ov44-hero-copy .page-kicker');if(heroKicker&&!a.group)heroKicker.textContent=a.responsibility.length?'Мой поход · зона ответственности':'Мой поход';
     if(!a.group){
       const r=personalReady(),card=document.querySelector('.ov44-readiness');if(card){card.querySelector('.ov44-card-head h2')?.replaceChildren('Моя готовность');card.querySelectorAll('.ov44-card-head>span,.ov44-ready-row>strong').forEach(el=>el.textContent=`${r.percent}%`);const bar=card.querySelector('.ov44-ready-track i');if(bar)bar.style.width=`${r.percent}%`;card.querySelector('p')?.replaceChildren(`${r.done} из ${r.total} личных пунктов готовы`)}
-      const ms=[...document.querySelectorAll('.ov44-metric')],pr=(()=>{try{return progress(current()?.id)}catch(e){return [0,0,0]}})(),rs=roles(),tasks=ownTasks();
-      metric(ms[1],'Дата',/уточня/i.test(S.event?.date||'')?'Уточняется':(S.event?.date||'Уточняется'),S.event?.meeting||'место сбора уточняется');
+      const ms=[...document.querySelectorAll('.ov44-metric')],pr=(()=>{try{return progress(current()?.id)}catch(e){return [0,0,0]}})(),rs=roles(),tasks=ownTasks(),there=rideDone(current()?.id,'there'),back=rideDone(current()?.id,'back'),transportDone=(there?1:0)+(back?1:0);
+      metric(ms[1],'Транспорт',transportDone===2?'Готово':`${transportDone}/2`,transportDone===2?'туда и обратно подтверждены':transportDone===1?'одно направление не закрыто':'нужно выбрать поездку',transportDone<2);
       metric(ms[2],'Моя роль',rs[0]?.title||'Участник',rs.length>1?`ещё ${rs.length-1}`:(rs.length?'моя ответственность':'без отдельной зоны'));
       metric(ms[3],'Снаряжение',`${pr[0]}/${pr[1]}`,pr[0]>=pr[1]?'личное готово':`${Math.max(0,pr[1]-pr[0])} осталось`);
       metric(ms[4],'Мои задачи',String(tasks.length),tasks.length?'осталось выполнить':'всё закрыто',tasks.some(x=>x.tone==='risk'));
