@@ -1,8 +1,8 @@
-/* V56 — sidebar grouping + deterministic current workspace modules. */
+/* V57 — sidebar grouping + deterministic current workspace modules. */
 (() => {
   'use strict';
-  const RELEASE='56-20260914c';
-  [['access-v47'],['preview-v48'],['preview-v51'],['participants-v56'],['avatars-v56']].forEach(([name])=>{
+  const RELEASE='57-20260914d';
+  [['access-v47'],['preview-v48'],['preview-v51'],['participants-v56'],['avatars-v56'],['overview-v57']].forEach(([name])=>{
     const key=`data-${name}`;
     if(document.querySelector(`link[${key}]`))return;
     const link=document.createElement('link');link.rel='stylesheet';link.href=`./${name}.css?r=${RELEASE}`;link.setAttribute(key,'1');document.head.appendChild(link);
@@ -29,12 +29,12 @@
   function decorateSidebar(){document.getElementById('sidebar')?.classList.add('sidebar-v43-ready');decorateNav()}
   const originalRenderNav=window.renderNav;if(typeof originalRenderNav==='function')window.renderNav=function(){originalRenderNav.apply(this,arguments);decorateNav()};requestAnimationFrame(decorateSidebar);
   window.addEventListener('load',()=>{
-    const modules=['access-v47-docs','access-v47-core','access-v47-cloud','preview-v48','event-v49','participants-v50','participants-v50-actions','preview-v51','avatars-v56'];
+    const modules=['access-v47-docs','access-v47-core','access-v47-cloud','preview-v48','event-v49','participants-v50','participants-v50-actions','preview-v51','avatars-v56','avatars-v57','overview-v57'];
     const next=index=>{
       if(index>=modules.length){
         window.V47Cloud?.load?.();
         if(typeof render==='function')render();
-        const build=document.querySelector('.build-label');if(build)build.textContent='V56 · стабильная сборка';
+        const build=document.querySelector('.build-label');if(build)build.textContent='V57 · стабильная сборка';
         return;
       }
       const script=document.createElement('script');script.src=`./${modules[index]}.js?r=${RELEASE}`;script.async=false;script.onload=()=>next(index+1);script.onerror=()=>{console.warn('Workspace module failed:',modules[index]);next(index+1)};document.body.appendChild(script);
