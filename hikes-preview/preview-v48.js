@@ -20,7 +20,7 @@
   }
 
   const api={
-    get active(){return mode!=='organizer'&&!!previewPid()},
+    get active(){return isActualOrganizer()&&mode!=='organizer'&&!!previewPid()},
     get pid(){return previewPid()},
     get mode(){return mode},
     set(next){mode=String(next||'organizer');normalizeMode();render()}
