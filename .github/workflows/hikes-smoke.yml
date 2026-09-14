@@ -1,0 +1,25 @@
+name: Hikes browser smoke
+on:
+  push:
+    branches: [main]
+    paths: ['hikes-preview/**', '.github/workflows/hikes-smoke.yml']
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save --package-lock=false playwright
+      - run: npx playwright install --with-deps chromium
+      - run: node hikes-preview/workspace.test.mjs
+      - run: node hikes-preview/browser-smoke.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hikes-browser-smoke
+          path: hikes-preview/test-results/
