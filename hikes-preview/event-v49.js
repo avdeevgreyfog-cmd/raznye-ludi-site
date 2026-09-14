@@ -1,4 +1,4 @@
-/* V49 — event facts are separate from route timing and editable by the organizer. */
+/* V58 — event facts are separate from route timing; organizer preview can edit locally. */
 (() => {
   'use strict';
 
@@ -9,7 +9,8 @@
   let eventRow=null;
 
   const session=()=>{try{return JSON.parse(localStorage.getItem(AUTH_KEY)||'null')}catch(e){return null}};
-  const isOrganizer=()=>document.body.classList.contains('hike-organizer');
+  const cloudOrganizer=()=>document.body.classList.contains('hike-organizer')&&!!session()?.access_token;
+  const organizerView=()=>cloudOrganizer()||!!window.HikeAccessV47?.access?.().admin;
   const safe=v=>typeof esc==='function'?esc(v):String(v??'');
   const plural=(n,one,few,many)=>{const a=Math.abs(Number(n)||0)%100,b=a%10;return a>10&&a<20?many:b===1?one:b>=2&&b<=4?few:many};
   const durationLabel=row=>{
@@ -34,6 +35,9 @@
     const match=text.match(/^\s*(\d{1,2}:\d{2})\s*(?:[·—–-]\s*)?(.*)$/);
     return match?{time:match[1],place:(match[2]||'').trim()}:{time:'',place:text};
   };
+  const statusCode=value=>({
+    'Подготовка':'planning','Регистрация открыта':'open','Набор закрыт':'closed','Отменён':'cancelled'
+  })[value]||'planning';
 
   async function request(path,options={}){
     const auth=session();
@@ -54,10 +58,26 @@
     S.event.durationDays=Math.max(1,Number(row.duration_days)||1);
     S.event.overnight=!!row.overnight;
     S.event.status=({planning:'Подготовка',open:'Регистрация открыта',closed:'Набор закрыт',cancelled:'Отменён'})[row.status]||'Подготовка';
+    if(row.title)S.event.title=row.title;
+  }
+
+  function localRow(){
+    const parts=meetingParts(S?.event?.meeting);
+    const durationDays=Math.max(1,Number(S?.event?.durationDays)||2);
+    return {
+      slug:EVENT_SLUG,
+      title:S?.event?.title||S?.event?.short||'Томинский лесопарк · поход-тренировка',
+      starts_at:null,
+      meeting_label:[parts.time,parts.place].filter(Boolean).join(' · ')||null,
+      duration_days:durationDays,
+      overnight:S?.event?.overnight!==false,
+      participant_limit:null,
+      reply_deadline:null,
+      status:statusCode(S?.event?.status)
+    };
   }
 
   async function load(){
-    const auth=session();if(!auth?.access_token)return null;
     const rows=await request(`/rest/v1/hike_events?slug=eq.${encodeURIComponent(EVENT_SLUG)}&select=*`);
     const row=rows?.[0]||null;if(row)apply(row);return row;
   }
@@ -65,8 +85,10 @@
   function focusLater(selector){if(!selector)return;requestAnimationFrame(()=>document.querySelector(selector)?.focus())}
 
   async function openEditor(focus=''){
-    if(!isOrganizer()){if(typeof toast==='function')toast('Редактирование доступно организатору');return}
-    const row=eventRow||await load();if(!row){if(typeof toast==='function')toast('Не удалось загрузить параметры похода');return}
+    if(!organizerView()){if(typeof toast==='function')toast('Редактирование доступно организатору');return}
+    let row=eventRow;
+    if(!row)row=await load().catch(()=>null);
+    if(!row)row=localRow();
     const meeting=meetingParts(row.meeting_label),start=toLocal(row.starts_at),deadline=toLocal(row.reply_deadline),days=Math.max(1,Number(row.duration_days)||1);
     openModal('Основная информация о походе',`<div class="form-grid hike-settings-form v49-event-form">
       <div class="field full"><label>Название<input id="evTitle" value="${safe(row.title||'')}"></label></div>
@@ -80,16 +102,22 @@
       <div class="field full"><label>Статус<select id="evStatus"><option value="planning" ${row.status==='planning'?'selected':''}>Подготовка</option><option value="open" ${row.status==='open'?'selected':''}>Регистрация открыта</option><option value="closed" ${row.status==='closed'?'selected':''}>Набор закрыт</option><option value="cancelled" ${row.status==='cancelled'?'selected':''}>Отменён</option></select></label></div>
     </div>`,async layer=>{
       const title=layer.querySelector('#evTitle').value.trim();if(!title){toast('Укажи название похода');return false}
-      const starts=layer.querySelector('#evStart').value,meetTime=layer.querySelector('#evMeetTime').value,meetPlace=layer.querySelector('#evMeetPlace').value.trim(),deadlineValue=layer.querySelector('#evDeadline').value,limit=layer.querySelector('#evLimit').value,daysValue=Math.max(1,Number(layer.querySelector('#evDays').value)||1),overnight=layer.querySelector('#evOvernight').checked;
+      const starts=layer.querySelector('#evStart').value,meetTime=layer.querySelector('#evMeetTime').value,meetPlace=layer.querySelector('#evMeetPlace').value.trim(),deadlineValue=layer.querySelector('#evDeadline').value,limit=layer.querySelector('#evLimit').value,daysValue=Math.max(1,Number(layer.querySelector('#evDays').value)||1),overnight=layer.querySelector('#evOvernight').checked,status=layer.querySelector('#evStatus').value;
       const meetingLabel=[meetTime,meetPlace].filter(Boolean).join(' · ')||null;
-      const rows=await request(`/rest/v1/hike_events?slug=eq.${encodeURIComponent(EVENT_SLUG)}`,{method:'PATCH',headers:{Prefer:'return=representation'},body:{title,starts_at:starts?new Date(starts).toISOString():null,meeting_label:meetingLabel,duration_days:daysValue,overnight,reply_deadline:deadlineValue?new Date(deadlineValue).toISOString():null,participant_limit:limit?Number(limit):null,status:layer.querySelector('#evStatus').value}});
-      const next=rows?.[0]||row;apply(next);if(typeof save==='function')save();render();toast('Параметры похода сохранены');return true;
+      const payload={title,starts_at:starts?new Date(starts).toISOString():null,meeting_label:meetingLabel,duration_days:daysValue,overnight,reply_deadline:deadlineValue?new Date(deadlineValue).toISOString():null,participant_limit:limit?Number(limit):null,status};
+      let next={...row,...payload};
+      if(cloudOrganizer()){
+        const rows=await request(`/rest/v1/hike_events?slug=eq.${encodeURIComponent(EVENT_SLUG)}`,{method:'PATCH',headers:{Prefer:'return=representation'},body:payload});
+        next=rows?.[0]||next;
+        apply(next);if(typeof save==='function')save();render();toast('Параметры похода сохранены для всей команды');return true;
+      }
+      apply(next);if(typeof save==='function')save();render();toast('Изменения сохранены в режиме проверки. Для общей версии войдите как организатор.');return true;
     });
     focusLater(focus);
   }
 
   function wireOrganizerControls(){
-    if(!isOrganizer())return;
+    if(!organizerView())return;
     const settings=document.getElementById('hikeSettingsButton');if(settings)settings.onclick=()=>openEditor('#evTitle');
     const switcher=document.getElementById('eventSwitcher');if(switcher)switcher.onclick=()=>openEditor('#evTitle');
   }
