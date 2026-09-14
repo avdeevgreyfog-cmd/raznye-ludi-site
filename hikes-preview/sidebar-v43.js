@@ -1,4 +1,4 @@
-/* V43 — sidebar grouping and lightweight line icons. */
+/* V44 — sidebar grouping with the user-approved icon pack. */
 (() => {
   'use strict';
 
@@ -9,14 +9,14 @@
   ];
 
   const ICONS = {
-    overview: '<circle cx="12" cy="12" r="8.25"/><path d="m15.5 8.5-2.2 5-4.8 2 2.1-4.9 4.9-2.1Z"/>',
-    participants: '<path d="M16 20v-1.5a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4V20"/><circle cx="9.5" cy="7.5" r="3.2"/><path d="M17 8.4a3 3 0 0 1 0 5.7M20.5 20v-1.4a3.5 3.5 0 0 0-2.7-3.4"/>',
-    roles: '<circle cx="8.5" cy="7.5" r="3"/><path d="M3 20v-1.3a4.6 4.6 0 0 1 4.6-4.6h1.8c1.1 0 2.1.4 2.9 1"/><circle cx="17" cy="16.8" r="3.2"/><path d="m19.4 19.2 2 2M17 12.4v1.1M17 20.1v1.1M12.6 16.8h1.1M20.3 16.8h1.1"/>',
-    gear: '<path d="M7 7V5.8A3.8 3.8 0 0 1 10.8 2h2.4A3.8 3.8 0 0 1 17 5.8V7"/><rect x="5" y="6.5" width="14" height="15" rx="3"/><path d="M5 11H3.5v6H5M19 11h1.5v6H19M9 10.5h6M9 15.5h6"/>',
-    food: '<path d="M5.5 3v7M8 3v7M3 3v4.5A2.5 2.5 0 0 0 5.5 10v11M16 3v18M16 3c3 1.7 4.5 4.3 4.5 7.2 0 2-1.4 3.3-4.5 3.3"/>',
-    transport: '<path d="M5 17h14M6.2 17l.8-6.1A2.2 2.2 0 0 1 9.2 9h5.6a2.2 2.2 0 0 1 2.2 1.9l.8 6.1M7 9l1.1-3h7.8L17 9"/><circle cx="8" cy="17.5" r="1.5"/><circle cx="16" cy="17.5" r="1.5"/>',
-    route: '<path d="m3.5 6.5 5-2.5 7 2.5 5-2.5v14l-5 2.5-7-2.5-5 2.5v-14Z"/><path d="M8.5 4v14M15.5 6.5v14"/>',
-    plan: '<path d="M7 3h8l4 4v14H5V3h2Z"/><path d="M14 3v5h5M8 12h8M8 16h8"/>'
+    overview: `<circle cx="12" cy="12" r="8.5"/><path d="M14.9 9.1 13 13l-3.9 1.9L11 11z"/><path d="M12 2.5v1.2M12 20.3v1.2M2.5 12h1.2M20.3 12h1.2"/>`,
+    participants: `<circle cx="9" cy="8" r="2.4"/><circle cx="16.3" cy="9.1" r="1.8"/><path d="M4.8 17.8c.3-3 2-4.8 4.2-4.8s3.9 1.8 4.2 4.8"/><path d="M13.9 14.2c.8-.9 1.6-1.3 2.5-1.3 1.8 0 3 1.3 3.3 3.6"/>`,
+    roles: `<circle cx="8.5" cy="7.5" r="2.4"/><path d="M4.2 17.5c.35-3.2 2.1-5 4.3-5 1.35 0 2.45.55 3.2 1.55"/><circle cx="16.7" cy="15.6" r="2.1"/><path d="M16.7 11.9v1M16.7 18.2v1M13 15.6h1M19.4 15.6h1M14.1 13l.7.7M18.6 17.5l.7.7M19.3 13l-.7.7M14.8 17.5l-.7.7"/>`,
+    gear: `<path d="M8.5 6V5a3.5 3.5 0 0 1 7 0v1"/><rect x="6.3" y="5.8" width="11.4" height="14.2" rx="3.2"/><path d="M8.2 10.2h7.6M8.8 14.1h6.4v3H8.8z"/><path d="M6.3 10.2H5.1v5.2h1.2M17.7 10.2h1.2v5.2h-1.2"/>`,
+    food: `<path d="M6.5 3v5.2M4.7 3v3.2M8.3 3v3.2M4.7 6.2c0 1.5.7 2.3 1.8 2.3s1.8-.8 1.8-2.3M6.5 8.5V21"/><path d="M15.1 3v18M15.1 3c3.2 1.6 4.2 5.1 4.2 8.3h-4.2"/>`,
+    transport: `<path d="M5.2 6.2h10.5c1.2 0 2 .4 2.7 1.5l1.5 2.4c.4.6.6 1.3.6 2v4.3H3.5V8c0-1 .7-1.8 1.7-1.8Z"/><path d="M5.8 8.3h8v4h-8zM14.8 8.3h2.2l1.8 3.9h-4z"/><circle cx="7" cy="17.3" r="1.6"/><circle cx="17.2" cy="17.3" r="1.6"/><path d="M3.5 13.2h17"/>`,
+    route: `<path d="M3.5 5.2 8.5 3l7 2.2 5-2.2v15.8l-5 2.2-7-2.2-5 2.2z"/><path d="M8.5 3v15.8M15.5 5.2V21"/><path d="M6.5 15.2c1.1-2 2.3-2.8 3.5-2.8 1.8 0 2.3 1.5 3.7 1.5 1.2 0 2.1-1 3.1-2.6" stroke-dasharray="1.6 2.2"/><path d="M17.1 7.5c0 1.5-1.7 3.6-1.7 3.6s-1.7-2.1-1.7-3.6a1.7 1.7 0 1 1 3.4 0Z"/>`,
+    plan: `<path d="M6 3.5h8.2L18 7.3v13.2H6z"/><path d="M14.2 3.5v3.8H18M8.8 11h6.4M8.8 14.5h6.4M8.8 18h4.2"/>`
   };
 
   function iconFor(id) {
@@ -26,64 +26,35 @@
   function decorateNav() {
     const nav = document.getElementById('nav');
     if (!nav) return;
-
     const buttons = Array.from(nav.querySelectorAll('button[data-tab]'));
     if (!buttons.length) return;
-
     const map = new Map(buttons.map(button => [button.dataset.tab, button]));
     const used = new Set();
     const fragment = document.createDocumentFragment();
-
     GROUPS.forEach(([title, ids]) => {
       const available = ids.map(id => map.get(id)).filter(Boolean);
       if (!available.length) return;
-
-      const group = document.createElement('div');
-      group.className = 'sidebar-nav-group';
-
-      const heading = document.createElement('div');
-      heading.className = 'sidebar-nav-group__title';
-      heading.textContent = title;
-
-      const items = document.createElement('div');
-      items.className = 'sidebar-nav-group__items';
-
+      const group = document.createElement('div'); group.className = 'sidebar-nav-group';
+      const heading = document.createElement('div'); heading.className = 'sidebar-nav-group__title'; heading.textContent = title;
+      const items = document.createElement('div'); items.className = 'sidebar-nav-group__items';
       available.forEach(button => {
-        const id = button.dataset.tab;
-        used.add(id);
-        if (!button.querySelector('.sidebar-v43-icon')) {
-          button.insertAdjacentHTML('afterbegin', iconFor(id));
-        }
-        items.appendChild(button);
+        const id = button.dataset.tab; used.add(id);
+        button.querySelector('.sidebar-v43-icon')?.remove();
+        button.insertAdjacentHTML('afterbegin', iconFor(id)); items.appendChild(button);
       });
-
-      group.append(heading, items);
-      fragment.appendChild(group);
+      group.append(heading, items); fragment.appendChild(group);
     });
-
     buttons.filter(button => !used.has(button.dataset.tab)).forEach(button => {
-      if (!button.querySelector('.sidebar-v43-icon')) {
-        button.insertAdjacentHTML('afterbegin', iconFor(button.dataset.tab));
-      }
-      fragment.appendChild(button);
+      button.querySelector('.sidebar-v43-icon')?.remove();
+      button.insertAdjacentHTML('afterbegin', iconFor(button.dataset.tab)); fragment.appendChild(button);
     });
-
-    nav.replaceChildren(fragment);
-    nav.dataset.v43Decorated = '1';
+    nav.replaceChildren(fragment); nav.dataset.v43Decorated = '1';
   }
 
-  function decorateSidebar() {
-    document.getElementById('sidebar')?.classList.add('sidebar-v43-ready');
-    decorateNav();
-  }
-
+  function decorateSidebar() { document.getElementById('sidebar')?.classList.add('sidebar-v43-ready'); decorateNav(); }
   const originalRenderNav = window.renderNav;
   if (typeof originalRenderNav === 'function') {
-    window.renderNav = function sidebarV43RenderNav() {
-      originalRenderNav.apply(this, arguments);
-      decorateNav();
-    };
+    window.renderNav = function sidebarV44RenderNav() { originalRenderNav.apply(this, arguments); decorateNav(); };
   }
-
   requestAnimationFrame(decorateSidebar);
 })();
