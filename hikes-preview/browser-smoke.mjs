@@ -15,6 +15,8 @@ page.on('pageerror',e=>errors.push(e.message));
 try{
  await page.goto('http://127.0.0.1:4173/hikes-preview/',{waitUntil:'domcontentloaded'});
  await page.locator('#nav [data-tab="roles"]').waitFor({timeout:30000});
+ await page.waitForTimeout(1500);
+ const dismiss=page.locator('#v39Dismiss'); if(await dismiss.count()) await dismiss.click({force:true}).catch(()=>{});
  for(const tab of ['overview','participants','roles','gear','food','transport','route','plan','documents']){
    await page.locator('#nav [data-tab="'+tab+'"]').click();
    await page.waitForTimeout(250);
