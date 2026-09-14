@@ -28,7 +28,7 @@
   function decorateSidebar(){document.getElementById('sidebar')?.classList.add('sidebar-v43-ready');decorateNav()}
   const originalRenderNav=window.renderNav;if(typeof originalRenderNav==='function')window.renderNav=function(){originalRenderNav.apply(this,arguments);decorateNav()};requestAnimationFrame(decorateSidebar);
   window.addEventListener('load',()=>{
-    const scripts=['./access-v47-docs.js?v=47-20260914','./access-v47-core.js?v=49-20260914','./access-v47-cloud.js?v=47-20260914','./preview-v48.js?v=49-20260914','./event-v49.js?v=49-20260914'];
+    const scripts=['./access-v47-docs.js?v=47-20260914','./access-v47-core.js?v=49-20260914','./access-v47-cloud.js?v=47-20260914','./preview-v48.js?v=49-20260914','./event-v49.js?v=49-20260914','./participants-v50.js?v=50-20260914'];
     const next=index=>{if(index>=scripts.length){window.V47Cloud?.load?.();if(typeof render==='function')render();return}const script=document.createElement('script');script.src=scripts[index];script.async=false;script.onload=()=>next(index+1);script.onerror=()=>console.warn('Workspace module failed:',scripts[index]);document.body.appendChild(script)};next(0);
   },{once:true});
 })();
