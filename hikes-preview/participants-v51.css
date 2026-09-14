@@ -1,0 +1,3 @@
+/* V51 — small visual fixes for Participants actions. */
+.p50-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap}
+.p50-btn svg{flex:0 0 14px;width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
