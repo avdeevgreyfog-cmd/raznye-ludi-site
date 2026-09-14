@@ -1,7 +1,7 @@
-/* V55 — sidebar grouping + deterministic current workspace modules. */
+/* V56 — sidebar grouping + deterministic current workspace modules. */
 (() => {
   'use strict';
-  const RELEASE='55-20260914b';
+  const RELEASE='56-20260914c';
   [['access-v47'],['preview-v48'],['preview-v51']].forEach(([name])=>{
     const key=`data-${name}`;
     if(document.querySelector(`link[${key}]`))return;
@@ -29,12 +29,12 @@
   function decorateSidebar(){document.getElementById('sidebar')?.classList.add('sidebar-v43-ready');decorateNav()}
   const originalRenderNav=window.renderNav;if(typeof originalRenderNav==='function')window.renderNav=function(){originalRenderNav.apply(this,arguments);decorateNav()};requestAnimationFrame(decorateSidebar);
   window.addEventListener('load',()=>{
-    const modules=['access-v47-docs','access-v47-core','access-v47-cloud','preview-v48','event-v49','participants-v50','participants-v50-actions','preview-v51'];
+    const modules=['access-v47-docs','access-v47-core','access-v47-cloud','preview-v48','event-v49','participants-v50','participants-v50-actions','preview-v51','avatars-v56'];
     const next=index=>{
       if(index>=modules.length){
         window.V47Cloud?.load?.();
         if(typeof render==='function')render();
-        const build=document.querySelector('.build-label');if(build)build.textContent='V55 · стабильная сборка';
+        const build=document.querySelector('.build-label');if(build)build.textContent='V56 · стабильная сборка';
         return;
       }
       const script=document.createElement('script');script.src=`./${modules[index]}.js?r=${RELEASE}`;script.async=false;script.onload=()=>next(index+1);script.onerror=()=>{console.warn('Workspace module failed:',modules[index]);next(index+1)};document.body.appendChild(script);
