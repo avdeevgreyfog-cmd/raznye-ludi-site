@@ -1,48 +1,70 @@
 <!doctype html>
-<html lang="ru">
+<html lang="ru" data-release="54-20260914a">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#f3f6f3">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Разные люди — Походы</title>
   <meta name="description" content="Рабочий модуль подготовки командных походов">
+  <script>
+    (()=>{
+      const current=document.documentElement.dataset.release;
+      fetch(`./release.json?t=${Date.now()}`,{cache:'no-store'})
+        .then(r=>r.ok?r.json():null)
+        .then(data=>{
+          const latest=data?.release;
+          if(!latest||latest===current)return;
+          const url=new URL(location.href);
+          if(url.searchParams.get('release')===latest)return;
+          url.searchParams.set('release',latest);
+          location.replace(url.toString());
+        })
+        .catch(()=>{});
+    })();
+  </script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
-  <link rel="stylesheet" href="./style.css?v=36-20260911">
-  <link rel="stylesheet" href="./route-v9.css?v=36-20260911">
-  <link rel="stylesheet" href="./route-v10.css?v=36-20260911">
-  <link rel="stylesheet" href="./route-v11.css?v=36-20260911">
-  <link rel="stylesheet" href="./route-v12.css?v=36-20260911">
-  <link rel="stylesheet" href="./route-v13.css?v=36-20260911">
-  <link rel="stylesheet" href="./route-v14.css?v=36-20260911">
-  <link rel="stylesheet" href="./route-v15.css?v=36-20260911">
-  <link rel="stylesheet" href="./route-v16.css?v=36-20260911">
-  <link rel="stylesheet" href="./atlas-v20.css?v=36-20260911">
-  <link rel="stylesheet" href="./map-studio-v21.css?v=36-20260911">
-  <link rel="stylesheet" href="./map-studio-v21-fix.css?v=36-20260911">
-  <link rel="stylesheet" href="./atlas-v22.css?v=36-20260911">
-  <link rel="stylesheet" href="./plan-v23.css?v=36-20260911">
-  <link rel="stylesheet" href="./transport-v24.css?v=36-20260911">
-  <link rel="stylesheet" href="./transport-v26.css?v=36-20260911">
-  <link rel="stylesheet" href="./transport-v27.css?v=36-20260911">
-  <link rel="stylesheet" href="./transport-v27-fix.css?v=36-20260911">
-  <link rel="stylesheet" href="./transport-v28.css?v=36-20260911">
-  <link rel="stylesheet" href="./gear-v30.css?v=36-20260911">
-  <link rel="stylesheet" href="./food-v31.css?v=36-20260911">
-  <link rel="stylesheet" href="./overview-v32.css?v=36-20260911">
-  <link rel="stylesheet" href="../css/rl-system.css?v=36-20260911">
-  <link rel="stylesheet" href="./unified-v29.css?v=36-20260911">
-  <link rel="stylesheet" href="./yandex-js-v34.css?v=36-20260911">
-  <link rel="stylesheet" href="./workspace-v35.css?v=36-20260911">
-  <link rel="stylesheet" href="./operations-v36.css?v=36-20260911">
-  <link rel="stylesheet" href="./workspace-v37.css?v=41-20260911">
-  <link rel="stylesheet" href="./profile-v38.css?v=41-20260911">
-  <link rel="stylesheet" href="./onboarding-v39.css?v=41-20260911">
-  <link rel="stylesheet" href="./transport-v40.css?v=41-20260911">
-  <link rel="stylesheet" href="./plan-v41.css?v=41-20260911">
-  <link rel="stylesheet" href="./supabase-v42.css?v=42-20260912">
-  <link rel="stylesheet" href="./sidebar-v43.css?v=44-20260914">
-  <link rel="stylesheet" href="./overview-v44.css?v=44-20260914">
-  <link rel="stylesheet" href="./participants-v51.css?v=51-20260914">
+  <link rel="stylesheet" href="./style.css?r=54-20260914a">
+  <link rel="stylesheet" href="./route-v9.css?r=54-20260914a">
+  <link rel="stylesheet" href="./route-v10.css?r=54-20260914a">
+  <link rel="stylesheet" href="./route-v11.css?r=54-20260914a">
+  <link rel="stylesheet" href="./route-v12.css?r=54-20260914a">
+  <link rel="stylesheet" href="./route-v13.css?r=54-20260914a">
+  <link rel="stylesheet" href="./route-v14.css?r=54-20260914a">
+  <link rel="stylesheet" href="./route-v15.css?r=54-20260914a">
+  <link rel="stylesheet" href="./route-v16.css?r=54-20260914a">
+  <link rel="stylesheet" href="./atlas-v20.css?r=54-20260914a">
+  <link rel="stylesheet" href="./map-studio-v21.css?r=54-20260914a">
+  <link rel="stylesheet" href="./map-studio-v21-fix.css?r=54-20260914a">
+  <link rel="stylesheet" href="./atlas-v22.css?r=54-20260914a">
+  <link rel="stylesheet" href="./plan-v23.css?r=54-20260914a">
+  <link rel="stylesheet" href="./transport-v24.css?r=54-20260914a">
+  <link rel="stylesheet" href="./transport-v26.css?r=54-20260914a">
+  <link rel="stylesheet" href="./transport-v27.css?r=54-20260914a">
+  <link rel="stylesheet" href="./transport-v27-fix.css?r=54-20260914a">
+  <link rel="stylesheet" href="./transport-v28.css?r=54-20260914a">
+  <link rel="stylesheet" href="./gear-v30.css?r=54-20260914a">
+  <link rel="stylesheet" href="./food-v31.css?r=54-20260914a">
+  <link rel="stylesheet" href="../css/rl-system.css?r=54-20260914a">
+  <link rel="stylesheet" href="./unified-v29.css?r=54-20260914a">
+  <link rel="stylesheet" href="./yandex-js-v34.css?r=54-20260914a">
+  <link rel="stylesheet" href="./workspace-v35.css?r=54-20260914a">
+  <link rel="stylesheet" href="./operations-v36.css?r=54-20260914a">
+  <link rel="stylesheet" href="./workspace-v37.css?r=54-20260914a">
+  <link rel="stylesheet" href="./profile-v38.css?r=54-20260914a">
+  <link rel="stylesheet" href="./onboarding-v39.css?r=54-20260914a">
+  <link rel="stylesheet" href="./transport-v40.css?r=54-20260914a">
+  <link rel="stylesheet" href="./plan-v41.css?r=54-20260914a">
+  <link rel="stylesheet" href="./supabase-v42.css?r=54-20260914a">
+  <link rel="stylesheet" href="./sidebar-v43.css?r=54-20260914a">
+  <link rel="stylesheet" href="./overview-v44.css?r=54-20260914a">
+  <link rel="stylesheet" href="./overview-v45.css?r=54-20260914a" data-overview-v45="1">
+  <link rel="stylesheet" href="./overview-v46.css?r=54-20260914a" data-overview-v46="1">
+  <link rel="stylesheet" href="./participants-v50.css?r=54-20260914a" data-participants-v50="1">
+  <link rel="stylesheet" href="./participants-v51.css?r=54-20260914a">
+  <link rel="stylesheet" href="./participants-v53.css?r=54-20260914a" data-participants-v53="1">
 </head>
 <body>
   <aside class="sidebar" id="sidebar">
@@ -63,7 +85,7 @@
     <nav class="side-nav" id="nav"></nav>
     <div class="sidebar-foot">
       <button class="text-button" id="reset" type="button">Сбросить локальную копию</button>
-      <div class="build-label">V52 · роли и предпросмотр</div>
+      <div class="build-label">V54 · стабильная сборка</div>
     </div>
   </aside>
   <main class="workspace">
@@ -78,52 +100,51 @@
   <div class="modal-layer" id="modalLayer" aria-hidden="true"></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="./v8.js?v=36-20260911"></script>
-  <script src="./route-v9.js?v=36-20260911"></script>
-  <script src="./route-v10.js?v=36-20260911"></script>
-  <script src="./route-v11.js?v=36-20260911"></script>
-  <script src="./route-v12.js?v=36-20260911"></script>
-  <script src="./route-v13-1.js?v=36-20260911"></script>
-  <script src="./route-v13-2.js?v=36-20260911"></script>
-  <script src="./route-v13-3.js?v=36-20260911"></script>
-  <script src="./route-v13-4.js?v=36-20260911"></script>
-  <script src="./route-v13-5.js?v=36-20260911"></script>
-  <script src="./route-v13-6.js?v=36-20260911"></script>
-  <script src="./route-v14-1.js?v=36-20260911"></script>
-  <script src="./route-v14-2.js?v=36-20260911"></script>
-  <script src="./route-v15.js?v=36-20260911"></script>
-  <script src="./route-v15-fix.js?v=36-20260911"></script>
-  <script src="./route-v16.js?v=36-20260911"></script>
-  <script src="./route-v17.js?v=36-20260911"></script>
-  <script src="./route-v18.js?v=36-20260911"></script>
-  <script src="./route-v19.js?v=36-20260911"></script>
-  <script src="./atlas-v20.js?v=36-20260911"></script>
-  <script src="./map-studio-v21.js?v=36-20260911"></script>
-  <script src="./map-studio-v21-fix.js?v=36-20260911"></script>
-  <script src="./atlas-v22.js?v=36-20260911"></script>
-  <script src="./plan-v23.js?v=36-20260911"></script>
-  <script src="./transport-v24.js?v=36-20260911"></script>
-  <script src="./transport-v24-fix.js?v=36-20260911"></script>
-  <script src="./transport-v25.js?v=36-20260911"></script>
-  <script src="./transport-v26.js?v=36-20260911"></script>
-  <script src="./transport-v27.js?v=36-20260911"></script>
-  <script src="./transport-v27-fix.js?v=36-20260911"></script>
-  <script src="./transport-v28.js?v=36-20260911"></script>
-  <script src="./unified-v29.js?v=36-20260911"></script>
-  <script src="./gear-v30.js?v=36-20260911"></script>
-  <script src="./food-v31.js?v=36-20260911"></script>
-  <script src="./overview-v32.js?v=36-20260911"></script>
-  <script src="./yandex-js-v34.js?v=36-20260911"></script>
-  <script src="./operations-v36.js?v=36-20260911"></script>
-  <script src="./workspace-v37.js?v=41-20260911"></script>
-  <script src="./profile-v38.js?v=41-20260911"></script>
-  <script src="./onboarding-v39.js?v=41-20260911"></script>
-  <script src="./onboarding-v40-fix.js?v=41-20260911"></script>
-  <script src="./transport-v40.js?v=41-20260911"></script>
-  <script src="./plan-v41.js?v=41-20260911"></script>
-  <script src="./supabase-v42.js?v=42-20260912"></script>
-  <script src="./preview-demo-v52.js?v=52-20260914"></script>
-  <script src="./sidebar-v49.js?v=52-20260914"></script>
-  <script src="./overview-v44.js?v=44-20260914"></script>
+  <script src="./v8.js?r=54-20260914a"></script>
+  <script src="./route-v9.js?r=54-20260914a"></script>
+  <script src="./route-v10.js?r=54-20260914a"></script>
+  <script src="./route-v11.js?r=54-20260914a"></script>
+  <script src="./route-v12.js?r=54-20260914a"></script>
+  <script src="./route-v13-1.js?r=54-20260914a"></script>
+  <script src="./route-v13-2.js?r=54-20260914a"></script>
+  <script src="./route-v13-3.js?r=54-20260914a"></script>
+  <script src="./route-v13-4.js?r=54-20260914a"></script>
+  <script src="./route-v13-5.js?r=54-20260914a"></script>
+  <script src="./route-v13-6.js?r=54-20260914a"></script>
+  <script src="./route-v14-1.js?r=54-20260914a"></script>
+  <script src="./route-v14-2.js?r=54-20260914a"></script>
+  <script src="./route-v15.js?r=54-20260914a"></script>
+  <script src="./route-v15-fix.js?r=54-20260914a"></script>
+  <script src="./route-v16.js?r=54-20260914a"></script>
+  <script src="./route-v17.js?r=54-20260914a"></script>
+  <script src="./route-v18.js?r=54-20260914a"></script>
+  <script src="./route-v19.js?r=54-20260914a"></script>
+  <script src="./atlas-v20.js?r=54-20260914a"></script>
+  <script src="./map-studio-v21.js?r=54-20260914a"></script>
+  <script src="./map-studio-v21-fix.js?r=54-20260914a"></script>
+  <script src="./atlas-v22.js?r=54-20260914a"></script>
+  <script src="./plan-v23.js?r=54-20260914a"></script>
+  <script src="./transport-v24.js?r=54-20260914a"></script>
+  <script src="./transport-v24-fix.js?r=54-20260914a"></script>
+  <script src="./transport-v25.js?r=54-20260914a"></script>
+  <script src="./transport-v26.js?r=54-20260914a"></script>
+  <script src="./transport-v27.js?r=54-20260914a"></script>
+  <script src="./transport-v27-fix.js?r=54-20260914a"></script>
+  <script src="./transport-v28.js?r=54-20260914a"></script>
+  <script src="./unified-v29.js?r=54-20260914a"></script>
+  <script src="./gear-v30.js?r=54-20260914a"></script>
+  <script src="./food-v31.js?r=54-20260914a"></script>
+  <script src="./yandex-js-v34.js?r=54-20260914a"></script>
+  <script src="./operations-v36.js?r=54-20260914a"></script>
+  <script src="./workspace-v37.js?r=54-20260914a"></script>
+  <script src="./profile-v38.js?r=54-20260914a"></script>
+  <script src="./onboarding-v39.js?r=54-20260914a"></script>
+  <script src="./onboarding-v40-fix.js?r=54-20260914a"></script>
+  <script src="./transport-v40.js?r=54-20260914a"></script>
+  <script src="./plan-v41.js?r=54-20260914a"></script>
+  <script src="./supabase-v42.js?r=54-20260914a"></script>
+  <script src="./preview-demo-v52.js?r=54-20260914a"></script>
+  <script src="./sidebar-v49.js?r=54-20260914a"></script>
+  <script src="./overview-v44.js?r=54-20260914a"></script>
 </body>
 </html>
