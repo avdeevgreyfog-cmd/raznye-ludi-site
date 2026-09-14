@@ -1,18 +1,16 @@
-/* V57 — editable event facts on Overview, separated from route timing. */
-body.rl-unified-shell.ov44-active .ov57-event-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 14px}
-body.rl-unified-shell.ov44-active .ov57-fact{position:relative;display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;align-items:center;min-height:84px;padding:14px 16px;border:1px solid #d6dfd8;border-radius:14px;background:rgba(251,252,249,.95);box-shadow:0 8px 24px rgba(29,66,52,.035);color:#123f35;text-align:left}
-body.rl-unified-shell.ov44-active button.ov57-fact{width:100%;font:inherit;cursor:pointer;transition:border-color .15s ease,background .15s ease,box-shadow .15s ease,transform .15s ease}
-body.rl-unified-shell.ov44-active button.ov57-fact:hover{border-color:#b7cec0;background:#f7faf7;box-shadow:0 10px 28px rgba(29,66,52,.06);transform:translateY(-1px)}
-body.rl-unified-shell.ov44-active .ov57-fact__icon{width:40px;height:40px;display:grid;place-items:center;border-radius:11px;background:#e8f1ea;color:#2f7a59}
-body.rl-unified-shell.ov44-active .ov57-fact__icon svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-body.rl-unified-shell.ov44-active .ov57-fact__copy{min-width:0}
-body.rl-unified-shell.ov44-active .ov57-fact__label{display:flex;align-items:center;gap:6px;margin-bottom:4px;color:#71837b;font-size:9px;line-height:1.1;font-weight:700;letter-spacing:.055em;text-transform:uppercase}
-body.rl-unified-shell.ov44-active .ov57-fact__value{display:block;overflow:hidden;color:#214f42;font-size:13px;line-height:1.25;font-weight:720;text-overflow:ellipsis;white-space:nowrap}
-body.rl-unified-shell.ov44-active .ov57-fact__detail{display:block;margin-top:3px;color:#7b8d86;font-size:8.8px;line-height:1.25}
-body.rl-unified-shell.ov44-active .ov57-fact__edit{position:absolute;top:10px;right:10px;width:24px;height:24px;display:grid;place-items:center;border-radius:7px;background:#eef5ef;color:#3d715c;opacity:.72}
-body.rl-unified-shell.ov44-active .ov57-fact__edit svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-body.rl-unified-shell.ov44-active button.ov57-fact:hover .ov57-fact__edit{opacity:1;background:#e3efe6}
-body.rl-unified-shell.ov44-active .ov57-fact:not(button) .ov57-fact__edit{display:none}
+/* V58 — edit affordances for the existing Overview facts row. */
+body.rl-unified-shell.ov44-active .ov48-event-facts{gap:12px;margin:0 0 14px}
+body.rl-unified-shell.ov44-active .ov48-fact{min-height:82px;padding:13px 15px;border-color:#d6dfd8;border-radius:14px;background:rgba(251,252,249,.95);box-shadow:0 8px 24px rgba(29,66,52,.035)}
+body.rl-unified-shell.ov44-active .ov48-fact.ov57-is-editable{padding-right:48px;padding-bottom:13px}
+body.rl-unified-shell.ov44-active .ov48-fact.ov57-is-editable:hover{border-color:#b7cec0;background:#f7faf7;box-shadow:0 10px 28px rgba(29,66,52,.055)}
+body.rl-unified-shell.ov44-active .ov48-fact__icon{width:40px;height:40px;border-radius:11px;background:#e8f1ea;color:#2f7a59}
+body.rl-unified-shell.ov44-active .ov48-fact__icon svg{width:21px;height:21px}
+body.rl-unified-shell.ov44-active .ov48-fact small{font-size:9px}
+body.rl-unified-shell.ov44-active .ov48-fact strong{font-size:13px}
+body.rl-unified-shell.ov44-active .ov48-fact em{font-size:8.8px}
+body.rl-unified-shell.ov44-active .ov57-fact-edit{position:absolute;top:10px;right:10px;width:28px;height:28px;display:grid;place-items:center;padding:0;border:0;border-radius:8px;background:#eef5ef;color:#3d715c;cursor:pointer;opacity:.8;transition:opacity .15s ease,background .15s ease,color .15s ease}
+body.rl-unified-shell.ov44-active .ov57-fact-edit:hover{opacity:1;background:#e1eee5;color:#235b43}
+body.rl-unified-shell.ov44-active .ov57-fact-edit svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 body.rl-unified-shell.ov44-active .ov44-metric:first-child em::before{content:"В пути: ";font-weight:650;color:#60786f}
-@media(max-width:1120px){body.rl-unified-shell.ov44-active .ov57-event-facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:620px){body.rl-unified-shell.ov44-active .ov57-event-facts{grid-template-columns:1fr;gap:9px}body.rl-unified-shell.ov44-active .ov57-fact{min-height:74px;padding:12px 14px}}
+@media(max-width:1120px){body.rl-unified-shell.ov44-active .ov48-event-facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){body.rl-unified-shell.ov44-active .ov48-event-facts{grid-template-columns:1fr;gap:9px}body.rl-unified-shell.ov44-active .ov48-fact{min-height:74px;padding:12px 14px}body.rl-unified-shell.ov44-active .ov48-fact.ov57-is-editable{padding-right:46px;padding-bottom:12px}}
