@@ -1,7 +1,7 @@
 /* V51 — sidebar grouping + current workspace modules. */
 (() => {
   'use strict';
-  [['overview-v45','45'],['overview-v46','46'],['access-v47','47'],['preview-v48','49'],['preview-v51','51']].forEach(([name,version])=>{
+  [['overview-v45','45'],['overview-v46','46'],['access-v47','47'],['preview-v48','49'],['preview-v51','51'],['participants-v50','53'],['participants-v53','53']].forEach(([name,version])=>{
     const key=`data-${name}`;
     if(document.querySelector(`link[${key}]`))return;
     const link=document.createElement('link');link.rel='stylesheet';link.href=`./${name}.css?v=${version}-20260914`;link.setAttribute(key,'1');document.head.appendChild(link);
