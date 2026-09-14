@@ -46,7 +46,7 @@
   }
 
   function apply(row){
-    if(!row||!window.S?.event)return;
+    if(!row||typeof S==='undefined'||!S?.event)return;
     eventRow=row;
     S.event.date=russianDate(row.starts_at);
     S.event.meeting=row.meeting_label||'Время и точка уточняются';
