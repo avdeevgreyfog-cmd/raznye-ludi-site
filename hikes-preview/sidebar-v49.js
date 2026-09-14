@@ -2,11 +2,6 @@
 (() => {
   'use strict';
   const RELEASE='60-20260914g';
-  [['access-v47'],['preview-v48'],['preview-v51'],['participants-v56'],['avatars-v56'],['overview-v57']].forEach(([name])=>{
-    const key=`data-${name}`;
-    if(document.querySelector(`link[${key}]`))return;
-    const link=document.createElement('link');link.rel='stylesheet';link.href=`./${name}.css?r=${RELEASE}`;link.setAttribute(key,'1');document.head.appendChild(link);
-  });
   const GROUPS=[['Поход',['overview','participants','roles']],['Подготовка',['gear','food','transport','documents']],['На местности',['route','plan']]];
   const ICONS={
     overview:'<circle cx="12" cy="12" r="8.5"/><path d="M14.9 9.1 13 13l-3.9 1.9L11 11z"/><path d="M12 2.5v1.2M12 20.3v1.2M2.5 12h1.2M20.3 12h1.2"/>',
@@ -28,17 +23,5 @@
   }
   function decorateSidebar(){document.getElementById('sidebar')?.classList.add('sidebar-v43-ready');decorateNav()}
   const originalRenderNav=window.renderNav;if(typeof originalRenderNav==='function')window.renderNav=function(){originalRenderNav.apply(this,arguments);decorateNav()};requestAnimationFrame(decorateSidebar);
-  window.addEventListener('load',()=>{
-    const modules=['access-v47-docs','access-v47-core','access-v47-cloud','preview-v48','event-v49','participants-v50','participants-v50-actions','preview-v51','avatars-v56','overview-v57'];
-    const next=index=>{
-      if(index>=modules.length){
-        window.V47Cloud?.load?.();
-        if(typeof render==='function')render();
-        const build=document.querySelector('.build-label');if(build)build.textContent='V60 · стабильная сборка';
-        return;
-      }
-      const script=document.createElement('script');script.src=`./${modules[index]}.js?r=${RELEASE}`;script.async=false;script.onload=()=>next(index+1);script.onerror=()=>{console.warn('Workspace module failed:',modules[index]);next(index+1)};document.body.appendChild(script);
-    };
-    next(0);
-  },{once:true});
+
 })();

@@ -13,7 +13,7 @@
     const roles = S.rolesV36?.roles || [];
     const lead = roles.find(r => r.id === 'lead')?.p;
     const logistics = roles.find(r => r.id === 'logistics')?.p;
-    return S.current === 'p1' || S.current === lead || S.current === logistics;
+    return window.HikeWorkspace?.can('roles') ?? (S.current === 'p1' || S.current === lead);
   }
 
   function profile40(pid = S.current) {
@@ -218,12 +218,12 @@
   function rideCard40(r, index) {
     syncRideProfile40(r);
     const me = r.driver === S.current, free = transportFreeV24(r), car = rideVehicle40(r), active = transportRequestV24(), blocked = active && active.ride.id !== r.id, full = free <= 0;
-    return `<div class="tv40-ride-wrap"><article class="tv40-ride ${me ? 'mine' : ''}"><header><div class="tv40-driver"><div class="tv40-car-icon">${carSvg40()}</div><div><small>${me ? 'МОЙ РЕЙС' : 'ВОДИТЕЛЬ'}</small><h3>${esc(pn(r.driver))}</h3><p>${esc(car.vehicle)}${car.color ? ` · ${esc(car.color)}` : ''}${car.plate ? ` · ${esc(car.plate)}` : ''}</p></div></div><div class="tv40-capacity ${full ? 'full' : ''}"><strong>${free}</strong><span>свободно из ${+r.seats||0}</span></div></header><div class="tv40-stops">${stopRows40(r)}</div>${r.comment ? `<div class="tv40-comment">${esc(r.comment)}</div>` : ''}<div class="tv40-passengers"><div><small>ПАССАЖИРЫ</small><span>${(r.passengers||[]).length ? (r.passengers||[]).map(pid => `<b title="${esc(pn(pid))}">${esc(initials(pn(pid)))}</b>`).join('') : '<em>Пока никого</em>'}</span></div><div class="row-actions">${me ? `<button class="btn sand sm" data-tv40-add-stop="${r.id}">+ ${dir === 'there' ? 'Посадка' : 'Высадка'}</button><button class="btn alt sm" data-tv40-edit-ride="${r.id}">Параметры</button>` : `<button class="btn sand sm" data-tv40-request="${r.id}" ${full || blocked || active?.ride.id === r.id ? 'disabled' : ''}>${active?.ride.id === r.id ? 'Заявка отправлена' : full ? 'Мест нет' : 'Попроситься'}</button>`}<button class="btn alt sm" data-tv24-yandex-ride="${r.id}">Маршрут в Яндекс</button></div></div></article>${pendingRequests40(r)}</div>`;
+    return `<div class="tv40-ride-wrap"><article class="tv40-ride ${me ? 'mine' : ''}"><header><div class="tv40-driver"><div class="tv40-car-icon">${carSvg40()}</div><div><small>${me ? 'МОЙ РЕЙС' : 'ВОДИТЕЛЬ'}</small><h3>${esc(pn(r.driver))}</h3><p>${esc(car.vehicle)}${car.color ? ` · ${esc(car.color)}` : ''}${car.plate ? ` · ${esc(car.plate)}` : ''}</p></div></div><div class="tv40-capacity ${full ? 'full' : ''}"><strong>${free}</strong><span>свободно из ${+r.seats||0}</span></div></header><div class="tv40-stops">${stopRows40(r)}</div>${r.comment ? `<div class="tv40-comment">${esc(r.comment)}</div>` : ''}<div class="tv40-passengers"><div><small>ПАССАЖИРЫ</small><span>${(r.passengers||[]).length ? (r.passengers||[]).map(pid => `<b title="${esc(pn(pid))}">${esc(initials(pn(pid)))}</b>`).join('') : '<em>Пока никого</em>'}</span></div><div class="row-actions">${me ? `<button class="btn sand sm" data-tv40-add-stop="${r.id}">+ ${dir === 'there' ? 'Посадка' : 'Высадка'}</button><button class="btn alt sm" data-tv40-edit-ride="${r.id}">Параметры</button>` : `<button class="btn sand sm" data-tv40-request="${r.id}" ${full || blocked || active?.ride.id === r.id ? 'disabled' : ''}>${active?.ride.id === r.id ? (active.request.status === 'approved' ? 'Место подтверждено' : 'Заявка отправлена') : full ? 'Мест нет' : 'Попроситься'}</button>`}<button class="btn alt sm" data-tv24-yandex-ride="${r.id}">Маршрут в Яндекс</button></div></div></article>${pendingRequests40(r)}</div>`;
   }
 
   function rides40() {
     const rides = tv24().rides[dir] || [];
-    return `<section class="tv40-panel"><div class="tv40-panel-head"><div><div class="page-kicker">${dir === 'there' ? 'Туда' : 'Обратно'}</div><h2>${dir === 'there' ? 'Рейсы и точки посадки' : 'Обратные рейсы и высадки'}</h2><p>${dir === 'there' ? 'Пассажир выбирает водителя и конкретную точку. Водитель подтверждает заявку.' : 'Обратный путь ведётся отдельно: состав и точки можно изменить независимо.'}</p></div></div><div class="tv40-rides">${rides.length ? rides.map(rideCard40).join('') : `<div class="tv40-empty"><div class="tv40-empty-icon">${carSvg40()}</div><strong>Рейсов пока нет</strong><span>${profile40().driver ? 'Создайте первый рейс и отметьте точку посадки на карте.' : 'Когда водитель создаст рейс, он появится здесь.'}</span>${profile40().driver ? '<button class="btn sand sm" id="tv40CreateRideEmpty">+ Создать рейс</button>' : ''}</div>`}</div></section>`;
+    return `<section class="tv40-panel"><div class="tv40-panel-head"><div><div class="page-kicker">${dir === 'there' ? 'Туда' : 'Обратно'}</div><h2>${dir === 'there' ? 'Рейсы и точки посадки' : 'Обратные рейсы и высадки'}</h2><p>${dir === 'there' ? 'Пассажир выбирает водителя и конкретную точку. Водитель подтверждает заявку.' : 'По умолчанию возвращаемся в той же машине. Здесь можно изменить возвращение; время обратного выезда уточняет водитель.'}</p></div></div><div class="tv40-rides">${rides.length ? rides.map(rideCard40).join('') : `<div class="tv40-empty"><div class="tv40-empty-icon">${carSvg40()}</div><strong>Рейсов пока нет</strong><span>${profile40().driver ? 'Создайте первый рейс и отметьте точку посадки на карте.' : 'Когда водитель создаст рейс, он появится здесь.'}</span>${profile40().driver ? '<button class="btn sand sm" id="tv40CreateRideEmpty">+ Создать рейс</button>' : ''}</div>`}</div></section>`;
   }
 
   function mapPanel40() {
@@ -235,7 +235,7 @@
     (tv24().rides[dir] || []).forEach(syncRideProfile40);
     return `${pageHead('Логистика','Транспорт','Рейсы, точки посадки и заявки пассажиров. Данные водителя и автомобиля редактируются только в личном профиле.', '<button class="btn alt" type="button" id="tv40ProfileTop">Мой профиль</button>')}
       <div class="tv40-shell">
-        <div class="tv40-toolbar"><div class="segmented tv40-directions tv24-dir"><button class="${dir === 'there' ? 'active' : ''}" data-tv40-dir="there">Туда</button><button class="${dir === 'back' ? 'active' : ''}" data-tv40-dir="back">Обратно</button></div><span>${dir === 'there' ? 'Дорога к мероприятию' : 'Возвращение после мероприятия'}</span></div>
+        <div class="tv40-toolbar"><div class="segmented tv40-directions tv24-dir"><button class="${dir === 'there' ? 'active' : ''}" data-tv40-dir="there">Поездка на мероприятие</button><button class="${dir === 'back' ? 'active' : ''}" data-tv40-dir="back">Изменить возвращение</button></div><span>${dir === 'there' ? 'Обратно — та же машина, если не выбран другой вариант' : 'Возвращение после мероприятия'}</span></div>
         ${summary40()}
         ${profileReference40()}
         ${destination40()}
@@ -406,6 +406,7 @@
   }
 
   function requestModal40(r) {
+    if (transportDriverRideV24()) return toast('Вы уже водитель: сначала отмените свой рейс');
     if (transportRequestV24()) return toast('Сначала отмените текущую заявку или освободите подтверждённое место');
     const stops = (r.stops||[]);
     if (!stops.length) return toast('Водитель ещё не указал точку посадки');

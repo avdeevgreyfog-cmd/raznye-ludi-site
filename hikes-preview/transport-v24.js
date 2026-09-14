@@ -58,7 +58,7 @@ function syncLegacyTransportV24(doSave=true){
   if(doSave)save();
 }
 function fmtCoordV24(lat,lon){return Number.isFinite(+lat)&&Number.isFinite(+lon)?`${(+lat).toFixed(6)}, ${(+lon).toFixed(6)}`:'координаты не заданы'}
-function hasCoordV24(p){return p&&Number.isFinite(+p.lat)&&Number.isFinite(+p.lon)}
+function hasCoordV24(p){return p&&p.lat!==null&&p.lon!==null&&p.lat!==''&&p.lon!==''&&Number.isFinite(+p.lat)&&Number.isFinite(+p.lon)}
 function yandexPointV24(lat,lon){return `https://yandex.ru/maps/?ll=${encodeURIComponent(`${lon},${lat}`)}&z=16&pt=${encodeURIComponent(`${lon},${lat},pm2rdm`)}`}
 function yandexRouteV24(points){const pts=points.filter(hasCoordV24);if(pts.length<2)return null;return `https://yandex.ru/maps/?mode=routes&rtext=${pts.map(p=>`${(+p.lat).toFixed(6)}%2C${(+p.lon).toFixed(6)}`).join('~')}&rtt=auto`}
 function rideRoutePointsV24(r,d=dir){const a=tv24().arrival,st=(r.stops||[]).filter(hasCoordV24);return d==='there'?[...st,a]:[a,...st]}

@@ -6,7 +6,7 @@
   let cfg=null,eventId='',loaded=false;
   const session=()=>{try{return JSON.parse(localStorage.getItem(AUTH)||'null')}catch(e){return null}};
   async function config(){
-    if(cfg)return cfg;const text=await fetch('./supabase-v42.js?v=42-20260912').then(r=>r.text());
+    if(cfg)return cfg;if(window.HikeCloudConfig){cfg=window.HikeCloudConfig;return cfg}const text=await fetch('./supabase-v42.js?v=42-20260912').then(r=>r.text());
     const url=text.match(/PROJECT_URL\s*=\s*['"]([^'"]+)['"]/i)?.[1],key=text.match(/PUBLISHABLE_KEY\s*=\s*['"]([^'"]+)['"]/i)?.[1];
     if(!url||!key)throw new Error('Конфигурация хранилища недоступна');cfg={url,key};return cfg;
   }

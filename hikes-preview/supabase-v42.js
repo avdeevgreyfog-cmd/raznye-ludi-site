@@ -7,7 +7,9 @@
   const EVENT_SLUG = 'tominsky-lesopark';
   const AUTH_KEY = 'rl_hike_auth_v42';
   const REVISION_KEY = 'rl_hike_cloud_revision_v42';
-  let session = null, event = null, membership = null, isOrganizer = false, cloudReady = false, writeTimer = 0, lastRevision = '';
+  let session = null, event = null, membership = null, isOrganizer = false, cloudReady = false, writeTimer = 0, lastRevision = '', writeInFlight = false, pendingWrite = false, remoteLocal = {};
+  window.HikeSession={signed:false,approved:false,organizer:false};
+  window.HikeCloudConfig={url:PROJECT_URL,key:PUBLISHABLE_KEY};
 
   const headers = extra => {
     const result = { apikey: PUBLISHABLE_KEY, ...extra };
@@ -77,13 +79,20 @@
     S.event.replyDeadline = event.reply_deadline ? new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long' }).format(new Date(event.reply_deadline)) : 'не задан';
     S.event.status = ({ planning: 'Подготовка', open: 'Регистрация открыта', closed: 'Набор закрыт', cancelled: 'Отменён' })[event.status] || 'Подготовка';
   }
-  function cloudKeys() { const values = {}; for (let i = 0; i < localStorage.length; i += 1) { const key = localStorage.key(i); if (key && key.startsWith('rl_hike_') && key !== AUTH_KEY) values[key] = localStorage.getItem(key); } return values; }
+  function cloudKeys() {
+    const values = {...remoteLocal};
+    if(isOrganizer || window.HikeWorkspace?.can('route')){
+      ['rl_hike_route_editor_v13','rl_hike_shared_route_revision','rl_hike_atlas_v20'].forEach(key=>{const value=localStorage.getItem(key);if(value!==null)values[key]=value});
+    }
+    return values;
+  }
   function restoreCloudKeys(values) { Object.entries(values || {}).forEach(([key, value]) => { if (key.startsWith('rl_hike_') && key !== AUTH_KEY && typeof value === 'string') localStorage.setItem(key, value); }); }
   function ensureCurrentParticipant(displayName, forceOrganizer) {
     if (!S || !session?.user?.id) return;
     const id = forceOrganizer ? 'p1' : session.user.id, name = displayName || session.user.email?.split('@')[0] || 'Участник';
     let person = S.participants?.find(p => p.id === id);
     if (!person) { person = { id, name, rsvp: forceOrganizer ? 'yes' : 'pending' }; S.participants.push(person); } else if (displayName) person.name = displayName;
+    if (!forceOrganizer && membership) person.rsvp = membership.status === 'approved' ? 'yes' : membership.status === 'declined' ? 'no' : 'pending';
     S.current = id; S.checks ||= {}; S.checks[id] ||= []; S.rides ||= { there: {}, back: {} }; S.rides.there ||= {}; S.rides.back ||= {}; S.rides.there[id] ||= 'unset'; S.rides.back[id] ||= 'unset';
   }
   async function syncOrganizerRoster() {
@@ -94,26 +103,48 @@
     (members || []).forEach(member => { if (member.role === 'organizer') return; if (!S.participants.find(person => person.id === member.user_id)) S.participants.push({ id: member.user_id, name: names.get(member.user_id) || 'Участник', rsvp: member.status === 'approved' ? 'yes' : member.status === 'declined' ? 'no' : 'pending' }); });
   }
   async function loadCloudDocument() {
-    if (!membership) return;
-    const rows = await request(`/rest/v1/hike_documents?event_id=eq.${event.id}&select=payload,updated_at`), document = rows?.[0];
-    if (!document?.payload?.app) return;
-    lastRevision = document.updated_at || '';
-    if (sessionStorage.getItem(REVISION_KEY) === lastRevision) return;
-    restoreCloudKeys(document.payload.local); localStorage.setItem(STORAGE, JSON.stringify(document.payload.app)); sessionStorage.setItem(REVISION_KEY, lastRevision); location.reload();
+    if (!membership) return true;
+    const rows = await request('/rest/v1/hike_documents?event_id=eq.'+event.id+'&select=payload,updated_at'), document = rows?.[0];
+    lastRevision = document?.updated_at || ''; remoteLocal = document?.payload?.local || {};
+    if (!document?.payload?.app) return true;
+    if (sessionStorage.getItem(REVISION_KEY) === lastRevision) return true;
+    restoreCloudKeys(remoteLocal);
+    localStorage.setItem(STORAGE, JSON.stringify({...document.payload.app,current:isOrganizer?'p1':session.user.id}));
+    sessionStorage.setItem(REVISION_KEY,lastRevision);
+    location.reload(); return false;
   }
-  window.scheduleCloudSync = function scheduleCloudSync(now = false) {
-    if (!cloudReady || !isOrganizer || !event || !S) return;
-    clearTimeout(writeTimer); writeTimer = setTimeout(async () => { try {
-      const payload = { app: S, local: cloudKeys(), version: 42 };
-      const rows = await request(`/rest/v1/hike_documents?event_id=eq.${event.id}`, { method: 'PATCH', headers: { Prefer: 'return=representation' }, body: { payload, updated_by: session.user.id } });
-      lastRevision = rows?.[0]?.updated_at || lastRevision; if (lastRevision) sessionStorage.setItem(REVISION_KEY, lastRevision);
-    } catch (error) { console.warn('Hike cloud sync failed', error); } }, now ? 0 : 700);
+  function syncStatus(text,error=false){
+    let el=document.getElementById('hikeSyncStatus');
+    if(!el){el=document.createElement('button');el.id='hikeSyncStatus';el.className='text-button';document.getElementById('hikeAuthBar')?.appendChild(el)}
+    el.textContent=text;el.style.color=error?'#995038':'#577261';
+    el.onclick=error?()=>{if(confirm('Обновить командные данные? Несохранённое действие понадобится повторить.')){sessionStorage.removeItem(REVISION_KEY);location.reload()}}:null;
+  }
+  async function flushCloud(){
+    writeTimer=0;
+    if(writeInFlight){pendingWrite=true;return}
+    if(!cloudReady||!pendingWrite)return;
+    writeInFlight=true;pendingWrite=false;syncStatus('Сохраняется…');
+    try{
+      const local=cloudKeys(),app=JSON.parse(JSON.stringify(S));
+      const row=await request('/rest/v1/rpc/save_hike_workspace',{method:'POST',body:{p_event:event.id,p_revision:lastRevision||null,p_app:app,p_local:local}});
+      lastRevision=row.updated_at;remoteLocal=local;
+      if(lastRevision)sessionStorage.setItem(REVISION_KEY,lastRevision);
+      syncStatus('Сохранено для команды');
+    }catch(error){
+      cloudReady=false;pendingWrite=false;
+      syncStatus('Не сохранено · обновить',true);toast(error.message||'Не удалось сохранить изменения для команды');
+    }finally{writeInFlight=false;if(pendingWrite&&cloudReady)window.scheduleCloudSync(true)}
+  }
+  window.scheduleCloudSync = function scheduleCloudSync(now=false){
+    if(!cloudReady||!event||!S||(!isOrganizer&&membership?.status!=='approved')||window.HikePreviewV48?.active)return;
+    pendingWrite=true;clearTimeout(writeTimer);writeTimer=setTimeout(flushCloud,now?0:700);
   };
   function wrapStorage() {
     const nativeSet = Storage.prototype.setItem;
-    Storage.prototype.setItem = function patchedSetItem(key, value) { nativeSet.call(this, key, value); if (this === localStorage && key?.startsWith('rl_hike_') && key !== AUTH_KEY) window.scheduleCloudSync?.(); };
+    Storage.prototype.setItem = function patchedSetItem(key, value) { nativeSet.call(this, key, value); if (this === localStorage && (key === STORAGE || key?.startsWith('rl_hike_')) && key !== AUTH_KEY) window.scheduleCloudSync?.(); };
   }
   function updateAuthUI() {
+    window.HikeSession={signed:!!session?.user,approved:isOrganizer||membership?.status==='approved',organizer:isOrganizer};
     const label = document.getElementById('hikeAuthLabel'), login = document.getElementById('hikeAuthButton'), settings = document.getElementById('hikeSettingsButton'), signout = document.getElementById('hikeSignoutButton'), selector = document.getElementById('who');
     if (!session?.user) { label.textContent = 'Гость'; login.hidden = false; settings.hidden = true; signout.hidden = true; selector.hidden = true; return; }
     label.textContent = membership?.status === 'requested' ? 'Заявка отправлена' : session.user.email; login.hidden = true; settings.hidden = !isOrganizer; signout.hidden = false; selector.hidden = true; document.body.classList.toggle('hike-organizer', isOrganizer);
@@ -158,10 +189,10 @@
   async function start() {
     wrapStorage(); attachControls(); if (!(await ensureSession())) { updateAuthUI(); return; }
     await getEvent(); await getMembership(); if (!membership) { updateAuthUI(); await ensureProfileAndRequest(); return; }
-    await loadCloudDocument();
+    if (!(await loadCloudDocument())) return;
     const profileRows = await request(`/rest/v1/profiles?id=eq.${session.user.id}&select=display_name`), displayName = profileRows?.[0]?.display_name || session.user.email?.split('@')[0];
-    ensureCurrentParticipant(displayName, isOrganizer); await syncOrganizerRoster(); applyEventToApp(); cloudReady = true; if (isOrganizer) window.scheduleCloudSync(true); updateAuthUI(); render(); wireMembershipActions();
-    setInterval(async () => { if (!membership || isOrganizer || document.hidden) return; try { const rows = await request(`/rest/v1/hike_documents?event_id=eq.${event.id}&select=updated_at`); if (rows?.[0]?.updated_at && rows[0].updated_at !== lastRevision) location.reload(); } catch (e) {} }, 45000);
+    ensureCurrentParticipant(displayName, isOrganizer); await syncOrganizerRoster(); applyEventToApp(); cloudReady = true; updateAuthUI(); render(); if (isOrganizer) window.scheduleCloudSync(true); wireMembershipActions();
+    setInterval(async () => { if (!membership || document.hidden || pendingWrite || writeInFlight || !cloudReady) return; try { const rows = await request(`/rest/v1/hike_documents?event_id=eq.${event.id}&select=updated_at`); if (rows?.[0]?.updated_at && rows[0].updated_at !== lastRevision) { sessionStorage.removeItem(REVISION_KEY); location.reload(); } } catch (e) {} }, 45000);
   }
   start().catch(error => { console.error(error); toast('Не удалось подключить командные данные: ' + (error.message || 'проверь соединение')); updateAuthUI(); });
 })();

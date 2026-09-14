@@ -27,7 +27,10 @@
     ['lead', 'Руководитель', 'Общее решение по мероприятию: состав, сроки, старт, остановка и изменение плана.'],
     ['nav', 'Навигатор', 'Маршрут, карта, контрольные точки, ориентиры и запасной вариант движения.'],
     ['safety', 'Замыкающий / безопасность', 'Целостность группы, темп, состояние участников и базовая безопасность на маршруте.'],
-    ['logistics', 'Логистика и снабжение', 'Транспорт, питание, вода, закупки и распределение группового имущества.']
+    ['logistics', 'Завхоз', 'Групповое имущество, питание, вода и закупки.'],
+    ['medic', 'Медик', 'Подготовка и проверка общей аптечки.'],
+    ['photographer', 'Фотограф / летописец', 'Взять фотоаппарат, снимать поход и собрать материалы.'],
+    ['cook', 'Повар', 'Приготовление еды. При необходимости руководитель отдельно поручает управление меню.']
   ];
   const SKILLS = [
     ['firstAid', 'Первая помощь'],
@@ -74,13 +77,14 @@
     ROLE_DEFS.forEach(([id, title, desc]) => {
       let row = r.roles.find(x => x.id === id);
       if (!row) { row = { id, title, desc, p: '' }; r.roles.push(row); }
-      row.title = title;
-      row.desc = desc;
+      if (!row.title || (id === 'logistics' && row.title === 'Логистика и снабжение')) row.title = title;
+      if (!row.desc) row.desc = desc;
     });
-    r.roles = r.roles.filter(x => ROLE_DEFS.some(([id]) => id === x.id));
+    r.candidates ||= {};
+    r.roles.forEach(x => { r.candidates[x.id] ||= []; });
     r.skills ||= {};
     (S.participants || []).forEach(p => { if (!Array.isArray(r.skills[p.id])) r.skills[p.id] = []; });
-    S.roles = r.roles.map(x => ({ id: `v36_${x.id}`, title: x.title, p: x.p || '', critical: true, desc: x.desc }));
+    S.roles = r.roles.map(x => ({ id: `v36_${x.id}`, title: x.title, p: x.p || '', critical: ['lead','nav','logistics'].includes(x.id), desc: x.desc }));
   }
 
   function ensureGear36() {
@@ -207,7 +211,7 @@
     const roles = S.rolesV36?.roles || [];
     const lead = roles.find(r => r.id === 'lead')?.p;
     const logistics = roles.find(r => r.id === 'logistics')?.p;
-    return S.current === 'p1' || S.current === lead || S.current === logistics;
+    return window.HikeWorkspace?.can(tab === 'food' ? 'food' : 'gear') ?? (S.current === 'p1' || S.current === lead || S.current === logistics);
   }
 
   function progress36(pid) {
@@ -219,6 +223,7 @@
 
   function rolePage36() {
     ensureRoles36();
+    if (window.HikeWorkspace) return window.HikeWorkspace.rolesPage();
     const roles = S.rolesV36.roles;
     const skills = S.rolesV36.skills;
     const roleCards = roles.map(r => `<article class="v36-role-card">
@@ -296,7 +301,7 @@
       const meta = sharedMeta36(x.id), st = sharedState36(x);
       const owners = (x.a || []).map(a => `${pn(a[0])} · ${fmt(a[1])} ${meta.unit || 'шт.'}${(x.confirmed || []).includes(a[0]) ? ' ✓' : ''}`).join(' · ') || 'пока не назначено';
       const mine = num((x.a || []).find(a => a[0] === S.current)?.[1]);
-      return `<article class="v36-shared-row ${st[1]}"><div><span class="v36-chip ${st[1]}">${st[0]}</span><h3>${esc(x.title)}</h3><p>${esc(meta.desc || '')}</p><small>${esc(owners)}</small></div><div class="v36-shared-numbers"><span><small>Нужно</small><b>${fmt(x.need)} ${esc(meta.unit || 'шт.')}</b></span><span><small>Распределено</small><b>${fmt(sharedAssigned36(x))}</b></span><span><small>Вес / ед.</small><b>${meta.weightKg ? `${fmt(meta.weightKg)} кг` : '—'}</b></span></div><div class="v36-shared-actions">${mine ? `<button class="btn alt sm" data-v36-shared-confirm="${x.id}">${(x.confirmed || []).includes(S.current) ? '✓ Подтверждено' : 'Подтвердить'}</button>` : ''}${organizer36() ? `<button class="btn alt sm" data-v36-shared-assign="${x.id}">Распределить</button><button class="btn ghost sm" data-v36-shared-edit="${x.id}">Изменить</button>` : ''}</div></article>`;
+      return `<article class="v36-shared-row ${st[1]}"><div><span class="v36-chip ${st[1]}">${st[0]}</span><h3>${esc(x.title)}</h3><p>${esc(meta.desc || '')}</p><small>${esc(owners)}</small></div><div class="v36-shared-numbers"><span><small>Нужно</small><b>${fmt(x.need)} ${esc(meta.unit || 'шт.')}</b></span><span><small>Распределено</small><b>${fmt(sharedAssigned36(x))}</b></span><span><small>Вес / ед.</small><b>${meta.weightKg ? `${fmt(meta.weightKg)} кг` : '—'}</b></span></div><div class="v36-shared-actions"><button class="btn alt sm" data-workspace-take="${esc(x.id)}">${mine ? 'Изменить количество' : 'Я возьму'}</button>${sharedMeta36(x.id).cat === 'health' || sharedMeta36(x.id).kit?.length ? `<button class="btn alt sm" data-workspace-kit="${esc(x.id)}">Состав комплекта</button>` : ''}${mine ? `<button class="btn alt sm" data-v36-shared-confirm="${x.id}">${(x.confirmed || []).includes(S.current) ? '✓ Подтверждено' : 'Подтвердить'}</button>` : ''}${organizer36() ? `<button class="btn alt sm" data-v36-shared-assign="${x.id}">Распределить</button><button class="btn ghost sm" data-v36-shared-edit="${x.id}">Изменить</button>` : ''}</div></article>`;
     }).join('');
     return `${organizer36() ? '<div class="v36-inline-toolbar"><div><b>Групповое имущество</b><small>Сначала задаём потребность, затем распределяем между участниками.</small></div><button class="btn sand" id="v36AddShared">+ Общее имущество</button></div>' : ''}<div class="v36-shared-list">${rows || '<div class="v36-empty">Групповое имущество пока не добавлено.</div>'}</div>`;
   }
@@ -306,7 +311,7 @@
     return `<div class="v36-team-list">${allRelevantPeople36().map(p => {
       const done = req.filter(i => gearStatus36(p.id, i.id) === 'ready').length;
       const problems = S.gearV36.items.filter(i => ['borrow', 'missing'].includes(gearStatus36(p.id, i.id)));
-      return `<div class="v36-team-row"><span class="v36-person"><span class="avatar">${initials(p.name)}</span><span><b>${esc(p.name)}</b><small>${p.rsvp === 'yes' ? 'Участвует' : p.rsvp === 'maybe' ? 'Возможно' : 'Нет ответа'}</small></span></span><span><small>Обязательное</small><b>${done}/${req.length}</b></span><span><small>Вес</small><b>${fmt(personalWeight36(p.id) + sharedAssignedWeight36(p.id), 1)} кг</b></span><span class="v36-team-problems">${problems.length ? problems.slice(0, 3).map(i => `<em>${esc(i.title)}</em>`).join('') : '<em class="ok">Критичных проблем нет</em>'}</span></div>`;
+      return `<div class="v36-team-row"><span class="v36-person"><span class="avatar">${initials(p.name)}</span><span><b>${esc(p.name)}</b><small>${p.rsvp === 'yes' ? 'Участвует' : p.rsvp === 'maybe' ? 'Возможно' : 'Нет ответа'}</small></span></span><span><small>Обязательное</small><b>${done}/${req.length}</b></span><span><small>Вес</small><b>${fmt(personalWeight36(p.id) + sharedAssignedWeight36(p.id), 1)} кг</b></span><span class="v36-team-problems">${problems.length ? problems.slice(0, 3).map(i => `<em>${esc(i.title)}</em>`).join('') : '<em class="ok">Нет отметок о нехватке</em>'}</span></div>`;
     }).join('')}</div>`;
   }
 
@@ -340,7 +345,7 @@
     const common = m.mode !== 'self';
     const ingredients = S.foodV31.ingredients.filter(i => i.mealId === m.id);
     const needBuy = ingredients.filter(i => ingredientBuy36(i) > 0).length;
-    return `<article class="v36-meal ${common ? 'common' : 'self'}"><div class="v36-meal-time"><b>${esc(m.time || '—')}</b><small>${esc(m.location || '')}</small></div><div class="v36-meal-main"><div class="v36-meal-head"><div><h3>${esc(m.title)}</h3><span class="v36-chip ${common ? 'ok' : ''}">${common ? (m.mode === 'hybrid' ? 'Общее + личное' : 'Общее') : 'Самостоятельно'}</span></div>${organizer36() ? `<div><button class="btn alt sm" data-v36-edit-meal="${m.id}">Изменить</button></div>` : ''}</div><p>${esc(m.menu || (common ? 'Меню не заполнено' : 'Каждый отвечает за свою еду.'))}</p>${m.note ? `<small class="v36-note">${esc(m.note)}</small>` : ''}${common ? `<div class="v36-meal-meta"><span><small>Порций</small><b>${mealPortions36(m)}</b></span><span><small>Продуктов</small><b>${ingredients.length}</b></span><span><small>Докупить</small><b>${needBuy}</b></span></div><div class="v36-recipe">${ingredients.length ? ingredients.map(i => `<div class="v36-recipe-row"><span><b>${esc(i.title)}</b><small>${fmt(i.perPerson)} ${esc(i.unit)} / чел.</small></span><span><small>Всего</small><b>${fmt(ingredientNeed36(i))} ${esc(i.unit)}</b></span><span class="${ingredientBuy36(i) > 0 ? 'warn' : 'ok'}"><small>${ingredientBuy36(i) > 0 ? 'Докупить' : 'Закрыто'}</small><b>${ingredientBuy36(i) > 0 ? `${fmt(ingredientBuy36(i))} ${esc(i.unit)}` : '✓'}</b></span>${organizer36() ? `<button class="icon-btn" data-v36-edit-ing="${i.id}" title="Изменить">✎</button>` : ''}</div>`).join('') : '<div class="v36-empty compact">Рецепт пока не заполнен.</div>'}${organizer36() ? `<button class="v36-add-line" data-v36-add-ing="${m.id}">+ продукт в рецепт</button>` : ''}</div>` : foodMealChecks36(m)}</div></article>`;
+    return `<article class="v36-meal ${common ? 'common' : 'self'}"><div class="v36-meal-time"><b>${esc((S.timeline||[]).find(t=>t.id===m.planEventId)?.time || m.time || '—')}</b><small>${esc(m.location || '')}</small></div><div class="v36-meal-main"><div class="v36-meal-head"><div><h3>${esc(m.title)}</h3><span class="v36-chip ${common ? 'ok' : ''}">${common ? (m.mode === 'hybrid' ? 'Общее + личное' : 'Общее') : 'Самостоятельно'}</span></div>${organizer36() ? `<div><button class="btn alt sm" data-v36-edit-meal="${m.id}">Изменить</button></div>` : ''}</div><p>${esc(m.menu || (common ? 'Меню не заполнено' : 'Каждый отвечает за свою еду.'))}</p>${m.note ? `<small class="v36-note">${esc(m.note)}</small>` : ''}${common ? `<div class="v36-meal-meta"><span><small>Порций</small><b>${mealPortions36(m)}</b></span><span><small>Продуктов</small><b>${ingredients.length}</b></span><span><small>Докупить</small><b>${needBuy}</b></span></div><div class="v36-recipe">${ingredients.length ? ingredients.map(i => `<div class="v36-recipe-row"><span><b>${esc(i.title)}</b><small>${fmt(i.perPerson)} ${esc(i.unit)} / чел.</small></span><span><small>Всего</small><b>${fmt(ingredientNeed36(i))} ${esc(i.unit)}</b></span><span class="${ingredientBuy36(i) > 0 ? 'warn' : 'ok'}"><small>${ingredientBuy36(i) > 0 ? 'Докупить' : 'Закрыто'}</small><b>${ingredientBuy36(i) > 0 ? `${fmt(ingredientBuy36(i))} ${esc(i.unit)}` : '✓'}</b></span>${organizer36() ? `<button class="icon-btn" data-v36-edit-ing="${i.id}" title="Изменить">✎</button>` : ''}</div>`).join('') : '<div class="v36-empty compact">Рецепт пока не заполнен.</div>'}${organizer36() ? `<button class="v36-add-line" data-v36-add-ing="${m.id}">+ продукт в рецепт</button>` : ''}</div>` : foodMealChecks36(m)}</div></article>`;
   }
 
   function foodAggregates36() {
@@ -365,7 +370,7 @@
 
   function waterCalc36() {
     const w = S.foodV36.water, people = activePeople36();
-    const base = Math.max(0, num(w.drinkPerPerson)) * people.length + Math.max(0, num(w.cookingLiters));
+    const base = Math.max(0, num(w.drinkPerPerson)) * people.length + Math.max(0, num(w.cookingLiters)) + Math.max(0, num(w.householdLiters));
     const total = Math.max(0, base * (1 + Math.max(0, num(w.reservePct)) / 100) - Math.max(0, num(w.refillLiters)));
     const assigned = people.reduce((n, p) => n + Math.max(0, num(w.assignments[p.id])), 0);
     return { people, base, total, assigned, delta: total - assigned };
@@ -374,7 +379,7 @@
   function foodWater36() {
     const w = S.foodV36.water, c = waterCalc36();
     return `<div class="v36-summary v36-summary-4"><div><small>Участников</small><strong>${c.people.length}</strong><span>подтвердили участие</span></div><div><small>Питьё</small><strong>${fmt(w.drinkPerPerson, 1)} л</strong><span>на человека</span></div><div><small>На старте</small><strong>${fmt(c.total, 1)} л</strong><span>с учётом готовки и резерва</span></div><div><small>Распределено</small><strong>${fmt(c.assigned, 1)} л</strong><span class="${Math.abs(c.delta) < .05 ? 'ok' : 'warn'}">${Math.abs(c.delta) < .05 ? 'баланс сходится' : `${c.delta > 0 ? 'осталось' : 'лишнее'} ${fmt(Math.abs(c.delta), 1)} л`}</span></div></div>
-      <section class="v36-water-settings"><div><h2>Расчёт воды</h2><p>Питьевая вода + вода на готовку + резерв − подтверждённое пополнение на маршруте.</p></div><div class="v36-water-fields"><label>Л/чел.<input data-v36-water="drinkPerPerson" type="number" min="0" step="0.1" value="${num(w.drinkPerPerson)}"></label><label>На готовку, л<input data-v36-water="cookingLiters" type="number" min="0" step="0.1" value="${num(w.cookingLiters)}"></label><label>Резерв, %<input data-v36-water="reservePct" type="number" min="0" step="1" value="${num(w.reservePct)}"></label><label>Пополнение, л<input data-v36-water="refillLiters" type="number" min="0" step="0.1" value="${num(w.refillLiters)}"></label></div></section>
+      <section class="v36-water-settings"><div><h2>Расчёт воды</h2><p>Личная питьевая вода + общая вода на готовку и бытовые нужды + резерв − подтверждённое пополнение. Объёмы задаёт ответственный под условия похода.</p></div><div class="v36-water-fields"><label>Л/чел.<input data-v36-water="drinkPerPerson" type="number" min="0" step="0.1" value="${num(w.drinkPerPerson)}"></label><label>На готовку, л<input data-v36-water="cookingLiters" type="number" min="0" step="0.1" value="${num(w.cookingLiters)}"></label><label>На бытовые нужды, л<input data-v36-water="householdLiters" type="number" min="0" step="0.1" value="${num(w.householdLiters)}"></label><label>Резерв, %<input data-v36-water="reservePct" type="number" min="0" step="1" value="${num(w.reservePct)}"></label><label>Пополнение, л<input data-v36-water="refillLiters" type="number" min="0" step="0.1" value="${num(w.refillLiters)}"></label></div></section>
       <section class="v36-water-distribution"><div class="v36-inline-toolbar"><div><b>Кто сколько несёт на старте</b><small>Можно распределить автоматически и затем вручную поправить нагрузку.</small></div><button class="btn alt" id="v36AutoWater">Распределить поровну</button></div>${c.people.map(p => `<label class="v36-water-row"><span><span class="avatar">${initials(p.name)}</span><b>${esc(p.name)}</b></span><span><input data-v36-water-person="${p.id}" type="number" min="0" step="0.1" value="${num(w.assignments[p.id])}"> л</span></label>`).join('') || '<div class="v36-empty">Нет подтверждённых участников.</div>'}</section>`;
   }
 
@@ -435,7 +440,7 @@
       const title = document.getElementById('v36ShTitle').value.trim(); if (!title) return toast('Укажи название');
       const need = Math.max(0, num(document.getElementById('v36ShNeed').value));
       if (!edit) { id = `sh36_${Date.now()}`; x.id = id; S.shared ||= []; S.shared.push(x); }
-      x.title = title; x.need = need; x.a = (x.a || []).map(a => [a[0], Math.min(num(a[1]), need)]).filter(a => a[1] > 0); x.confirmed = (x.confirmed || []).filter(pid => x.a.some(a => a[0] === pid));
+      x.title = title; x.need = need; // Changing demand must not silently alter participant commitments.
       Object.assign(sharedMeta36(id), { unit: document.getElementById('v36ShUnit').value.trim() || 'шт.', desc: document.getElementById('v36ShDesc').value.trim(), weightKg: Math.max(0, num(document.getElementById('v36ShWeight').value)) });
       save(); closeModal36(); render();
     };
@@ -457,13 +462,13 @@
   function mealModal36(id = '', presetDay = '') {
     const edit = !!id, f = S.foodV31, m = edit ? f.meals.find(x => x.id === id) : { day: presetDay || 'День 1', time: '12:00', title: '', mode: 'self', location: '', menu: '', note: '', portions: 0, cooks: [], equipment: [] };
     if (!m) return;
-    const body = `<div class="v36-form-row"><label>День<input id="v36MealDay" value="${esc(m.day)}"></label><label>Время<input id="v36MealTime" type="time" value="${esc(m.time || '12:00')}"></label></div><label>Название<input id="v36MealTitle" value="${esc(m.title)}" placeholder="Обед / ужин / завтрак"></label><div class="v36-form-row"><label>Формат<select id="v36MealMode"><option value="self" ${m.mode === 'self' ? 'selected' : ''}>Самостоятельно</option><option value="common" ${m.mode === 'common' ? 'selected' : ''}>Общее</option><option value="hybrid" ${m.mode === 'hybrid' ? 'selected' : ''}>Общее + личное</option></select></label><label>Порций (0 = автоматически)<input id="v36MealPortions" type="number" min="0" step="1" value="${num(m.portions)}"></label></div><label>Место<input id="v36MealLocation" value="${esc(m.location || '')}"></label><label>Меню<textarea id="v36MealMenu" rows="2">${esc(m.menu || '')}</textarea></label><label>Комментарий<textarea id="v36MealNote" rows="2">${esc(m.note || '')}</textarea></label>`;
+    const body = `<div class="v36-form-row"><label>День<input id="v36MealDay" value="${esc(m.day)}"></label><label>Время<input id="v36MealTime" type="time" value="${esc(m.time || '12:00')}"></label></div><label>Название<input id="v36MealTitle" value="${esc(m.title)}" placeholder="Обед / ужин / завтрак"></label><div class="v36-form-row"><label>Формат<select id="v36MealMode"><option value="self" ${m.mode === 'self' ? 'selected' : ''}>Самостоятельно</option><option value="common" ${m.mode === 'common' ? 'selected' : ''}>Общее</option><option value="hybrid" ${m.mode === 'hybrid' ? 'selected' : ''}>Общее + личное</option></select></label><label>Порций (0 = автоматически)<input id="v36MealPortions" type="number" min="0" step="1" value="${num(m.portions)}"></label></div><label>Время из плана<select id="v36MealPlan"><option value="">Задать вручную</option>${(S.timeline||[]).map(t=>`<option value="${esc(t.id)}" ${m.planEventId===t.id?'selected':''}>${esc(t.time)} · ${esc(t.title)}</option>`).join('')}</select></label><label>Место<input id="v36MealLocation" value="${esc(m.location || '')}"></label><label>Меню<textarea id="v36MealMenu" rows="2">${esc(m.menu || '')}</textarea></label><label>Комментарий<textarea id="v36MealNote" rows="2">${esc(m.note || '')}</textarea></label>`;
     const l = openModal36(edit ? 'Изменить приём пищи' : 'Добавить приём пищи', body, `<button class="btn alt" data-v36-close>Отмена</button>${edit ? '<button class="btn risk" id="v36MealDelete">Удалить</button>' : ''}<button class="btn sand" id="v36MealSave">Сохранить</button>`);
     if (!l) return;
     document.getElementById('v36MealDelete')?.addEventListener('click', () => { if (!confirm(`Удалить «${m.title}»?`)) return; f.meals = f.meals.filter(x => x.id !== m.id); f.ingredients = f.ingredients.filter(i => i.mealId !== m.id); delete f.mealChecks[m.id]; delete f.attendance[m.id]; syncFood36(); closeModal36(); render(); });
     document.getElementById('v36MealSave').onclick = () => {
       const title = document.getElementById('v36MealTitle').value.trim(); if (!title) return toast('Укажи название');
-      const patch = { day: document.getElementById('v36MealDay').value.trim() || 'День 1', time: document.getElementById('v36MealTime').value || '12:00', title, mode: document.getElementById('v36MealMode').value, location: document.getElementById('v36MealLocation').value.trim(), menu: document.getElementById('v36MealMenu').value.trim(), note: document.getElementById('v36MealNote').value.trim(), portions: Math.max(0, Math.round(num(document.getElementById('v36MealPortions').value))) };
+      const patch = { planEventId: document.getElementById('v36MealPlan').value, day: document.getElementById('v36MealDay').value.trim() || 'День 1', time: document.getElementById('v36MealTime').value || '12:00', title, mode: document.getElementById('v36MealMode').value, location: document.getElementById('v36MealLocation').value.trim(), menu: document.getElementById('v36MealMenu').value.trim(), note: document.getElementById('v36MealNote').value.trim(), portions: Math.max(0, Math.round(num(document.getElementById('v36MealPortions').value))) };
       if (edit) Object.assign(m, patch); else { const nm = { id: `fm36_${Date.now()}`, cooks: [], equipment: [], ...patch }; f.meals.push(nm); f.mealChecks[nm.id] = {}; f.attendance[nm.id] = {}; (S.participants || []).forEach(p => { f.mealChecks[nm.id][p.id] = { food: false, water: false }; f.attendance[nm.id][p.id] = p.rsvp === 'yes' ? 'eat' : 'skip'; }); }
       syncFood36(); closeModal36(); render();
     };
