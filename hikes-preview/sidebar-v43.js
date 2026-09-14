@@ -10,6 +10,14 @@
     document.head.appendChild(link);
   }
 
+  if (!document.querySelector('link[data-overview-v46]')) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = './overview-v46.css?v=46-20260914';
+    link.dataset.overviewV46 = '1';
+    document.head.appendChild(link);
+  }
+
   const GROUPS = [
     ['Поход', ['overview', 'participants', 'roles']],
     ['Подготовка', ['gear', 'food', 'transport']],
