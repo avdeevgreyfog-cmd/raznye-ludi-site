@@ -1,7 +1,7 @@
-/* V49 — sidebar grouping + current workspace modules. */
+/* V51 — sidebar grouping + current workspace modules. */
 (() => {
   'use strict';
-  [['overview-v45','45'],['overview-v46','46'],['access-v47','47'],['preview-v48','49']].forEach(([name,version])=>{
+  [['overview-v45','45'],['overview-v46','46'],['access-v47','47'],['preview-v48','49'],['preview-v51','51']].forEach(([name,version])=>{
     const key=`data-${name}`;
     if(document.querySelector(`link[${key}]`))return;
     const link=document.createElement('link');link.rel='stylesheet';link.href=`./${name}.css?v=${version}-20260914`;link.setAttribute(key,'1');document.head.appendChild(link);
@@ -28,7 +28,7 @@
   function decorateSidebar(){document.getElementById('sidebar')?.classList.add('sidebar-v43-ready');decorateNav()}
   const originalRenderNav=window.renderNav;if(typeof originalRenderNav==='function')window.renderNav=function(){originalRenderNav.apply(this,arguments);decorateNav()};requestAnimationFrame(decorateSidebar);
   window.addEventListener('load',()=>{
-    const scripts=['./access-v47-docs.js?v=47-20260914','./access-v47-core.js?v=49-20260914','./access-v47-cloud.js?v=47-20260914','./preview-v48.js?v=49-20260914','./event-v49.js?v=49-20260914','./participants-v50.js?v=50-20260914'];
+    const scripts=['./access-v47-docs.js?v=47-20260914','./access-v47-core.js?v=49-20260914','./access-v47-cloud.js?v=47-20260914','./preview-v48.js?v=49-20260914','./event-v49.js?v=49-20260914','./participants-v50.js?v=50-20260914','./participants-v50-actions.js?v=50-20260914','./preview-v51.js?v=51-20260914'];
     const next=index=>{if(index>=scripts.length){window.V47Cloud?.load?.();if(typeof render==='function')render();return}const script=document.createElement('script');script.src=scripts[index];script.async=false;script.onload=()=>next(index+1);script.onerror=()=>console.warn('Workspace module failed:',scripts[index]);document.body.appendChild(script)};next(0);
   },{once:true});
 })();
