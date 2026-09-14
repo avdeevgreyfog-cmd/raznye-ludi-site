@@ -2,7 +2,7 @@
 (() => {
   'use strict';
   const RELEASE='56-20260914c';
-  [['access-v47'],['preview-v48'],['preview-v51']].forEach(([name])=>{
+  [['access-v47'],['preview-v48'],['preview-v51'],['participants-v56'],['avatars-v56']].forEach(([name])=>{
     const key=`data-${name}`;
     if(document.querySelector(`link[${key}]`))return;
     const link=document.createElement('link');link.rel='stylesheet';link.href=`./${name}.css?r=${RELEASE}`;link.setAttribute(key,'1');document.head.appendChild(link);
