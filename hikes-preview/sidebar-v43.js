@@ -2,6 +2,14 @@
 (() => {
   'use strict';
 
+  if (!document.querySelector('link[data-overview-v45]')) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = './overview-v45.css?v=45-20260914';
+    link.dataset.overviewV45 = '1';
+    document.head.appendChild(link);
+  }
+
   const GROUPS = [
     ['Поход', ['overview', 'participants', 'roles']],
     ['Подготовка', ['gear', 'food', 'transport']],
