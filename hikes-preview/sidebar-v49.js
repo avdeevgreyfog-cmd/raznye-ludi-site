@@ -1,7 +1,7 @@
-/* V59 — sidebar grouping + deterministic current workspace modules. */
+/* V60 — sidebar grouping + deterministic current workspace modules. */
 (() => {
   'use strict';
-  const RELEASE='59-20260914f';
+  const RELEASE='60-20260914g';
   [['access-v47'],['preview-v48'],['preview-v51'],['participants-v56'],['avatars-v56'],['overview-v57']].forEach(([name])=>{
     const key=`data-${name}`;
     if(document.querySelector(`link[${key}]`))return;
@@ -34,7 +34,7 @@
       if(index>=modules.length){
         window.V47Cloud?.load?.();
         if(typeof render==='function')render();
-        const build=document.querySelector('.build-label');if(build)build.textContent='V59 · стабильная сборка';
+        const build=document.querySelector('.build-label');if(build)build.textContent='V60 · стабильная сборка';
         return;
       }
       const script=document.createElement('script');script.src=`./${modules[index]}.js?r=${RELEASE}`;script.async=false;script.onload=()=>next(index+1);script.onerror=()=>{console.warn('Workspace module failed:',modules[index]);next(index+1)};document.body.appendChild(script);
