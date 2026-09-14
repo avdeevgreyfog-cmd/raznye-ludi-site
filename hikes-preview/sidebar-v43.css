@@ -19,6 +19,9 @@
     isolation:isolate;
     overflow-x:hidden;
     overflow-y:auto;
+    overscroll-behavior:contain;
+    scrollbar-width:none!important;
+    -ms-overflow-style:none;
     width:var(--sidebar)!important;
     padding:0 18px 18px!important;
     background:
@@ -27,6 +30,12 @@
     border-right:1px solid #d2d9d3!important;
     color:var(--v43-ink)!important;
     box-shadow:10px 0 34px rgba(32,62,51,.035);
+  }
+
+  body.rl-unified-shell .sidebar::-webkit-scrollbar{
+    width:0!important;
+    height:0!important;
+    display:none!important;
   }
 
   body.rl-unified-shell .sidebar::before{
@@ -101,7 +110,7 @@
     position:relative;
     z-index:3;
     padding:0!important;
-    margin:-3px 5px 18px!important;
+    margin:-3px 5px 16px!important;
   }
 
   body.rl-unified-shell .event-switcher::before{
@@ -120,37 +129,38 @@
   body.rl-unified-shell .event-switcher::after{
     content:"";
     display:block;
-    width:24px;
+    width:20px;
     height:1px;
-    margin:7px 0 0 8px;
+    margin:6px 0 0 8px;
     background:#769184;
-    opacity:.7;
+    opacity:.5;
   }
 
   body.rl-unified-shell .event-switcher__label{
-    margin:0 0 8px 1px!important;
-    color:#65766f!important;
-    font:700 9px/1.2 Inter,"Segoe UI",Arial,sans-serif!important;
-    letter-spacing:.07em!important;
+    margin:0 0 6px 2px!important;
+    color:#6d7d76!important;
+    font:700 8.5px/1.2 Inter,"Segoe UI",Arial,sans-serif!important;
+    letter-spacing:.06em!important;
     text-transform:none!important;
   }
 
   body.rl-unified-shell .event-switcher__button{
     width:100%!important;
-    min-height:78px!important;
-    gap:10px!important;
-    padding:13px 13px!important;
-    border:1px solid rgba(177,193,183,.92)!important;
-    border-radius:14px!important;
-    background:rgba(251,250,246,.92)!important;
+    min-height:66px!important;
+    gap:9px!important;
+    padding:10px 12px!important;
+    border:1px solid rgba(160,179,168,.48)!important;
+    border-radius:12px!important;
+    background:rgba(247,246,240,.68)!important;
     color:var(--v43-ink)!important;
-    box-shadow:0 9px 24px rgba(37,72,59,.055)!important;
-    backdrop-filter:blur(7px);
+    box-shadow:none!important;
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
   }
 
   body.rl-unified-shell .event-switcher__button:hover{
-    border-color:#9fb5a7!important;
-    background:#fdfcf8!important;
+    border-color:rgba(137,163,147,.72)!important;
+    background:rgba(251,250,246,.86)!important;
   }
 
   body.rl-unified-shell .event-switcher__button > span:first-child{
@@ -159,24 +169,25 @@
 
   body.rl-unified-shell .event-switcher__button strong{
     overflow:hidden;
-    color:#183f36!important;
-    font:720 14px/1.2 Inter,"Segoe UI",Arial,sans-serif!important;
-    letter-spacing:-.015em!important;
+    color:#21483e!important;
+    font:700 13.5px/1.2 Inter,"Segoe UI",Arial,sans-serif!important;
+    letter-spacing:-.012em!important;
     text-overflow:ellipsis;
     text-transform:none!important;
     white-space:nowrap;
   }
 
   body.rl-unified-shell .event-switcher__button small{
-    margin-top:4px!important;
-    color:#687c73!important;
-    font-size:10.5px!important;
+    margin-top:3px!important;
+    color:#74857e!important;
+    font-size:10px!important;
     line-height:1.2!important;
   }
 
   body.rl-unified-shell .event-switcher__button .chev{
-    color:#60776e!important;
-    font-size:16px!important;
+    color:#72847c!important;
+    font-size:14px!important;
+    opacity:.78;
   }
 
   body.rl-unified-shell .side-nav{
@@ -357,8 +368,8 @@
   body.rl-unified-shell .brand-block{min-height:96px;padding-top:17px!important;padding-bottom:29px!important}
   body.rl-unified-shell .sidebar::before{height:226px}
   body.rl-unified-shell .event-switcher::before{display:none}
-  body.rl-unified-shell .event-switcher{margin-top:-7px!important;margin-bottom:11px!important}
-  body.rl-unified-shell .event-switcher__button{min-height:66px!important;padding:10px 12px!important}
+  body.rl-unified-shell .event-switcher{margin-top:-7px!important;margin-bottom:10px!important}
+  body.rl-unified-shell .event-switcher__button{min-height:58px!important;padding:9px 11px!important}
   body.rl-unified-shell .sidebar-nav-group{margin-bottom:8px}
   body.rl-unified-shell .sidebar-nav-group__title{margin-bottom:3px}
   body.rl-unified-shell .side-nav button{min-height:36px!important;padding-top:6px!important;padding-bottom:6px!important}
