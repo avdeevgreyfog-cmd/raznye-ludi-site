@@ -84,7 +84,7 @@ const rolePersonV63=role=>{
 if(!role.p)return`<div class="role-person-v63 empty"><span class="role-avatar-v63 empty">+</span><span><b>Не назначено</b><small>Нужен ответственный</small></span></div>`;
 const person=S.participants.find(x=>x.id===role.p);
 if(!person)return`<div class="role-person-v63 empty"><span class="role-avatar-v63 empty">+</span><span><b>Не назначено</b><small>Участник недоступен</small></span></div>`;
-return`<div class="role-person-v63"><span class="role-avatar-v63">${esc(initials(person.name))}</span><span><b>${esc(person.name)}</b><small>${role.critical?'Ключевая ответственность':'Дополнительная роль'}</small></span></div>`};
+return`<div class="role-person-v63"><span class="role-avatar-v63">${esc(initials(person.name))}</span><span><b>${esc(person.name)}</b><small>${role.critical?'Ответственная роль':'Дополнительная роль'}</small></span></div>`};
 const roleStatusV63=role=>{
 ensureRoleResponsibilitiesV65(role);
 if(!role.p)return`<span class="role-status-v63 free"><i></i>Свободно</span>`;
