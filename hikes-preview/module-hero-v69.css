@@ -1,0 +1,156 @@
+/* V69 — one canonical header language for module pages. */
+body.module-hero-v69-active .module-hero-v69{
+  position:relative!important;
+  display:flex!important;
+  align-items:flex-end!important;
+  justify-content:space-between!important;
+  gap:28px!important;
+  min-height:154px!important;
+  margin:0 0 16px!important;
+  padding:22px 26px 23px!important;
+  overflow:hidden!important;
+  border:1px solid #d6dfd8!important;
+  border-radius:16px!important;
+  background:
+    linear-gradient(90deg,
+      rgba(247,250,246,.99) 0%,
+      rgba(247,250,246,.97) 37%,
+      rgba(247,250,246,.82) 55%,
+      rgba(247,250,246,.44) 73%,
+      rgba(247,250,246,.18) 100%),
+    url('./assets/overview-v44-hero.webp') 76% 49%/cover no-repeat!important;
+  box-shadow:0 10px 30px rgba(29,66,52,.045)!important;
+}
+body.module-hero-v69-active .module-hero-v69:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='260' viewBox='0 0 640 260'%3E%3Cg fill='none' stroke='%236d8a7d' stroke-opacity='.075' stroke-width='1'%3E%3Cpath d='M-30 64c92-48 162-39 230 7s130 55 221 15 148-37 225 10'/%3E%3Cpath d='M-30 92c97-50 169-41 237 5s134 58 228 18 153-37 232 13'/%3E%3Cpath d='M-30 122c101-53 176-43 245 3s139 61 236 20 158-37 239 15'/%3E%3C/g%3E%3C/svg%3E");
+  background-position:left center;
+  background-repeat:repeat-x;
+}
+body.module-hero-v69-active .module-hero-copy-v69,
+body.module-hero-v69-active .module-hero-actions-v69{
+  position:relative;
+  z-index:1;
+}
+body.module-hero-v69-active .module-hero-copy-v69{
+  min-width:0;
+  max-width:860px;
+}
+body.module-hero-v69-active .module-hero-copy-v69 .page-kicker,
+body.module-hero-v69-active .module-hero-copy-v69 .p50-kicker{
+  margin:0 0 9px!important;
+  color:#2f7a59!important;
+  font:800 10px/1 Inter,"Segoe UI",Arial,sans-serif!important;
+  letter-spacing:.12em!important;
+  text-transform:uppercase!important;
+}
+body.module-hero-v69-active .module-hero-copy-v69 h1{
+  margin:0!important;
+  color:#123f35!important;
+  font:720 clamp(42px,4vw,54px)/.98 "Roboto Condensed",Inter,"Segoe UI",Arial,sans-serif!important;
+  letter-spacing:-.035em!important;
+  text-transform:none!important;
+}
+body.module-hero-v69-active .module-hero-meta-v69{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:center!important;
+  gap:8px 14px!important;
+  margin:11px 0 0!important;
+  color:#647a72!important;
+  font:400 13px/1.4 Inter,"Segoe UI",Arial,sans-serif!important;
+}
+body.module-hero-v69-active .module-hero-meta-v69 span{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+}
+body.module-hero-v69-active .module-hero-meta-v69 span+span:before{
+  content:"";
+  width:3px;
+  height:3px;
+  border-radius:50%;
+  background:#8da198;
+}
+body.module-hero-v69-active .module-hero-actions-v69{
+  display:flex!important;
+  align-items:center!important;
+  align-self:flex-end!important;
+  gap:8px!important;
+  flex:0 0 auto;
+}
+body.module-hero-v69-active .module-hero-actions-v69 .btn,
+body.module-hero-v69-active .module-hero-actions-v69 .p50-btn{
+  min-height:40px!important;
+  height:40px!important;
+  padding:0 15px!important;
+  border-radius:10px!important;
+  font:700 10.5px/1 Inter,"Segoe UI",Arial,sans-serif!important;
+}
+body.module-hero-v69-active .module-hero-actions-v69 .roles-add-primary-v63,
+body.module-hero-v69-active .module-hero-actions-v69 .p50-btn.primary{
+  border-color:#1f684c!important;
+  background:#176044!important;
+  color:#fff!important;
+}
+body.module-hero-v69-active .module-hero-actions-v69 .roles-add-primary-v63:hover,
+body.module-hero-v69-active .module-hero-actions-v69 .p50-btn.primary:hover{
+  background:#124f39!important;
+}
+
+/* Neutralize the three legacy hero implementations. */
+body.module-hero-v69-overview .ov44-hero-head,
+body.module-hero-v69-participants .p50-hero,
+body.module-hero-v69-roles .page-head{
+  width:100%!important;
+}
+body.module-hero-v69-overview .ov44-hero-copy,
+body.module-hero-v69-roles .page-head__copy{
+  padding:0!important;
+  margin:0!important;
+}
+body.module-hero-v69-roles .page-head{
+  border-bottom:1px solid #d6dfd8!important;
+}
+body.module-hero-v69-roles .page-head__actions:empty{display:none!important}
+
+/* Small visual variation through crop only; the component itself remains identical. */
+body.module-hero-v69-overview .module-hero-v69{background-position:center,78% 43%!important}
+body.module-hero-v69-participants .module-hero-v69{background-position:center,74% 50%!important}
+body.module-hero-v69-roles .module-hero-v69{background-position:center,81% 56%!important}
+
+@media(max-width:860px){
+  body.module-hero-v69-active .module-hero-v69{
+    min-height:138px!important;
+    padding:18px!important;
+    gap:18px!important;
+  }
+  body.module-hero-v69-active .module-hero-copy-v69 h1{
+    font-size:40px!important;
+  }
+  body.module-hero-v69-active .module-hero-actions-v69{
+    align-self:flex-end!important;
+  }
+}
+@media(max-width:640px){
+  body.module-hero-v69-active .module-hero-v69{
+    align-items:flex-start!important;
+    flex-direction:column!important;
+    min-height:0!important;
+    padding:17px!important;
+    background:
+      linear-gradient(90deg,rgba(247,250,246,.99),rgba(247,250,246,.84)),
+      url('./assets/overview-v44-hero.webp') 72% 50%/cover no-repeat!important;
+  }
+  body.module-hero-v69-active .module-hero-copy-v69 h1{font-size:36px!important}
+  body.module-hero-v69-active .module-hero-meta-v69{font-size:11px!important}
+  body.module-hero-v69-active .module-hero-actions-v69{
+    width:100%;
+    align-self:stretch!important;
+  }
+  body.module-hero-v69-active .module-hero-actions-v69>*{flex:1}
+}
