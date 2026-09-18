@@ -19,46 +19,40 @@ checklist:{label:'Организация',svg:'<svg viewBox="0 0 24 24" aria-hid
 };
 
 const RESPONSIBILITY_AREAS_V65={
-participants:{label:'Команда',hint:'участники и состав'},
-route:{label:'Маршрут',hint:'трек, точки и навигация'},
-plan:{label:'План',hint:'тайминг и этапы'},
-gear:{label:'Снаряжение',hint:'личное и групповое'},
-food:{label:'Питание и вода',hint:'еда, вода и запасы'},
-transport:{label:'Транспорт',hint:'машины и рассадка'},
-documents:{label:'Документы',hint:'файлы и памятки'},
-medical:{label:'Первая помощь',hint:'аптечка и медицина'},
-comms:{label:'Связь',hint:'каналы и резерв'},
-safety:{label:'Безопасность',hint:'риски и контроль группы'},
-camp:{label:'Лагерь / костёр',hint:'стоянка и огонь'},
-media:{label:'Фото / хроника',hint:'фото, видео и заметки'}
+participants:{label:'Участники',hint:'состав, заявки и статусы'},
+gear:{label:'Снаряжение',hint:'списки и распределение'},
+food:{label:'Питание',hint:'меню, вода и закупки'},
+transport:{label:'Транспорт',hint:'рейсы, точки и пассажиры'},
+documents:{label:'Документы',hint:'загрузка и удаление файлов'},
+route:{label:'Маршрут',hint:'трек, КП и редактор'},
+plan:{label:'План',hint:'тайминг и этапы дня'}
 };
 const inferResponsibilitiesV65=role=>{
 const t=String(role?.title||'').toLowerCase();
 if(t.includes('руковод')||t.includes('организ'))return Object.keys(RESPONSIBILITY_AREAS_V65);
-if(t.includes('навиг')||t.includes('маршрут')||t.includes('ориент'))return['route','plan','safety'];
-if(t.includes('замык'))return['participants','comms','safety'];
-if(t.includes('помощ')||t.includes('аптеч')||t.includes('мед'))return['medical','safety'];
-if(t.includes('связ')||t.includes('радио'))return['comms','safety'];
+if(t.includes('навиг')||t.includes('маршрут')||t.includes('ориент'))return['route','plan'];
 if(t.includes('снаряж')||t.includes('завхоз')||t.includes('экип'))return['gear','food','transport'];
 if(t.includes('транспорт')||t.includes('водител'))return['transport'];
 if(t.includes('питан')||t.includes('еда')||t.includes('вод'))return['food'];
-if(t.includes('кост')||t.includes('огон'))return['camp','safety'];
-if(t.includes('фото')||t.includes('видео'))return['media'];
-if(t.includes('эколог')||t.includes('природ'))return['camp','safety'];
-if(t.includes('летопис')||t.includes('дневник')||t.includes('замет'))return['media','documents'];
-return['plan'];
+if(t.includes('документ')||t.includes('файл'))return['documents'];
+return[];
 };
 const ensureRoleResponsibilitiesV65=role=>{
-if(!Array.isArray(role.responsibilities))role.responsibilities=inferResponsibilitiesV65(role);
+if(!Array.isArray(role.responsibilities))role.responsibilities=role.critical?inferResponsibilitiesV65(role):[];
 role.responsibilities=[...new Set(role.responsibilities)].filter(key=>RESPONSIBILITY_AREAS_V65[key]);
+if(!role.critical)role.responsibilities=[];
 if(!Array.isArray(role.duties))role.duties=[];
 role.duties=role.duties.map(x=>String(x||'').trim()).filter(Boolean);
+if(role.critical)role.acceptance='accepted';
+else if(role.p&&!role.acceptance)role.acceptance='accepted';
+else if(!role.p)role.acceptance='';
 return role;
 };
 const responsibilityChipsV65=role=>{
 ensureRoleResponsibilitiesV65(role);
+if(!role.critical)return'<div class="role-extra-note-v66">Дополнительная роль · без доступа к модулям</div>';
 const list=role.responsibilities;
-if(!list.length)return'<div class="role-responsibility-empty-v65">Зоны ответственности не выбраны</div>';
+if(!list.length)return'<div class="role-responsibility-empty-v65">Нет доступа к рабочим модулям</div>';
 const visible=list.slice(0,4).map(key=>`<span class="role-scope-chip-v65">${esc(RESPONSIBILITY_AREAS_V65[key].label)}</span>`).join('');
 return`<div class="role-scope-chips-v65">${visible}${list.length>4?`<span class="role-scope-chip-v65 more">+${list.length-4}</span>`:''}</div>`;
 };
@@ -91,12 +85,18 @@ if(!role.p)return`<div class="role-person-v63 empty"><span class="role-avatar-v6
 const person=S.participants.find(x=>x.id===role.p);
 if(!person)return`<div class="role-person-v63 empty"><span class="role-avatar-v63 empty">+</span><span><b>Не назначено</b><small>Участник недоступен</small></span></div>`;
 return`<div class="role-person-v63"><span class="role-avatar-v63">${esc(initials(person.name))}</span><span><b>${esc(person.name)}</b><small>${role.critical?'Ключевая ответственность':'Дополнительная роль'}</small></span></div>`};
-const roleStatusV63=role=>role.p?`<span class="role-status-v63 ok"><i>✓</i>Назначено</span>`:`<span class="role-status-v63 free"><i></i>Свободно</span>`;
+const roleStatusV63=role=>{
+ensureRoleResponsibilitiesV65(role);
+if(!role.p)return`<span class="role-status-v63 free"><i></i>Свободно</span>`;
+if(!role.critical&&role.acceptance==='pending')return`<span class="role-status-v63 pending-v66"><i>…</i>Ждёт подтверждения</span>`;
+if(!role.critical&&role.acceptance==='declined')return`<span class="role-status-v63 declined-v66"><i>×</i>Отказался</span>`;
+return`<span class="role-status-v63 ok"><i>✓</i>${role.critical?'Назначено':'Подтверждено'}</span>`;
+};
 const participantOptionsV63=role=>`<option value="">Не назначено</option>${S.participants.filter(p=>p.rsvp!=='no').map(p=>`<option value="${p.id}" ${role.p===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}`;
 const roleRowV63=(role,manage)=>`<div class="role-row-v63 ${role.p?'':'is-free'}">
 <div class="role-icon-v63">${iconSvgV63(role)}</div>
 <div class="role-copy-v63"><strong>${esc(role.title)}</strong><small>${esc(role.desc||'Описание роли пока не заполнено.')}</small>${responsibilityChipsV65(role)}${role.duties?.length?`<div class="role-duties-count-v65">${role.duties.length} ${role.duties.length===1?'конкретная задача':'конкретных задач'}</div>`:''}</div>
-<div class="role-owner-v63">${rolePersonV63(role)}</div>
+<div class="role-owner-v63">${rolePersonV63(role)}${!manage&&!role.critical&&role.p===((window.HikePreviewV48?.active&&window.HikePreviewV48.pid)||S.current)&&role.acceptance==='pending'?`<div class="role-confirm-v66"><button class="btn sand sm" type="button" data-role-confirm-v66="${role.id}">Подтвердить</button><button class="btn alt sm" type="button" data-role-decline-v66="${role.id}">Отказаться</button></div>`:''}</div>
 <div class="role-status-cell-v63">${roleStatusV63(role)}</div>
 ${manage?`<div class="role-manage-v63">
 <label class="role-assign-v63"><span>Ответственный</span><select data-role="${role.id}" aria-label="Ответственный за ${esc(role.title)}">${participantOptionsV63(role)}</select></label>
@@ -120,10 +120,10 @@ ${manage?`<div class="roles-manager-bar-v63"><div><strong>Управление �
 <div class="roles-summary-item-v63"><span class="summary-svg-v63">${ICONS_V63.tail.svg}</span><div><strong>${free}</strong><small>свободно</small></div></div>
 <div class="roles-progress-v63"><div><span>Распределено ${assigned} из ${total}</span><b>${pct}%</b></div><div class="roles-progress-track-v63"><i style="width:${pct}%"></i></div></div>
 </div>
-${roleSectionV63('Ключевые роли','Обязательные зоны ответственности для безопасного и управляемого похода.',critical,manage,'critical')}
-${roleSectionV63('Дополнительные роли','Полезные обязанности, которые делают подготовку и сам поход удобнее.',additional,manage,'additional')}
-${roleSectionV63('Свободные роли','Роли, для которых пока не выбран ответственный.',open,manage,'free')}
-${manage?`<div class="roles-organizer-note-v63"><span>i</span><div><strong>Организатор управляет структурой ролей</strong><p>Роль можно добавить, переименовать, сменить иконку, перевести в ключевую или дополнительную, назначить человека, снять назначение или удалить целиком.</p></div></div>`:`<div class="roles-organizer-note-v63 viewer"><span>i</span><div><strong>Роли команды</strong><p>Здесь видно, к кому обращаться по конкретному вопросу во время подготовки и похода.</p></div></div>`}`;}
+${roleSectionV63('Ответственные роли','Роли, которым можно выдать доступ к рабочим модулям сайта.',critical,manage,'critical')}
+${roleSectionV63('Дополнительные роли','Командные обязанности без доступа к модулям. Назначенный участник подтверждает такую роль.',additional,manage,'additional')}
+${roleSectionV63('Свободные роли','Свободные дополнительные роли, для которых пока не выбран участник.',open,manage,'free')}
+${manage?`<div class="roles-organizer-note-v63"><span>i</span><div><strong>Организатор управляет структурой ролей</strong><p>Для ответственной роли настрой доступ к конкретным модулям. Дополнительные роли не дают системных прав и подтверждаются самим участником.</p></div></div>`:`<div class="roles-organizer-note-v63 viewer"><span>i</span><div><strong>Роли команды</strong><p>Здесь видно, к кому обращаться по конкретному вопросу во время подготовки и похода.</p></div></div>`}`;}
 function iconPickerV63(selected){return`<div class="role-icon-picker-v63">${Object.entries(ICONS_V63).map(([key,item])=>`<label class="role-icon-choice-v63 ${key===selected?'selected':''}"><input type="radio" name="roleIconV63" value="${key}" ${key===selected?'checked':''}><span class="role-icon-choice-svg-v63">${item.svg}</span><small>${esc(item.label)}</small></label>`).join('')}</div>`}
 function bindIconPickerV63(layer){layer.querySelectorAll('input[name="roleIconV63"]').forEach(input=>{input.onchange=()=>{layer.querySelectorAll('.role-icon-choice-v63').forEach(label=>label.classList.toggle('selected',label.contains(input)&&input.checked))}})}
 function roleModalV63(item=null){
@@ -131,18 +131,26 @@ const role=item||{title:'',desc:'',critical:false,p:'',icon:'checklist',responsi
 openModal(item?'Изменить роль':'Добавить роль',`<div class="form-grid role-form-v63">
 <div class="field full"><label>Название роли</label><input id="roleTitleV63" value="${esc(role.title)}" placeholder="Например, Костровой"></div>
 <div class="field full"><label>Краткое описание роли</label><textarea id="roleDescV63" placeholder="Например: ведёт группу по маршруту и контролирует ориентирование">${esc(role.desc||'')}</textarea></div>
-<div class="field full role-responsibility-field-v65"><label>За что отвечает</label><p class="role-field-help-v65">Выбери зоны ответственности. Они будут показаны в карточке роли и, где это поддерживает модуль, дадут назначенному человеку право управлять этим разделом.</p>${responsibilitiesPickerV65(role.responsibilities)}</div>
+<div class="field full role-responsibility-field-v65 role-module-field-v66"><label>Доступ к модулям</label><p class="role-field-help-v65">Отметь только те разделы сайта, которые назначенный человек сможет редактировать. «Обзор» остаётся доступен всем только для просмотра, а управление ролями — организатору.</p>${responsibilitiesPickerV65(role.responsibilities)}</div>
 <div class="field full"><label>Конкретные обязанности</label><p class="role-field-help-v65">Необязательно. По одной задаче в строке — например «проверить офлайн-карту» или «собрать групповую аптечку».</p><textarea id="roleDutiesV65" placeholder="Проверить офлайн-карту&#10;Сверить контрольные точки">${esc((role.duties||[]).join('\n'))}</textarea></div>
 <div class="field full"><label>Иконка</label>${iconPickerV63(selectedIcon)}</div>
 <div class="field"><label>Ответственный</label><select id="rolePersonV63">${participantOptionsV63(role)}</select></div>
-<div class="field"><label>Тип роли</label><select id="roleTypeV63"><option value="critical" ${role.critical?'selected':''}>Ключевая</option><option value="additional" ${!role.critical?'selected':''}>Дополнительная</option></select></div>
+<div class="field"><label>Тип роли</label><select id="roleTypeV63"><option value="critical" ${role.critical?'selected':''}>Ответственная роль</option><option value="additional" ${!role.critical?'selected':''}>Дополнительная роль</option></select></div>
 </div>`,layer=>{
-const title=layer.querySelector('#roleTitleV63').value.trim(),desc=layer.querySelector('#roleDescV63').value.trim(),icon=layer.querySelector('input[name="roleIconV63"]:checked')?.value||'checklist',p=layer.querySelector('#rolePersonV63').value,critical=layer.querySelector('#roleTypeV63').value==='critical',responsibilities=[...layer.querySelectorAll('input[name="roleResponsibilityV65"]:checked')].map(input=>input.value),duties=layer.querySelector('#roleDutiesV65').value.split(/\n+/).map(x=>x.trim()).filter(Boolean);
+const title=layer.querySelector('#roleTitleV63').value.trim(),desc=layer.querySelector('#roleDescV63').value.trim(),icon=layer.querySelector('input[name="roleIconV63"]:checked')?.value||'checklist',p=layer.querySelector('#rolePersonV63').value,critical=layer.querySelector('#roleTypeV63').value==='critical';
+let responsibilities=[...layer.querySelectorAll('input[name="roleResponsibilityV65"]:checked')].map(input=>input.value);
+const duties=layer.querySelector('#roleDutiesV65').value.split(/\n+/).map(x=>x.trim()).filter(Boolean);
 if(!title){toast('Укажи название роли');return false}
-const next={title,desc,icon,p,critical,responsibilities,duties};
+if(!critical)responsibilities=[];
+const oldPerson=item?.p||'',oldAcceptance=item?.acceptance||'';
+const acceptance=!p?'':critical?'accepted':oldPerson===p?(oldAcceptance||'accepted'):'pending';
+const next={title,desc,icon,p,critical,responsibilities,duties,acceptance};
 if(item)Object.assign(item,next);else S.roles.push({id:`r${Date.now()}`,...next});
 save();render();toast(item?'Роль обновлена':'Роль добавлена')});
-bindIconPickerV63(document.getElementById('modalLayer'))}
+bindIconPickerV63(document.getElementById('modalLayer'));
+const typeSelectV66=document.getElementById('roleTypeV63'),moduleFieldV66=document.querySelector('.role-module-field-v66');
+const syncRoleTypeV66=()=>{const extra=typeSelectV66?.value==='additional';moduleFieldV66?.classList.toggle('is-disabled',extra);moduleFieldV66?.querySelectorAll('input[name="roleResponsibilityV65"]').forEach(input=>input.disabled=extra)};
+typeSelectV66?.addEventListener('change',syncRoleTypeV66);syncRoleTypeV66()}
 function deleteRoleV63(role){
 openModal('Удалить роль?',`<div class="delete-role-copy-v63"><div class="delete-role-icon-v63">${iconSvgV63(role)}</div><div><strong>${esc(role.title)}</strong><p>Роль будет удалена из текущего похода${role.p?` вместе с назначением «${esc(pn(role.p))}»`:''}. Сам участник и его остальные данные останутся без изменений.</p></div></div>`,()=>{S.roles=S.roles.filter(r=>r.id!==role.id);save();render();toast('Роль удалена')})}
 const baseBindV63=bind;
@@ -152,7 +160,10 @@ if(tab!=='roles')return;
 const add=()=>roleModalV63();
 document.getElementById('addRoleV63')?.addEventListener('click',add);
 document.getElementById('addRoleV63Secondary')?.addEventListener('click',add);
-document.querySelectorAll('[data-role-unassign-v63]').forEach(button=>{button.onclick=()=>{const role=S.roles.find(x=>x.id===button.dataset.roleUnassignV63);if(!role)return;role.p='';save();render();toast('Назначение снято')}});
+document.querySelectorAll('select[data-role]').forEach(select=>{select.onchange=()=>{const role=S.roles.find(r=>r.id===select.dataset.role);if(!role)return;const next=select.value,changed=role.p!==next;role.p=next;ensureRoleResponsibilitiesV65(role);role.acceptance=!next?'':role.critical?'accepted':changed?'pending':(role.acceptance||'accepted');save();render();toast(next?(role.critical?'Ответственный назначен':'Назначение отправлено на подтверждение'):'Назначение снято')}});
+document.querySelectorAll('[data-role-unassign-v63]').forEach(button=>{button.onclick=()=>{const role=S.roles.find(x=>x.id===button.dataset.roleUnassignV63);if(!role)return;role.p='';role.acceptance='';save();render();toast('Назначение снято')}});
+document.querySelectorAll('[data-role-confirm-v66]').forEach(button=>{button.onclick=()=>{const role=S.roles.find(x=>x.id===button.dataset.roleConfirmV66);if(!role)return;role.acceptance='accepted';save();render();toast('Роль подтверждена')}});
+document.querySelectorAll('[data-role-decline-v66]').forEach(button=>{button.onclick=()=>{const role=S.roles.find(x=>x.id===button.dataset.roleDeclineV66);if(!role)return;role.acceptance='declined';save();render();toast('Отказ от роли сохранён')}});
 document.querySelectorAll('[data-role-edit-v63]').forEach(button=>{button.onclick=()=>{const role=S.roles.find(x=>x.id===button.dataset.roleEditV63);if(role)roleModalV63(role)}});
 document.querySelectorAll('[data-role-delete-v63]').forEach(button=>{button.onclick=()=>{const role=S.roles.find(x=>x.id===button.dataset.roleDeleteV63);if(role)deleteRoleV63(role)}})};
 rolesPage=rolesPageV63;
