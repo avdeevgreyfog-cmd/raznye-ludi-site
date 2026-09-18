@@ -52,9 +52,9 @@ const responsibilityChipsV65=role=>{
 ensureRoleResponsibilitiesV65(role);
 if(!role.critical)return'<div class="role-extra-note-v66">Дополнительная роль · без доступа к модулям</div>';
 const list=role.responsibilities;
-if(!list.length)return'<div class="role-responsibility-empty-v65">Нет доступа к рабочим модулям</div>';
+if(!list.length)return'<div class="role-responsibility-empty-v65"><span>Доступ:</span> не настроен</div>';
 const visible=list.slice(0,4).map(key=>`<span class="role-scope-chip-v65">${esc(RESPONSIBILITY_AREAS_V65[key].label)}</span>`).join('');
-return`<div class="role-scope-chips-v65">${visible}${list.length>4?`<span class="role-scope-chip-v65 more">+${list.length-4}</span>`:''}</div>`;
+return`<div class="role-access-line-v67"><span class="role-access-label-v67">Доступ:</span><div class="role-scope-chips-v65">${visible}${list.length>4?`<span class="role-scope-chip-v65 more">+${list.length-4}</span>`:''}</div></div>`;
 };
 const responsibilitiesPickerV65=selected=>{
 const set=new Set(selected||[]);
@@ -90,21 +90,40 @@ ensureRoleResponsibilitiesV65(role);
 if(!role.p)return`<span class="role-status-v63 free"><i></i>Свободно</span>`;
 if(!role.critical&&role.acceptance==='pending')return`<span class="role-status-v63 pending-v66"><i>…</i>Ждёт подтверждения</span>`;
 if(!role.critical&&role.acceptance==='declined')return`<span class="role-status-v63 declined-v66"><i>×</i>Отказался</span>`;
-return`<span class="role-status-v63 ok"><i>✓</i>${role.critical?'Назначено':'Подтверждено'}</span>`;
+return'';
 };
 const participantOptionsV63=role=>`<option value="">Не назначено</option>${S.participants.filter(p=>p.rsvp!=='no').map(p=>`<option value="${p.id}" ${role.p===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}`;
-const roleRowV63=(role,manage)=>`<div class="role-row-v63 ${role.p?'':'is-free'}">
+const roleRowV63=(role,manage)=>{
+ensureRoleResponsibilitiesV65(role);
+const state=roleStatusV63(role);
+const currentPid=(window.HikePreviewV48?.active&&window.HikePreviewV48.pid)||S.current;
+return`<div class="role-row-v63 role-row-v67 ${role.p?'':'is-free'}" data-role-row-v67="${esc(role.id)}">
 <div class="role-icon-v63">${iconSvgV63(role)}</div>
-<div class="role-copy-v63"><strong>${esc(role.title)}</strong><small>${esc(role.desc||'Описание роли пока не заполнено.')}</small>${responsibilityChipsV65(role)}${role.duties?.length?`<div class="role-duties-count-v65">${role.duties.length} ${role.duties.length===1?'конкретная задача':'конкретных задач'}</div>`:''}</div>
-<div class="role-owner-v63">${rolePersonV63(role)}${!manage&&!role.critical&&role.p===((window.HikePreviewV48?.active&&window.HikePreviewV48.pid)||S.current)&&role.acceptance==='pending'?`<div class="role-confirm-v66"><button class="btn sand sm" type="button" data-role-confirm-v66="${role.id}">Подтвердить</button><button class="btn alt sm" type="button" data-role-decline-v66="${role.id}">Отказаться</button></div>`:''}</div>
-<div class="role-status-cell-v63">${roleStatusV63(role)}</div>
-${manage?`<div class="role-manage-v63">
-<label class="role-assign-v63"><span>Ответственный</span><select data-role="${role.id}" aria-label="Ответственный за ${esc(role.title)}">${participantOptionsV63(role)}</select></label>
-<div class="role-manage-buttons-v63">
-${role.p?`<button class="btn alt sm" type="button" data-role-unassign-v63="${role.id}">Снять</button>`:''}
-<button class="btn alt sm" type="button" data-role-edit-v63="${role.id}">Изменить</button>
-<button class="btn alt sm danger-v63" type="button" data-role-delete-v63="${role.id}">Удалить</button>
-</div></div>`:''}</div>`;
+<div class="role-copy-v63">
+  <strong>${esc(role.title)}</strong>
+  <small>${esc(role.desc||'Описание роли пока не заполнено.')}</small>
+  ${responsibilityChipsV65(role)}
+  ${role.duties?.length?`<div class="role-duties-count-v65">${role.duties.length} ${role.duties.length===1?'задача':'задачи'}</div>`:''}
+</div>
+<div class="role-owner-v63 role-owner-v67">
+  ${rolePersonV63(role)}
+  ${state?`<div class="role-owner-state-v67">${state}</div>`:''}
+  ${manage?`<button class="role-owner-change-v67" type="button" data-role-owner-v67="${esc(role.id)}">${role.p?'Сменить':'Назначить'}</button>`:''}
+  ${!manage&&!role.critical&&role.p===currentPid&&role.acceptance==='pending'?`<div class="role-confirm-v66"><button class="btn sand sm" type="button" data-role-confirm-v66="${role.id}">Подтвердить</button><button class="btn alt sm" type="button" data-role-decline-v66="${role.id}">Отказаться</button></div>`:''}
+</div>
+${manage?`<div class="role-controls-v67">
+  <button class="btn alt sm role-configure-v67" type="button" data-role-edit-v63="${role.id}">Настроить</button>
+  <button class="role-more-v67" type="button" data-role-menu-v67="${role.id}" aria-label="Дополнительные действия" aria-expanded="false">•••</button>
+  <div class="role-menu-v67" data-role-menu-panel-v67="${role.id}" hidden>
+    ${role.p?`<button type="button" data-role-unassign-v63="${role.id}">Снять назначение</button>`:''}
+    <button type="button" class="danger" data-role-delete-v63="${role.id}">Удалить роль</button>
+  </div>
+</div>
+<div class="role-owner-editor-v67" data-role-owner-editor-v67="${role.id}" hidden>
+  <label><span>Ответственный</span><select data-role="${role.id}" aria-label="Ответственный за ${esc(role.title)}">${participantOptionsV63(role)}</select></label>
+</div>`:''}
+</div>`;
+};
 const roleSectionV63=(title,desc,roles,manage,tone='')=>{
 if(!roles.length)return'';
 const assigned=roles.filter(r=>r.p).length;
@@ -113,7 +132,6 @@ function rolesPageV63(){
 const manage=canManageRolesV63(),total=S.roles.length,assigned=S.roles.filter(r=>r.p).length,free=total-assigned,pct=total?Math.round(assigned/total*100):100;
 const critical=S.roles.filter(r=>r.critical),additional=S.roles.filter(r=>!r.critical&&r.p),open=S.roles.filter(r=>!r.critical&&!r.p);
 return`${pageHead('Ответственность','Роли','Кто за что отвечает в походе.',manage?`<button class="btn sand roles-add-primary-v63" id="addRoleV63" type="button">+ Добавить роль</button>`:'')}
-${manage?`<div class="roles-manager-bar-v63"><div><strong>Управление ролями</strong><span>Добавляй нужные обязанности, назначай участников и удаляй лишние роли.</span></div><button class="btn sand" id="addRoleV63Secondary" type="button">+ Добавить роль</button></div>`:''}
 <div class="roles-summary-v63">
 <div class="roles-summary-item-v63"><span class="summary-svg-v63">${ICONS_V63.checklist.svg}</span><div><strong>${total}</strong><small>ролей всего</small></div></div>
 <div class="roles-summary-item-v63"><span class="summary-svg-v63">${ICONS_V63.leader.svg}</span><div><strong>${assigned}</strong><small>назначено</small></div></div>
@@ -159,7 +177,11 @@ baseBindV63();
 if(tab!=='roles')return;
 const add=()=>roleModalV63();
 document.getElementById('addRoleV63')?.addEventListener('click',add);
-document.getElementById('addRoleV63Secondary')?.addEventListener('click',add);
+document.querySelectorAll('[data-role-owner-v67]').forEach(button=>{button.onclick=e=>{e.stopPropagation();const id=button.dataset.roleOwnerV67;document.querySelectorAll('[data-role-owner-editor-v67]').forEach(editor=>{if(editor.dataset.roleOwnerEditorV67!==id)editor.hidden=true});const editor=document.querySelector(`[data-role-owner-editor-v67="${CSS.escape(id)}"]`);if(editor)editor.hidden=!editor.hidden}});
+document.querySelectorAll('[data-role-menu-v67]').forEach(button=>{button.onclick=e=>{e.stopPropagation();const id=button.dataset.roleMenuV67;document.querySelectorAll('[data-role-menu-panel-v67]').forEach(panel=>{if(panel.dataset.roleMenuPanelV67!==id)panel.hidden=true});const panel=document.querySelector(`[data-role-menu-panel-v67="${CSS.escape(id)}"]`);if(panel){panel.hidden=!panel.hidden;button.setAttribute('aria-expanded',panel.hidden?'false':'true')}}});
+if(!window.__rolesV67OutsideBound){document.addEventListener('click',()=>{document.querySelectorAll('[data-role-menu-panel-v67]').forEach(panel=>panel.hidden=true);document.querySelectorAll('[data-role-menu-v67]').forEach(button=>button.setAttribute('aria-expanded','false'))});window.__rolesV67OutsideBound=true}
+document.querySelectorAll('[data-role-menu-panel-v67]').forEach(panel=>panel.onclick=e=>e.stopPropagation());
+
 document.querySelectorAll('select[data-role]').forEach(select=>{select.onchange=()=>{const role=S.roles.find(r=>r.id===select.dataset.role);if(!role)return;const next=select.value,changed=role.p!==next;role.p=next;ensureRoleResponsibilitiesV65(role);role.acceptance=!next?'':role.critical?'accepted':changed?'pending':(role.acceptance||'accepted');save();render();toast(next?(role.critical?'Ответственный назначен':'Назначение отправлено на подтверждение'):'Назначение снято')}});
 document.querySelectorAll('[data-role-unassign-v63]').forEach(button=>{button.onclick=()=>{const role=S.roles.find(x=>x.id===button.dataset.roleUnassignV63);if(!role)return;role.p='';role.acceptance='';save();render();toast('Назначение снято')}});
 document.querySelectorAll('[data-role-confirm-v66]').forEach(button=>{button.onclick=()=>{const role=S.roles.find(x=>x.id===button.dataset.roleConfirmV66);if(!role)return;role.acceptance='accepted';save();render();toast('Роль подтверждена')}});
