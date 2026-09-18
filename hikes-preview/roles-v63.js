@@ -84,7 +84,9 @@ const rolePersonV63=role=>{
 if(!role.p)return`<div class="role-person-v63 empty"><span class="role-avatar-v63 empty">+</span><span><b>Не назначено</b><small>Нужен ответственный</small></span></div>`;
 const person=S.participants.find(x=>x.id===role.p);
 if(!person)return`<div class="role-person-v63 empty"><span class="role-avatar-v63 empty">+</span><span><b>Не назначено</b><small>Участник недоступен</small></span></div>`;
-return`<div class="role-person-v63"><span class="role-avatar-v63">${esc(initials(person.name))}</span><span><b>${esc(person.name)}</b><small>${role.critical?'Ответственная роль':'Дополнительная роль'}</small></span></div>`};
+const avatarSrc=window.HikeAvatarsV56?.src?.(person.avatarKey);
+const avatar=avatarSrc?`<span class="role-avatar-v63 has-image"><img src="${esc(avatarSrc)}" alt=""></span>`:`<span class="role-avatar-v63">${esc(initials(person.name))}</span>`;
+return`<div class="role-person-v63">${avatar}<span><b>${esc(person.name)}</b><small>${role.critical?'Ответственная роль':'Дополнительная роль'}</small></span></div>`};
 const roleStatusV63=role=>{
 ensureRoleResponsibilitiesV65(role);
 if(!role.p)return`<span class="role-status-v63 free"><i></i>Свободно</span>`;
@@ -124,10 +126,21 @@ ${manage?`<div class="role-controls-v67">
 </div>`:''}
 </div>`;
 };
-const roleSectionV63=(title,desc,roles,manage,tone='')=>{
-if(!roles.length)return'';
+const roleSectionV63=(title,desc,roles,manage,tone='',addType='')=>{
+if(!roles.length&&!manage)return'';
 const assigned=roles.filter(r=>r.p).length;
-return`<section class="roles-group-v63 ${tone}"><div class="roles-group-head-v63"><div><h2>${esc(title)}</h2><p>${esc(desc)}</p></div><span>${assigned} из ${roles.length} назначены</span></div><div class="roles-list-v63">${roles.map(role=>roleRowV63(role,manage)).join('')}</div></section>`};
+const count=`${assigned} из ${roles.length} назначены`;
+return`<section class="roles-group-v63 ${tone}">
+  <div class="roles-group-head-v63">
+    <div><h2>${esc(title)}</h2><p>${esc(desc)}</p></div>
+    <div class="roles-group-head-actions-v68">
+      <span>${count}</span>
+      ${manage&&addType?`<button class="roles-section-add-v68" type="button" data-role-add-type-v68="${addType}">+ Добавить</button>`:''}
+    </div>
+  </div>
+  <div class="roles-list-v63">${roles.length?roles.map(role=>roleRowV63(role,manage)).join(''):`<div class="roles-empty-v68">В этом разделе пока нет ролей.</div>`}</div>
+</section>`;
+};
 function rolesPageV63(){
 const manage=canManageRolesV63(),total=S.roles.length,assigned=S.roles.filter(r=>r.p).length,free=total-assigned,pct=total?Math.round(assigned/total*100):100;
 const critical=S.roles.filter(r=>r.critical),additional=S.roles.filter(r=>!r.critical&&r.p),open=S.roles.filter(r=>!r.critical&&!r.p);
@@ -138,14 +151,14 @@ return`${pageHead('Ответственность','Роли','Кто за чт�
 <div class="roles-summary-item-v63"><span class="summary-svg-v63">${ICONS_V63.tail.svg}</span><div><strong>${free}</strong><small>свободно</small></div></div>
 <div class="roles-progress-v63"><div><span>Распределено ${assigned} из ${total}</span><b>${pct}%</b></div><div class="roles-progress-track-v63"><i style="width:${pct}%"></i></div></div>
 </div>
-${roleSectionV63('Ответственные роли','Роли, которым можно выдать доступ к рабочим модулям сайта.',critical,manage,'critical')}
-${roleSectionV63('Дополнительные роли','Командные обязанности без доступа к модулям. Назначенный участник подтверждает такую роль.',additional,manage,'additional')}
-${roleSectionV63('Свободные роли','Свободные дополнительные роли, для которых пока не выбран участник.',open,manage,'free')}
+${roleSectionV63('Ответственные роли','Роли, которым можно выдать доступ к рабочим модулям сайта.',critical,manage,'critical','critical')}
+${roleSectionV63('Дополнительные роли','Командные обязанности без доступа к модулям. Назначенный участник подтверждает такую роль.',additional,manage,'additional','additional')}
+${roleSectionV63('Свободные роли','Свободные дополнительные роли, для которых пока не выбран участник.',open,manage,'free','additional')}
 ${manage?`<div class="roles-organizer-note-v63"><span>i</span><div><strong>Организатор управляет структурой ролей</strong><p>Для ответственной роли настрой доступ к конкретным модулям. Дополнительные роли не дают системных прав и подтверждаются самим участником.</p></div></div>`:`<div class="roles-organizer-note-v63 viewer"><span>i</span><div><strong>Роли команды</strong><p>Здесь видно, к кому обращаться по конкретному вопросу во время подготовки и похода.</p></div></div>`}`;}
 function iconPickerV63(selected){return`<div class="role-icon-picker-v63">${Object.entries(ICONS_V63).map(([key,item])=>`<label class="role-icon-choice-v63 ${key===selected?'selected':''}"><input type="radio" name="roleIconV63" value="${key}" ${key===selected?'checked':''}><span class="role-icon-choice-svg-v63">${item.svg}</span><small>${esc(item.label)}</small></label>`).join('')}</div>`}
 function bindIconPickerV63(layer){layer.querySelectorAll('input[name="roleIconV63"]').forEach(input=>{input.onchange=()=>{layer.querySelectorAll('.role-icon-choice-v63').forEach(label=>label.classList.toggle('selected',label.contains(input)&&input.checked))}})}
-function roleModalV63(item=null){
-const role=item||{title:'',desc:'',critical:false,p:'',icon:'checklist',responsibilities:[],duties:[]};ensureRoleResponsibilitiesV65(role);const selectedIcon=inferIconV63(role);
+function roleModalV63(item=null,defaultCritical=false){
+const role=item||{title:'',desc:'',critical:!!defaultCritical,p:'',icon:'checklist',responsibilities:[],duties:[]};ensureRoleResponsibilitiesV65(role);const selectedIcon=inferIconV63(role);
 openModal(item?'Изменить роль':'Добавить роль',`<div class="form-grid role-form-v63">
 <div class="field full"><label>Название роли</label><input id="roleTitleV63" value="${esc(role.title)}" placeholder="Например, Костровой"></div>
 <div class="field full"><label>Краткое описание роли</label><textarea id="roleDescV63" placeholder="Например: ведёт группу по маршруту и контролирует ориентирование">${esc(role.desc||'')}</textarea></div>
@@ -177,9 +190,34 @@ baseBindV63();
 if(tab!=='roles')return;
 const add=()=>roleModalV63();
 document.getElementById('addRoleV63')?.addEventListener('click',add);
+document.querySelectorAll('[data-role-add-type-v68]').forEach(button=>{button.onclick=()=>roleModalV63(null,button.dataset.roleAddTypeV68==='critical')});
 document.querySelectorAll('[data-role-owner-v67]').forEach(button=>{button.onclick=e=>{e.stopPropagation();const id=button.dataset.roleOwnerV67;document.querySelectorAll('[data-role-owner-editor-v67]').forEach(editor=>{if(editor.dataset.roleOwnerEditorV67!==id)editor.hidden=true});const editor=document.querySelector(`[data-role-owner-editor-v67="${CSS.escape(id)}"]`);if(editor)editor.hidden=!editor.hidden}});
-document.querySelectorAll('[data-role-menu-v67]').forEach(button=>{button.onclick=e=>{e.stopPropagation();const id=button.dataset.roleMenuV67;document.querySelectorAll('[data-role-menu-panel-v67]').forEach(panel=>{if(panel.dataset.roleMenuPanelV67!==id)panel.hidden=true});const panel=document.querySelector(`[data-role-menu-panel-v67="${CSS.escape(id)}"]`);if(panel){panel.hidden=!panel.hidden;button.setAttribute('aria-expanded',panel.hidden?'false':'true')}}});
-if(!window.__rolesV67OutsideBound){document.addEventListener('click',()=>{document.querySelectorAll('[data-role-menu-panel-v67]').forEach(panel=>panel.hidden=true);document.querySelectorAll('[data-role-menu-v67]').forEach(button=>button.setAttribute('aria-expanded','false'))});window.__rolesV67OutsideBound=true}
+document.querySelectorAll('[data-role-menu-v67]').forEach(button=>{button.onclick=e=>{
+e.stopPropagation();
+const id=button.dataset.roleMenuV67;
+document.querySelectorAll('[data-role-menu-panel-v67]').forEach(panel=>{if(panel.dataset.roleMenuPanelV67!==id)panel.hidden=true});
+const panel=document.querySelector(`[data-role-menu-panel-v67="${CSS.escape(id)}"]`);
+if(!panel)return;
+const opening=panel.hidden;
+panel.hidden=!opening;
+if(opening){button.setAttribute('aria-expanded','false');return}
+button.setAttribute('aria-expanded','true');
+const br=button.getBoundingClientRect();
+panel.style.position='fixed';panel.style.right='auto';panel.style.bottom='auto';panel.style.zIndex='999';
+panel.style.visibility='hidden';panel.hidden=false;
+const pr=panel.getBoundingClientRect();
+let left=Math.max(10,Math.min(br.right-pr.width,window.innerWidth-pr.width-10));
+let top=br.bottom+7;
+if(top+pr.height>window.innerHeight-10)top=Math.max(10,br.top-pr.height-7);
+panel.style.left=`${Math.round(left)}px`;panel.style.top=`${Math.round(top)}px`;panel.style.visibility='';
+}});
+if(!window.__rolesV67OutsideBound){
+const closeRoleMenusV68=()=>{document.querySelectorAll('[data-role-menu-panel-v67]').forEach(panel=>panel.hidden=true);document.querySelectorAll('[data-role-menu-v67]').forEach(button=>button.setAttribute('aria-expanded','false'))};
+document.addEventListener('click',closeRoleMenusV68);
+window.addEventListener('resize',closeRoleMenusV68);
+window.addEventListener('scroll',closeRoleMenusV68,true);
+window.__rolesV67OutsideBound=true
+}
 document.querySelectorAll('[data-role-menu-panel-v67]').forEach(panel=>panel.onclick=e=>e.stopPropagation());
 
 document.querySelectorAll('select[data-role]').forEach(select=>{select.onchange=()=>{const role=S.roles.find(r=>r.id===select.dataset.role);if(!role)return;const next=select.value,changed=role.p!==next;role.p=next;ensureRoleResponsibilitiesV65(role);role.acceptance=!next?'':role.critical?'accepted':changed?'pending':(role.acceptance||'accepted');save();render();toast(next?(role.critical?'Ответственный назначен':'Назначение отправлено на подтверждение'):'Назначение снято')}});
