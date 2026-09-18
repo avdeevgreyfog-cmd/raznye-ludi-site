@@ -4315,7 +4315,7 @@ const buildV241=document.querySelector('.build-label');if(buildV241)buildV241.te
     const roles = S.rolesV36?.roles || [];
     const lead = roles.find(r => r.id === 'lead')?.p;
     const logistics = roles.find(r => r.id === 'logistics')?.p;
-    return window.HikeWorkspace?.can('roles') ?? (S.current === 'p1' || S.current === lead);
+    return window.HikeWorkspace?.can('transport') ?? (S.current === 'p1' || S.current === lead);
   }
 
   function profile40(pid = S.current) {
@@ -4885,7 +4885,7 @@ render();
     S.current = id; S.checks ||= {}; S.checks[id] ||= []; S.rides ||= { there: {}, back: {} }; S.rides.there ||= {}; S.rides.back ||= {}; S.rides.there[id] ||= 'unset'; S.rides.back[id] ||= 'unset';
   }
   async function syncOrganizerRoster() {
-    if (!isOrganizer) return;
+    if (!isOrganizer && !window.HikeWorkspace?.can?.('participants')) return;
     const members = await request(`/rest/v1/hike_members?event_id=eq.${event.id}&select=user_id,status,role`);
     const profiles = await request('/rest/v1/profiles?select=id,display_name');
     const names = new Map((profiles || []).map(profile => [profile.id, profile.display_name]));
@@ -4956,8 +4956,9 @@ render();
   }
   function wireMembershipActions() {
     document.querySelectorAll('.status-select[data-rsvp]').forEach(control => {
-      control.disabled = !isOrganizer;
-      if (!isOrganizer) return;
+      const canManageMembers = isOrganizer || !!window.HikeWorkspace?.can?.('participants');
+      control.disabled = !canManageMembers;
+      if (!canManageMembers) return;
       control.addEventListener('change', async () => {
         const userId = control.dataset.rsvp;
         if (!/^[0-9a-f-]{36}$/i.test(userId)) return;
@@ -5377,7 +5378,7 @@ render();
     host.classList.add('v47-doc-summary');host.innerHTML=`<div class="ov44-card-head"><h2>Документы и материалы</h2><button data-v47-jump="documents">Все документы</button></div><div class="v47-doc-mini">${list.map(d=>`<button data-v47-doc-open="${safe(d.id)}" ${d.local||!d.storage_path?'disabled':''}><span><b>${safe(d.title)}</b><small>${safe(d.category||ext(d))}${size(d.size_bytes)?` · ${safe(size(d.size_bytes))}`:''}</small></span><em>${safe(ext(d))}${d.local||!d.storage_path?'':' ↓'}</em></button>`).join('')||'<div class="ov44-empty">Документы пока не добавлены.</div>'}</div>`;bind();
   }
   function row(d,a){const ready=!!d.storage_path&&!d.local;return `<article class="v47-doc-row"><div class="v47-doc-type">${safe(ext(d))}</div><div class="v47-doc-copy"><div><strong>${safe(d.title)}</strong><span>${safe(d.category||'Материалы')}</span></div><p>${safe(d.description||(ready?'Материал похода':'Файл ещё не загружен'))}</p><small>${safe(d.file_name||'')}${size(d.size_bytes)?` · ${safe(size(d.size_bytes))}`:''}</small></div><div class="v47-doc-actions">${ready?`<button class="btn alt sm" data-v47-doc-open="${safe(d.id)}">Открыть / скачать</button>`:'<span class="v47-doc-pending">Ожидает файл</span>'}${a.admin&&ready?`<button class="icon-btn" data-v47-doc-delete="${safe(d.id)}" title="Удалить">×</button>`:''}</div></article>`}
-  function page(){const a=window.HikeAccessV47?.access?.()||{admin:false},list=rows(),actions=a.admin?'<button class="btn sand" id="v47UploadDocument">Загрузить документ</button>':'';return `<div class="v47-doc-page">${pageHead('Подготовка','Документы','Памятки, PDF, Word, треки и другие материалы этого похода.',actions)}<section class="v47-doc-intro"><div><span>Материалы похода</span><strong>${list.length}</strong><small>документов и файлов</small></div><p>${a.admin?'Организатор может добавлять материалы. Участникам доступно чтение и скачивание.':'Здесь находятся материалы, которые организатор рекомендует скачать или изучить до похода.'}</p></section><section class="v47-doc-list">${list.map(d=>row(d,a)).join('')||'<div class="v47-doc-empty"><strong>Документы пока не добавлены</strong><span>Когда организатор загрузит материалы, они появятся здесь.</span></div>'}</section></div>`}
+  function page(){const base=window.HikeAccessV47?.access?.()||{admin:false},a={...base,admin:base.admin||!!window.HikeWorkspace?.can?.('documents')},list=rows(),actions=a.admin?'<button class="btn sand" id="v47UploadDocument">Загрузить документ</button>':'';return `<div class="v47-doc-page">${pageHead('Подготовка','Документы','Памятки, PDF, Word, треки и другие материалы этого похода.',actions)}<section class="v47-doc-intro"><div><span>Материалы похода</span><strong>${list.length}</strong><small>документов и файлов</small></div><p>${a.admin?'Организатор может добавлять материалы. Участникам доступно чтение и скачивание.':'Здесь находятся материалы, которые организатор рекомендует скачать или изучить до похода.'}</p></section><section class="v47-doc-list">${list.map(d=>row(d,a)).join('')||'<div class="v47-doc-empty"><strong>Документы пока не добавлены</strong><span>Когда организатор загрузит материалы, они появятся здесь.</span></div>'}</section></div>`}
   function bind(){document.querySelectorAll('[data-v47-jump]').forEach(b=>b.onclick=()=>{tab=b.dataset.v47Jump;render()});document.querySelectorAll('[data-v47-doc-open]').forEach(b=>b.onclick=()=>window.V47Cloud?.open?.(b.dataset.v47DocOpen));document.querySelectorAll('[data-v47-doc-delete]').forEach(b=>b.onclick=()=>window.V47Cloud?.remove?.(b.dataset.v47DocDelete));document.getElementById('v47UploadDocument')?.addEventListener('click',()=>window.V47Cloud?.upload?.())}
   function setDocs(next){docs=Array.isArray(next)?next:[];if(tab==='overview')mini();if(tab==='documents')refresh()}
   function refresh(){if(tab!=='documents')return;const app=document.getElementById('app');if(app)app.innerHTML=page();bind()}
@@ -5403,11 +5404,11 @@ render();
     return document.body.classList.contains('hike-organizer')||(!signed()&&current()?.id==='p1');
   };
   function roles(pid=current()?.id){
+    const modern=(S.roles||[]).filter(r=>r.p===pid).map(r=>({id:r.id,title:r.title,desc:r.desc||'',critical:!!r.critical,responsibilities:Array.isArray(r.responsibilities)?r.responsibilities:[],acceptance:r.acceptance||''}));
+    if(modern.length)return modern;
     const rows=[];
     if(Array.isArray(S.rolesV36?.roles)&&S.rolesV36.roles.length){
       S.rolesV36.roles.filter(r=>r.p===pid).forEach(r=>rows.push({id:r.id,title:r.title,desc:r.desc||''}));
-    }else{
-      (S.roles||[]).filter(r=>r.p===pid).forEach(r=>rows.push({id:legacyMap[r.title]||r.id,title:r.title,desc:r.desc||''}));
     }
     return rows.filter((r,i,a)=>a.findIndex(x=>x.id===r.id)===i);
   }
@@ -5508,7 +5509,7 @@ render();
   async function open(id){const d=window.V47Docs?.get?.().find(x=>String(x.id)===String(id));if(!d?.storage_path)return;try{const a=document.createElement('a');a.href=await signed(d);a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()}catch(e){toast(e.message||'Не удалось открыть документ')}}
   const clean=n=>{const p=String(n||'file').split('.'),x=p.length>1?`.${p.pop().toLowerCase()}`:'';return `${p.join('.').toLowerCase().replace(/[^a-z0-9а-яё_-]+/gi,'-').replace(/^-+|-+$/g,'').slice(0,80)||'file'}${x}`};
   function upload(){
-    const a=window.HikeAccessV47?.access?.();if(!a?.admin)return toast('Загрузка доступна организатору');
+    const a=window.HikeAccessV47?.access?.();if(!(a?.admin||window.HikeWorkspace?.can?.('documents')))return toast('Нет доступа к редактированию документов');
     openModal('Добавить документ',`<div class="form-grid v47-upload-form"><div class="field full"><label>Файл</label><input id="v47File" type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,.jpg,.jpeg,.png,.gpx,.kml" required><small>PDF, Word, Excel, TXT, изображения, GPX/KML · до 25 МБ</small></div><div class="field full"><label>Название</label><input id="v47Title" placeholder="Например, Памятка участника"></div><div class="field"><label>Категория</label><select id="v47Category"><option>Памятки</option><option>Маршрут</option><option>Безопасность</option><option>Организация</option><option>Материалы</option></select></div><div class="field full"><label>Описание</label><textarea id="v47Description" placeholder="Коротко — зачем этот файл участнику"></textarea></div></div>`,async layer=>{
       const file=layer.querySelector('#v47File').files?.[0];if(!file){toast('Выбери файл');return false}const ext=(file.name.split('.').pop()||'').toLowerCase();if(!MIME[ext]){toast('Этот формат пока не поддерживается');return false}if(file.size>MAX){toast('Файл больше 25 МБ');return false}
       const s=session();if(!s?.access_token){toast('Сначала войди в аккаунт организатора');return false}const id=await eid(),path=`${id}/${crypto.randomUUID()}/${clean(file.name)}`;
@@ -5519,7 +5520,7 @@ render();
       loaded=false;await load(true);toast('Документ загружен');render();return true;
     })
   }
-  async function remove(id){const a=window.HikeAccessV47?.access?.();if(!a?.admin)return;const d=window.V47Docs?.get?.().find(x=>String(x.id)===String(id));if(!d?.storage_path||!confirm(`Удалить «${d.title}»?`))return;try{await req(`/storage/v1/object/hike-files/${encodeURI(d.storage_path)}`,{method:'DELETE'});const r=await req(`/rest/v1/hike_files?id=eq.${encodeURIComponent(d.id)}`,{method:'DELETE'});if(!r.ok)throw new Error('Не удалось удалить запись');loaded=false;await load(true);toast('Документ удалён');render()}catch(e){toast(e.message||'Не удалось удалить документ')}}
+  async function remove(id){const a=window.HikeAccessV47?.access?.();if(!(a?.admin||window.HikeWorkspace?.can?.('documents')))return;const d=window.V47Docs?.get?.().find(x=>String(x.id)===String(id));if(!d?.storage_path||!confirm(`Удалить «${d.title}»?`))return;try{await req(`/storage/v1/object/hike-files/${encodeURI(d.storage_path)}`,{method:'DELETE'});const r=await req(`/rest/v1/hike_files?id=eq.${encodeURIComponent(d.id)}`,{method:'DELETE'});if(!r.ok)throw new Error('Не удалось удалить запись');loaded=false;await load(true);toast('Документ удалён');render()}catch(e){toast(e.message||'Не удалось удалить документ')}}
   window.V47Cloud={load,open,upload,remove};window.addEventListener('load',()=>load());
 })();
 
@@ -5818,7 +5819,7 @@ render();
   }
 
   const safe = v => typeof esc === 'function' ? esc(v) : String(v ?? '');
-  const admin = () => !!window.HikeAccessV47?.access?.().admin;
+  const admin = () => !!window.HikeAccessV47?.access?.().admin || !!window.HikeWorkspace?.can?.('participants');
   const people = () => Array.isArray(S?.participants) ? S.participants : [];
   const me = () => people().find(p => p.id === S.current) || people()[0] || null;
   const counts = () => Object.fromEntries(['yes','maybe','no','pending'].map(k => [k, people().filter(p => p.rsvp === k).length]));
@@ -6065,7 +6066,7 @@ const A=[
 const M=Object.fromEntries(A.map(x=>[x.id,x])),D=A[0];
 const people=()=>Array.isArray(S?.participants)?S.participants:[];
 const current=()=>people().find(p=>p.id===S.current)||people()[0]||null;
-const admin=()=>!!window.HikeAccessV47?.access?.().admin;
+const admin=()=>!!window.HikeAccessV47?.access?.().admin||!!window.HikeWorkspace?.can?.('participants');
 const team=()=>admin()?people():people().filter(p=>p.rsvp==='yes'||p.id===S.current);
 const html=p=>`<img class="v56-avatar-img" src="${M[p?.avatarKey]?.src||D.src}" alt="">`;
 function defaults(){let c=false;people().forEach(p=>{if(!M[p.avatarKey]){p.avatarKey=D.id;c=true}});if(c&&typeof save==='function')save()}
@@ -6178,28 +6179,22 @@ function can(area){
   if(window.HikePreviewV48?.active)return false;
   if(window.HikeSession?.signed&&!window.HikeSession.approved)return false;
   if(window.HikeSession?.organizer||(!window.HikeSession?.signed&&S.current==='p1'))return true;
-  const configured=['participants','route','plan','gear','food','transport','documents','medical','comms','safety','camp','media'];
-  if(configured.includes(area)){
-    const pid=actor();
-    const infer=r=>{
-      if(Array.isArray(r.responsibilities))return r.responsibilities;
-      const t=String(r.title||'').toLowerCase();
-      if(t.includes('руковод')||t.includes('организ'))return configured;
-      if(t.includes('навиг')||t.includes('маршрут')||t.includes('ориент'))return['route','plan','safety'];
-      if(t.includes('замык'))return['participants','comms','safety'];
-      if(t.includes('помощ')||t.includes('аптеч')||t.includes('мед'))return['medical','safety'];
-      if(t.includes('связ')||t.includes('радио'))return['comms','safety'];
-      if(t.includes('снаряж')||t.includes('завхоз')||t.includes('экип'))return['gear','food','transport'];
-      if(t.includes('транспорт')||t.includes('водител'))return['transport'];
-      if(t.includes('питан')||t.includes('еда')||t.includes('вод'))return['food'];
-      if(t.includes('кост')||t.includes('огон'))return['camp','safety'];
-      if(t.includes('фото')||t.includes('видео'))return['media'];
-      if(t.includes('эколог')||t.includes('природ'))return['camp','safety'];
-      if(t.includes('летопис')||t.includes('дневник')||t.includes('замет'))return['media','documents'];
-      return['plan'];
-    };
-    return(S.roles||[]).some(r=>r.p===pid&&infer(r).includes(area));
-  }
+  const modules=['participants','gear','food','transport','documents','route','plan'];
+  const pid=actor();
+  const infer=r=>{
+    if(Array.isArray(r.responsibilities))return r.responsibilities.filter(x=>modules.includes(x));
+    const t=String(r.title||'').toLowerCase();
+    if(t.includes('руковод')||t.includes('организ'))return modules;
+    if(t.includes('навиг')||t.includes('маршрут')||t.includes('ориент'))return['route','plan'];
+    if(t.includes('снаряж')||t.includes('завхоз')||t.includes('экип'))return['gear','food','transport'];
+    if(t.includes('транспорт')||t.includes('водител'))return['transport'];
+    if(t.includes('питан')||t.includes('еда')||t.includes('вод'))return['food'];
+    if(t.includes('документ')||t.includes('файл'))return['documents'];
+    return[];
+  };
+  const moduleCan=module=> (S.roles||[]).some(r=>r.p===pid&&r.critical!==false&&infer(r).includes(module));
+  if(modules.includes(area))return moduleCan(area);
+  if(area==='roles'&&typeof tab!=='undefined'&&tab==='transport')return moduleCan('transport');
   if(area==='roles')return has('lead');
   return false;
 }
