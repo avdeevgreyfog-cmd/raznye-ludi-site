@@ -4955,7 +4955,7 @@ render();
     document.getElementById('reset').onclick = () => toast('Данные похода не сбрасываются с устройства: рабочая версия хранится у команды централизованно.');
   }
   function wireMembershipActions() {
-    document.querySelectorAll('.status-select[data-rsvp]').forEach(control => {
+    document.querySelectorAll('select[data-rsvp]').forEach(control => {
       const canManageMembers = isOrganizer || !!window.HikeWorkspace?.can?.('participants');
       control.disabled = !canManageMembers;
       if (!canManageMembers) return;
