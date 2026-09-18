@@ -17,6 +17,56 @@ notes:{label:'Летописец',svg:'<svg viewBox="0 0 24 24" aria-hidden="tru
 water:{label:'Вода',svg:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3s5 6 5 10a5 5 0 01-10 0c0-4 5-10 5-10z"/></svg>'},
 checklist:{label:'Организация',svg:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="16" rx="2"/><path d="M9 9l1.5 1.5L13 8M9 14l1.5 1.5L13 13M15 9h1M15 14h1"/></svg>'}
 };
+
+const RESPONSIBILITY_AREAS_V65={
+participants:{label:'Команда',hint:'участники и состав'},
+route:{label:'Маршрут',hint:'трек, точки и навигация'},
+plan:{label:'План',hint:'тайминг и этапы'},
+gear:{label:'Снаряжение',hint:'личное и групповое'},
+food:{label:'Питание и вода',hint:'еда, вода и запасы'},
+transport:{label:'Транспорт',hint:'машины и рассадка'},
+documents:{label:'Документы',hint:'файлы и памятки'},
+medical:{label:'Первая помощь',hint:'аптечка и медицина'},
+comms:{label:'Связь',hint:'каналы и резерв'},
+safety:{label:'Безопасность',hint:'риски и контроль группы'},
+camp:{label:'Лагерь / костёр',hint:'стоянка и огонь'},
+media:{label:'Фото / хроника',hint:'фото, видео и заметки'}
+};
+const inferResponsibilitiesV65=role=>{
+const t=String(role?.title||'').toLowerCase();
+if(t.includes('руковод')||t.includes('организ'))return Object.keys(RESPONSIBILITY_AREAS_V65);
+if(t.includes('навиг')||t.includes('маршрут')||t.includes('ориент'))return['route','plan','safety'];
+if(t.includes('замык'))return['participants','comms','safety'];
+if(t.includes('помощ')||t.includes('аптеч')||t.includes('мед'))return['medical','safety'];
+if(t.includes('связ')||t.includes('радио'))return['comms','safety'];
+if(t.includes('снаряж')||t.includes('завхоз')||t.includes('экип'))return['gear','food','transport'];
+if(t.includes('транспорт')||t.includes('водител'))return['transport'];
+if(t.includes('питан')||t.includes('еда')||t.includes('вод'))return['food'];
+if(t.includes('кост')||t.includes('огон'))return['camp','safety'];
+if(t.includes('фото')||t.includes('видео'))return['media'];
+if(t.includes('эколог')||t.includes('природ'))return['camp','safety'];
+if(t.includes('летопис')||t.includes('дневник')||t.includes('замет'))return['media','documents'];
+return['plan'];
+};
+const ensureRoleResponsibilitiesV65=role=>{
+if(!Array.isArray(role.responsibilities))role.responsibilities=inferResponsibilitiesV65(role);
+role.responsibilities=[...new Set(role.responsibilities)].filter(key=>RESPONSIBILITY_AREAS_V65[key]);
+if(!Array.isArray(role.duties))role.duties=[];
+role.duties=role.duties.map(x=>String(x||'').trim()).filter(Boolean);
+return role;
+};
+const responsibilityChipsV65=role=>{
+ensureRoleResponsibilitiesV65(role);
+const list=role.responsibilities;
+if(!list.length)return'<div class="role-responsibility-empty-v65">Зоны ответственности не выбраны</div>';
+const visible=list.slice(0,4).map(key=>`<span class="role-scope-chip-v65">${esc(RESPONSIBILITY_AREAS_V65[key].label)}</span>`).join('');
+return`<div class="role-scope-chips-v65">${visible}${list.length>4?`<span class="role-scope-chip-v65 more">+${list.length-4}</span>`:''}</div>`;
+};
+const responsibilitiesPickerV65=selected=>{
+const set=new Set(selected||[]);
+return`<div class="role-responsibility-picker-v65">${Object.entries(RESPONSIBILITY_AREAS_V65).map(([key,item])=>`<label class="role-responsibility-choice-v65"><input type="checkbox" name="roleResponsibilityV65" value="${key}" ${set.has(key)?'checked':''}><span><b>${esc(item.label)}</b><small>${esc(item.hint)}</small></span></label>`).join('')}</div>`;
+};
+
 const canManageRolesV63=()=>!!window.HikeSession?.organizer||document.body.classList.contains('hike-organizer')||!!(document.getElementById('hikeSettingsButton')&&!document.getElementById('hikeSettingsButton').hidden);
 const inferIconV63=role=>{
 if(role?.icon&&ICONS_V63[role.icon])return role.icon;
@@ -45,7 +95,7 @@ const roleStatusV63=role=>role.p?`<span class="role-status-v63 ok"><i>✓</i>Н�
 const participantOptionsV63=role=>`<option value="">Не назначено</option>${S.participants.filter(p=>p.rsvp!=='no').map(p=>`<option value="${p.id}" ${role.p===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}`;
 const roleRowV63=(role,manage)=>`<div class="role-row-v63 ${role.p?'':'is-free'}">
 <div class="role-icon-v63">${iconSvgV63(role)}</div>
-<div class="role-copy-v63"><strong>${esc(role.title)}</strong><small>${esc(role.desc||'Описание роли пока не заполнено.')}</small></div>
+<div class="role-copy-v63"><strong>${esc(role.title)}</strong><small>${esc(role.desc||'Описание роли пока не заполнено.')}</small>${responsibilityChipsV65(role)}${role.duties?.length?`<div class="role-duties-count-v65">${role.duties.length} ${role.duties.length===1?'конкретная задача':'конкретных задач'}</div>`:''}</div>
 <div class="role-owner-v63">${rolePersonV63(role)}</div>
 <div class="role-status-cell-v63">${roleStatusV63(role)}</div>
 ${manage?`<div class="role-manage-v63">
@@ -77,17 +127,19 @@ ${manage?`<div class="roles-organizer-note-v63"><span>i</span><div><strong>Ор�
 function iconPickerV63(selected){return`<div class="role-icon-picker-v63">${Object.entries(ICONS_V63).map(([key,item])=>`<label class="role-icon-choice-v63 ${key===selected?'selected':''}"><input type="radio" name="roleIconV63" value="${key}" ${key===selected?'checked':''}><span class="role-icon-choice-svg-v63">${item.svg}</span><small>${esc(item.label)}</small></label>`).join('')}</div>`}
 function bindIconPickerV63(layer){layer.querySelectorAll('input[name="roleIconV63"]').forEach(input=>{input.onchange=()=>{layer.querySelectorAll('.role-icon-choice-v63').forEach(label=>label.classList.toggle('selected',label.contains(input)&&input.checked))}})}
 function roleModalV63(item=null){
-const role=item||{title:'',desc:'',critical:false,p:'',icon:'checklist'},selectedIcon=inferIconV63(role);
+const role=item||{title:'',desc:'',critical:false,p:'',icon:'checklist',responsibilities:[],duties:[]};ensureRoleResponsibilitiesV65(role);const selectedIcon=inferIconV63(role);
 openModal(item?'Изменить роль':'Добавить роль',`<div class="form-grid role-form-v63">
 <div class="field full"><label>Название роли</label><input id="roleTitleV63" value="${esc(role.title)}" placeholder="Например, Костровой"></div>
-<div class="field full"><label>За что отвечает</label><textarea id="roleDescV63" placeholder="Коротко и понятно опиши зону ответственности">${esc(role.desc||'')}</textarea></div>
+<div class="field full"><label>Краткое описание роли</label><textarea id="roleDescV63" placeholder="Например: ведёт группу по маршруту и контролирует ориентирование">${esc(role.desc||'')}</textarea></div>
+<div class="field full role-responsibility-field-v65"><label>За что отвечает</label><p class="role-field-help-v65">Выбери зоны ответственности. Они будут показаны в карточке роли и, где это поддерживает модуль, дадут назначенному человеку право управлять этим разделом.</p>${responsibilitiesPickerV65(role.responsibilities)}</div>
+<div class="field full"><label>Конкретные обязанности</label><p class="role-field-help-v65">Необязательно. По одной задаче в строке — например «проверить офлайн-карту» или «собрать групповую аптечку».</p><textarea id="roleDutiesV65" placeholder="Проверить офлайн-карту&#10;Сверить контрольные точки">${esc((role.duties||[]).join('\n'))}</textarea></div>
 <div class="field full"><label>Иконка</label>${iconPickerV63(selectedIcon)}</div>
 <div class="field"><label>Ответственный</label><select id="rolePersonV63">${participantOptionsV63(role)}</select></div>
 <div class="field"><label>Тип роли</label><select id="roleTypeV63"><option value="critical" ${role.critical?'selected':''}>Ключевая</option><option value="additional" ${!role.critical?'selected':''}>Дополнительная</option></select></div>
 </div>`,layer=>{
-const title=layer.querySelector('#roleTitleV63').value.trim(),desc=layer.querySelector('#roleDescV63').value.trim(),icon=layer.querySelector('input[name="roleIconV63"]:checked')?.value||'checklist',p=layer.querySelector('#rolePersonV63').value,critical=layer.querySelector('#roleTypeV63').value==='critical';
+const title=layer.querySelector('#roleTitleV63').value.trim(),desc=layer.querySelector('#roleDescV63').value.trim(),icon=layer.querySelector('input[name="roleIconV63"]:checked')?.value||'checklist',p=layer.querySelector('#rolePersonV63').value,critical=layer.querySelector('#roleTypeV63').value==='critical',responsibilities=[...layer.querySelectorAll('input[name="roleResponsibilityV65"]:checked')].map(input=>input.value),duties=layer.querySelector('#roleDutiesV65').value.split(/\n+/).map(x=>x.trim()).filter(Boolean);
 if(!title){toast('Укажи название роли');return false}
-const next={title,desc,icon,p,critical};
+const next={title,desc,icon,p,critical,responsibilities,duties};
 if(item)Object.assign(item,next);else S.roles.push({id:`r${Date.now()}`,...next});
 save();render();toast(item?'Роль обновлена':'Роль добавлена')});
 bindIconPickerV63(document.getElementById('modalLayer'))}
@@ -104,6 +156,19 @@ document.querySelectorAll('[data-role-unassign-v63]').forEach(button=>{button.on
 document.querySelectorAll('[data-role-edit-v63]').forEach(button=>{button.onclick=()=>{const role=S.roles.find(x=>x.id===button.dataset.roleEditV63);if(role)roleModalV63(role)}});
 document.querySelectorAll('[data-role-delete-v63]').forEach(button=>{button.onclick=()=>{const role=S.roles.find(x=>x.id===button.dataset.roleDeleteV63);if(role)deleteRoleV63(role)}})};
 rolesPage=rolesPageV63;
+function patchWorkspacePermissionsV65(){
+if(!window.HikeWorkspace||window.HikeWorkspace.__rolesV65Permissions)return;
+const baseCan=typeof window.HikeWorkspace.can==='function'?window.HikeWorkspace.can.bind(window.HikeWorkspace):()=>false;
+window.HikeWorkspace.can=function(area){
+if(baseCan(area))return true;
+if(window.HikePreviewV48?.active)return false;
+if(window.HikeSession?.signed&&!window.HikeSession.approved)return false;
+const actor=S.current;
+return(S.roles||[]).some(role=>role.p===actor&&ensureRoleResponsibilitiesV65(role).responsibilities.includes(area));
+};
+window.HikeWorkspace.__rolesV65Permissions=true;
+}
+patchWorkspacePermissionsV65();
 const authBar=document.getElementById('hikeAuthBar');
 if(authBar){let lastManageState=canManageRolesV63();new MutationObserver(()=>{const next=canManageRolesV63();if(next!==lastManageState){lastManageState=next;if(tab==='roles')render()}}).observe(authBar,{attributes:true,subtree:true,childList:true,attributeFilter:['hidden','class','style']})}
 render();
