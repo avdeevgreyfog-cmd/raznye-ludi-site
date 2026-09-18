@@ -1,0 +1,151 @@
+/* V70 — final unified module header system. */
+body.module-hero-v70-active .module-hero-v70{
+  --hero-image:url('./assets/hero-hike-v70.webp');
+  position:relative!important;
+  isolation:isolate!important;
+  display:flex!important;
+  align-items:flex-end!important;
+  justify-content:space-between!important;
+  gap:28px!important;
+  width:100%!important;
+  min-height:148px!important;
+  margin:0 0 16px!important;
+  padding:22px 26px 24px!important;
+  overflow:hidden!important;
+  border:1px solid #d5dfd8!important;
+  border-radius:16px!important;
+  background:
+    linear-gradient(90deg,
+      rgba(248,250,247,.995) 0%,
+      rgba(248,250,247,.98) 36%,
+      rgba(248,250,247,.88) 54%,
+      rgba(248,250,247,.48) 72%,
+      rgba(248,250,247,.12) 100%),
+    var(--hero-image) 50% 50%/cover no-repeat!important;
+  box-shadow:0 9px 28px rgba(29,66,52,.04)!important;
+}
+body.module-hero-v70-hike .module-hero-v70{
+  --hero-image:url('./assets/hero-hike-v70.webp');
+  background-position:center,50% 48%!important;
+}
+body.module-hero-v70-prep .module-hero-v70{
+  --hero-image:url('./assets/hero-prep-v70.webp');
+  background-position:center,50% 50%!important;
+}
+body.module-hero-v70-field .module-hero-v70{
+  --hero-image:url('./assets/hero-field-v70.webp');
+  background-position:center,50% 50%!important;
+}
+
+body.module-hero-v70-active .module-hero-v70:before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(238,244,239,.08));
+}
+body.module-hero-v70-active .module-hero-v70:after{display:none!important}
+
+body.module-hero-v70-active .module-hero-copy-v70,
+body.module-hero-v70-active .module-hero-actions-v70{
+  position:relative!important;
+  z-index:1!important;
+}
+body.module-hero-v70-active .module-hero-copy-v70{
+  min-width:0!important;
+  max-width:760px!important;
+  margin:0!important;
+  padding:0!important;
+}
+body.module-hero-v70-active .module-hero-copy-v70 .page-kicker,
+body.module-hero-v70-active .module-hero-copy-v70 .p50-kicker{
+  margin:0 0 10px!important;
+  color:#2f7658!important;
+  font:800 10px/1 Inter,"Segoe UI",Arial,sans-serif!important;
+  letter-spacing:.12em!important;
+  text-transform:uppercase!important;
+}
+body.module-hero-v70-active .module-hero-copy-v70 h1{
+  margin:0!important;
+  color:#123f35!important;
+  font:720 clamp(42px,4vw,54px)/.98 "Roboto Condensed",Inter,"Segoe UI",Arial,sans-serif!important;
+  letter-spacing:-.035em!important;
+  text-transform:none!important;
+}
+body.module-hero-v70-active .module-hero-desc-v70,
+body.module-hero-v70-active .module-hero-meta-v69{
+  display:none!important;
+}
+
+body.module-hero-v70-active .module-hero-actions-v70{
+  display:flex!important;
+  align-items:center!important;
+  align-self:flex-end!important;
+  gap:8px!important;
+  flex:0 0 auto!important;
+  margin:0!important;
+}
+body.module-hero-v70-active .module-hero-actions-v70:empty{display:none!important}
+body.module-hero-v70-active .module-hero-actions-v70 .btn,
+body.module-hero-v70-active .module-hero-actions-v70 .p50-btn{
+  min-height:40px!important;
+  height:40px!important;
+  padding:0 15px!important;
+  border-radius:10px!important;
+  font:700 10.5px/1 Inter,"Segoe UI",Arial,sans-serif!important;
+}
+body.module-hero-v70-active .module-hero-actions-v70 .btn.sand,
+body.module-hero-v70-active .module-hero-actions-v70 .p50-btn.primary,
+body.module-hero-v70-active .module-hero-actions-v70 .roles-add-primary-v63{
+  border-color:#1f684c!important;
+  background:#176044!important;
+  color:#fff!important;
+}
+body.module-hero-v70-active .module-hero-actions-v70 .btn.sand:hover,
+body.module-hero-v70-active .module-hero-actions-v70 .p50-btn.primary:hover,
+body.module-hero-v70-active .module-hero-actions-v70 .roles-add-primary-v63:hover{
+  background:#124f39!important;
+}
+
+/* Kill incompatible geometry inherited from the three legacy hero variants. */
+body.module-hero-v70-active .ov44-hero-head,
+body.module-hero-v70-active .p50-hero,
+body.module-hero-v70-active .page-head{
+  border-bottom:1px solid #d5dfd8!important;
+}
+body.module-hero-v70-active .ov44-hero-copy,
+body.module-hero-v70-active .p50-hero__copy,
+body.module-hero-v70-active .page-head__copy{
+  min-height:0!important;
+  padding:0!important;
+}
+body.module-hero-v70-active .p50-hero__actions{
+  align-self:flex-end!important;
+}
+
+@media(max-width:860px){
+  body.module-hero-v70-active .module-hero-v70{
+    min-height:132px!important;
+    padding:18px 20px 20px!important;
+    gap:18px!important;
+  }
+  body.module-hero-v70-active .module-hero-copy-v70 h1{font-size:40px!important}
+}
+@media(max-width:640px){
+  body.module-hero-v70-active .module-hero-v70{
+    flex-direction:column!important;
+    align-items:flex-start!important;
+    min-height:0!important;
+    padding:17px!important;
+    background:
+      linear-gradient(90deg,rgba(248,250,247,.995) 0%,rgba(248,250,247,.92) 64%,rgba(248,250,247,.72) 100%),
+      var(--hero-image) 64% 50%/cover no-repeat!important;
+  }
+  body.module-hero-v70-active .module-hero-copy-v70 h1{font-size:36px!important}
+  body.module-hero-v70-active .module-hero-actions-v70{
+    width:100%!important;
+    align-self:stretch!important;
+  }
+  body.module-hero-v70-active .module-hero-actions-v70>*{flex:1 1 auto}
+}
