@@ -351,3 +351,78 @@
  .roles-group-head-v63{padding:15px 16px}
  .roles-group-head-v63 h2{font-size:16px}
 }
+
+/* V68 — unclipped menus, section add actions, participant avatars */
+.roles-group-v63{overflow:visible}
+.roles-group-head-v63{border-radius:18px 18px 0 0}
+.roles-list-v63{overflow:visible}
+.roles-list-v63 .role-row-v63:last-child{border-radius:0 0 18px 18px}
+
+.roles-group-head-actions-v68{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex:0 0 auto;
+}
+.roles-group-head-actions-v68>span{
+  white-space:nowrap;
+  color:#526d5e;
+  font-family:Inter,var(--body);
+  font-size:11.5px;
+  font-weight:700;
+}
+.roles-section-add-v68{
+  min-height:32px;
+  padding:6px 10px;
+  border:1px solid #cfddd4;
+  border-radius:9px;
+  background:#fff;
+  color:#35684e;
+  font-family:Inter,var(--body);
+  font-size:10.5px;
+  font-weight:700;
+  cursor:pointer;
+}
+.roles-section-add-v68:hover{
+  border-color:#9fbeaa;
+  background:#f4f9f5;
+}
+
+.roles-empty-v68{
+  padding:18px 20px;
+  border-radius:0 0 18px 18px;
+  background:#fcfdfc;
+  color:#819087;
+  font-family:Inter,var(--body);
+  font-size:12px;
+}
+
+.role-avatar-v63.has-image{
+  overflow:hidden;
+  padding:0;
+  border:1px solid #d9e4dc;
+  background:#eef4ef;
+}
+.role-avatar-v63.has-image img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:inherit;
+}
+
+.role-menu-v67{
+  position:fixed;
+  z-index:999;
+}
+.role-menu-v67[hidden]{display:none!important}
+
+@media(max-width:720px){
+  .roles-group-head-actions-v68{
+    width:100%;
+    justify-content:space-between;
+  }
+  .roles-section-add-v68{
+    margin-left:auto;
+  }
+}
