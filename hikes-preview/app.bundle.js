@@ -6177,11 +6177,30 @@ const has=id=>rows().some(r=>r.id===id&&r.p===actor());
 function can(area){
   if(window.HikePreviewV48?.active)return false;
   if(window.HikeSession?.signed&&!window.HikeSession.approved)return false;
-  if(window.HikeSession?.organizer||(!window.HikeSession?.signed&&S.current==='p1')||has('lead'))return true;
-  if(area==='route'||area==='plan')return has('nav');
-  if(area==='gear')return has('logistics');
-  if(area==='food')return has('logistics')||rows().some(r=>r.p===actor()&&r.manageFood);
-  if(area==='medical')return has('medic')||has('logistics');
+  if(window.HikeSession?.organizer||(!window.HikeSession?.signed&&S.current==='p1'))return true;
+  const configured=['participants','route','plan','gear','food','transport','documents','medical','comms','safety','camp','media'];
+  if(configured.includes(area)){
+    const pid=actor();
+    const infer=r=>{
+      if(Array.isArray(r.responsibilities))return r.responsibilities;
+      const t=String(r.title||'').toLowerCase();
+      if(t.includes('руковод')||t.includes('организ'))return configured;
+      if(t.includes('навиг')||t.includes('маршрут')||t.includes('ориент'))return['route','plan','safety'];
+      if(t.includes('замык'))return['participants','comms','safety'];
+      if(t.includes('помощ')||t.includes('аптеч')||t.includes('мед'))return['medical','safety'];
+      if(t.includes('связ')||t.includes('радио'))return['comms','safety'];
+      if(t.includes('снаряж')||t.includes('завхоз')||t.includes('экип'))return['gear','food','transport'];
+      if(t.includes('транспорт')||t.includes('водител'))return['transport'];
+      if(t.includes('питан')||t.includes('еда')||t.includes('вод'))return['food'];
+      if(t.includes('кост')||t.includes('огон'))return['camp','safety'];
+      if(t.includes('фото')||t.includes('видео'))return['media'];
+      if(t.includes('эколог')||t.includes('природ'))return['camp','safety'];
+      if(t.includes('летопис')||t.includes('дневник')||t.includes('замет'))return['media','documents'];
+      return['plan'];
+    };
+    return(S.roles||[]).some(r=>r.p===pid&&infer(r).includes(area));
+  }
+  if(area==='roles')return has('lead');
   return false;
 }
 const canAct=()=>!window.HikePreviewV48?.active&&(!window.HikeSession?.signed||window.HikeSession.approved);
