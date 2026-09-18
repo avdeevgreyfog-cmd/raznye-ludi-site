@@ -18,3 +18,45 @@
 #roleDutiesV65{min-height:108px}
 @media(max-width:900px){.role-responsibility-picker-v65{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.role-responsibility-picker-v65{grid-template-columns:1fr}}
+
+/* V66 — module access + clean role editor */
+.modal-layer .modal:has(.role-form-v63){width:min(860px,calc(100vw - 32px));max-width:860px;max-height:calc(100vh - 32px);overflow:hidden;border:1px solid #d6dfd9;border-radius:18px;background:#fff;box-shadow:0 26px 80px rgba(28,49,38,.22);font-family:Inter,var(--body)}
+.modal-layer .modal:has(.role-form-v63) .modal-head{padding:18px 22px;border-bottom:1px solid #e3e9e5;background:#fff}
+.modal-layer .modal:has(.role-form-v63) .modal-head strong{font-family:Inter,var(--body);font-size:20px;font-weight:700;line-height:1.25;text-transform:none;letter-spacing:0;color:#23352b}
+.modal-layer .modal:has(.role-form-v63) .modal-body{padding:20px 22px;overflow-y:auto;overflow-x:hidden;background:#fbfcfb}
+.modal-layer .modal:has(.role-form-v63) .modal-foot{padding:14px 22px;border-top:1px solid #e3e9e5;background:#fff}
+.role-form-v63{font-family:Inter,var(--body);gap:18px 16px}
+.role-form-v63 .field{min-width:0;gap:7px}
+.role-form-v63 .field>label{font-family:Inter,var(--body);font-size:12px;font-weight:650;line-height:1.3;text-transform:none;letter-spacing:0;color:#34483c}
+.role-form-v63 input,.role-form-v63 select,.role-form-v63 textarea{font-family:Inter,var(--body);font-size:14px;line-height:1.45;border:1px solid #cfdad3;border-radius:10px;background:#fff;padding:10px 12px;color:#26372d}
+.role-form-v63 textarea{min-height:92px}
+.role-field-help-v65{margin:0 0 2px;font-family:Inter,var(--body);font-size:12px;line-height:1.45;color:#718078}
+.role-responsibility-picker-v65{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.role-responsibility-choice-v65{display:flex!important;align-items:flex-start;gap:10px;min-width:0;min-height:66px;padding:11px 12px;border:1px solid #dbe4de;border-radius:12px;background:#fff;cursor:pointer}
+.role-responsibility-choice-v65:has(input:checked){border-color:#7ead8f;background:#eef7f1;box-shadow:0 0 0 1px #a9cdb5 inset}
+.role-responsibility-choice-v65 input{flex:0 0 auto;width:17px!important;height:17px;margin:2px 0 0;padding:0;accent-color:#2f6b4f}
+.role-responsibility-choice-v65 span{min-width:0}
+.role-responsibility-choice-v65 b,.role-responsibility-choice-v65 small{display:block;font-family:Inter,var(--body);overflow-wrap:anywhere}
+.role-responsibility-choice-v65 b{font-size:13px;line-height:1.25;color:#26372d}
+.role-responsibility-choice-v65 small{margin-top:3px;font-size:11px;line-height:1.35;color:#7a887f}
+.role-module-field-v66.is-disabled{opacity:.55}
+.role-module-field-v66.is-disabled .role-responsibility-picker-v65{pointer-events:none}
+.role-module-field-v66.is-disabled:after{content:"Для дополнительной роли права на модули не выдаются.";display:block;margin-top:7px;font-size:11px;color:#7f8c84}
+.role-icon-picker-v63{grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.role-icon-choice-v63{min-width:0;min-height:88px;padding:10px 8px;overflow:hidden}
+.role-icon-choice-v63 small{width:100%;font-family:Inter,var(--body);font-size:10px;line-height:1.25;white-space:normal;overflow-wrap:anywhere;text-align:center}
+.role-extra-note-v66{display:inline-flex;margin-top:8px;padding:5px 8px;border-radius:999px;background:#f1f4f2;color:#6e7b73;font-family:Inter,var(--body);font-size:10px;font-weight:650}
+.role-status-v63.pending-v66{background:#fff4dd;color:#8d640d}
+.role-status-v63.pending-v66 i{display:grid;place-items:center;width:16px;height:16px;border-radius:50%;background:#dba62e;color:#fff;font-style:normal}
+.role-status-v63.declined-v66{background:#fff0ef;color:#a64b48}
+.role-status-v63.declined-v66 i{display:grid;place-items:center;width:16px;height:16px;border-radius:50%;background:#b95b56;color:#fff;font-style:normal}
+.role-confirm-v66{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.role-scope-chip-v65{font-family:Inter,var(--body);white-space:normal}
+.role-copy-v63 strong,.role-copy-v63 small,.role-person-v63 b,.role-person-v63 small{font-family:Inter,var(--body)}
+@media(max-width:720px){
+ .modal-layer .modal:has(.role-form-v63){width:calc(100vw - 16px);max-height:calc(100vh - 16px);border-radius:14px}
+ .role-form-v63{grid-template-columns:1fr}
+ .role-form-v63 .field{grid-column:1}
+ .role-responsibility-picker-v65{grid-template-columns:1fr}
+ .role-icon-picker-v63{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
