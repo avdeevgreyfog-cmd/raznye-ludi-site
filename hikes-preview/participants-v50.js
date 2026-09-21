@@ -73,7 +73,9 @@
   function participantSummary() {
     const c=counts(), l=limit(), f=free();
     const item=(type,label,value,detail)=>`<div class="p50-friendly"><div class="p50-friendly__icon">${icon(type)}</div><div><small>${label}</small><strong>${value}</strong><span class="p50-sub">${detail}</span></div></div>`;
-    return `<section class="p50-participant-summary">${item('people','Команда',`Нас уже ${c.yes}`,c.yes===1?'участник подтвердил участие':'участников подтвердили участие')}${item('plus','Набор',l?`${f} свободных мест`:'Регистрация открыта',l?'можно пригласить друзей':'лимит участников не задан')}</section>`;
+    const teamValue=c.yes?`Нас уже ${c.yes}`:'Пока никого';
+    const teamDetail=c.yes?(c.yes===1?'участник подтвердил участие':'участников подтвердили участие'):'После входа можно подать заявку на участие';
+    return `<section class="p50-participant-summary">${item('people','Команда',teamValue,teamDetail)}${item('plus','Набор',l?`${f} свободных мест`:'Регистрация открыта',l?'можно приглашать участников':'заявки принимаются по email')}</section>`;
   }
 
   function participantRows() {
