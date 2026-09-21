@@ -16,6 +16,14 @@ try{
  await page.goto('http://127.0.0.1:4173/hikes-preview/',{waitUntil:'domcontentloaded'});
  await page.locator('#nav [data-tab="roles"]').waitFor({timeout:30000});
  await page.waitForTimeout(1500);
+ const publicState=await page.evaluate(()=>({
+   participants:Array.isArray(window.S?.participants)?window.S.participants.map(p=>({id:p.id,name:p.name})):[],
+   current:window.S?.current||'',
+   text:document.body.innerText
+ }));
+ assert.equal(publicState.participants.length,0,'Public workspace must start with no seeded participants');
+ for(const name of ['Сергей','Иван','Алексей','Максим','Андрей','Николай']) assert.equal(publicState.text.includes(name),false,'Legacy demo participant leaked into public UI: '+name);
+ assert.equal((await page.locator('#hikeAuthLabel').textContent())?.trim(),'Гость','Unsigned public visitor must stay a guest');
  const dismiss=page.locator('#v39Dismiss'); if(await dismiss.count()) await dismiss.click({force:true}).catch(()=>{});
  for(const tab of ['overview','participants','roles','gear','food','transport','route','plan','documents']){
    await page.locator('#nav [data-tab="'+tab+'"]').click();
