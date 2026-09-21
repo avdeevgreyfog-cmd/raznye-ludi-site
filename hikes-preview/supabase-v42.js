@@ -3,6 +3,7 @@
   'use strict';
 
   const PROJECT_URL = 'https://qmnjsvifwcutjailxdug.supabase.co';
+  const PUBLIC_APP_URL = 'https://avdeevgreyfog-cmd.github.io/raznye-ludi-site/hikes-preview/';
   const PUBLISHABLE_KEY = 'sb_publishable_R1n0gwDrWkKn0-D5nuaz3Q_jRjTFwTD';
   const EVENT_SLUG = 'tominsky-lesopark';
   const AUTH_KEY = 'rl_hike_auth_v42';
@@ -50,7 +51,7 @@
     session.user = user; saveSession(session); return true;
   }
   function modal(title, body, onConfirm) { openModal(title, body, async layer => { try { return await onConfirm(layer); } catch (error) { toast(error.message || 'Не удалось выполнить действие'); return false; } }); }
-  const appUrl = () => `${location.origin}${location.pathname}`;
+  const appUrl = () => PUBLIC_APP_URL;
   async function requestMagicLink(email) { await request(`/auth/v1/otp?redirect_to=${encodeURIComponent(appUrl())}`, { method: 'POST', body: { email, create_user: true } }); }
   function authModal() {
     modal('Войти в поход', '<div class="hike-auth-copy"><p>Укажи email. Придёт одноразовая ссылка: пароль придумывать не нужно.</p><label class="field"><span>Email</span><input id="hikeEmail" type="email" autocomplete="email" placeholder="name@example.com" required></label></div>', async layer => {
