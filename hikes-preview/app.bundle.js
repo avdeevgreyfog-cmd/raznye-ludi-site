@@ -5707,10 +5707,18 @@ render();
     const nights=Math.max(1,days-1);
     return `${days} ${plural(days,'день','дня','дней')} · ${nights} ${plural(nights,'ночь','ночи','ночей')}`;
   };
-  const russianDate=value=>{
+  const russianDate=(value,durationDays=1)=>{
     if(!value)return 'Дата уточняется';
-    const date=new Date(value);
-    return Number.isNaN(date.getTime())?'Дата уточняется':new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long',year:'numeric'}).format(date);
+    const start=new Date(value);
+    if(Number.isNaN(start.getTime()))return 'Дата уточняется';
+    const tz='Europe/Moscow';
+    const parts=d=>Object.fromEntries(new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:tz}).formatToParts(d).filter(x=>x.type!=='literal').map(x=>[x.type,x.value]));
+    const a=parts(start),days=Math.max(1,Number(durationDays)||1);
+    if(days===1)return `${a.day} ${a.month} ${a.year}`;
+    const end=new Date(start.getTime()+(days-1)*86400000),b=parts(end);
+    if(a.month===b.month&&a.year===b.year)return `${a.day}–${b.day} ${b.month} ${b.year}`;
+    if(a.year===b.year)return `${a.day} ${a.month} – ${b.day} ${b.month} ${b.year}`;
+    return `${a.day} ${a.month} ${a.year} – ${b.day} ${b.month} ${b.year}`;
   };
   const toLocal=value=>{
     if(!value)return '';
@@ -5740,7 +5748,7 @@ render();
   function apply(row){
     if(!row||typeof S==='undefined'||!S?.event)return;
     eventRow=row;
-    S.event.date=russianDate(row.starts_at);
+    S.event.date=russianDate(row.starts_at,row.duration_days);
     S.event.meeting=row.meeting_label||'Время и точка уточняются';
     S.event.duration=durationLabel(row);
     S.event.durationDays=Math.max(1,Number(row.duration_days)||1);
@@ -5755,7 +5763,7 @@ render();
     return {
       slug:EVENT_SLUG,
       title:S?.event?.title||S?.event?.short||'Томинский лесопарк · поход-тренировка',
-      starts_at:null,
+      starts_at:S?.event?._previewStart?new Date(S.event._previewStart).toISOString():'2026-10-10T07:00:00.000Z',
       meeting_label:[parts.time,parts.place].filter(Boolean).join(' · ')||null,
       duration_days:durationDays,
       overnight:S?.event?.overnight!==false,
