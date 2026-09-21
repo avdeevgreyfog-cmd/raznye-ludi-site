@@ -70,7 +70,7 @@
               <div class="v38-profile-card-head"><div><h2>Основные данные</h2><p>То, как участник отображается внутри похода и как с ним связаться.</p></div></div>
               <div class="v38-profile-card-body">
                 <div class="v38-form-grid">
-                  <label class="v38-field"><span>Имя</span><input id="v38Name" autocomplete="name" value="${esc(p.name || '')}" placeholder="Сергей"></label>
+                  <label class="v38-field"><span>Имя</span><input id="v38Name" autocomplete="name" value="${esc(p.name || '')}" placeholder="Ваше имя"></label>
                   <label class="v38-field"><span>Позывной</span><input id="v38Callsign" value="${esc(p.callsign || '')}" placeholder="Например, Серый"></label>
                   <label class="v38-field full"><span>Телефон</span><input id="v38Phone" type="tel" autocomplete="tel" value="${esc(transport.phone || '')}" placeholder="+7 ..."><small class="v38-help">Нужен прежде всего для связи с водителем и организатором. Можно оставить пустым.</small></label>
                 </div>

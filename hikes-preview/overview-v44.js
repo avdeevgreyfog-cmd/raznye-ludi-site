@@ -115,7 +115,7 @@
 
   function overview44(){
     const me=(S.participants||[]).find(p=>p.id===S.current)||(S.participants||[])[0];
-    const rs=routeStats44(),att=attention44(),tasks=nextTasks44(me),pr=me?progress(me.id):[0,0,0],roles=me?participantRoles(me.id):[],shared=me?participantShared(me.id):[];
+    const meId=me?.id||'',rs=routeStats44(),att=attention44(),tasks=nextTasks44(me),pr=me?progress(me.id):[0,0,0],roles=me?participantRoles(me.id):[],shared=me?participantShared(me.id):[];
     const yes=confirmedCount44(),maybe=maybeCount44(),roleDone=rolesDone44(),gearDone=gearDone44(),ready=typeof readiness==='function'?readiness():0;
     const roleMissing=Math.max(0,(S.roles||[]).length-roleDone),gearMissing=Math.max(0,(S.shared||[]).length-gearDone);
     const topAttention=att.all.slice(0,3);
@@ -139,9 +139,9 @@
       </section>
       <section class="ov44-main-grid">
         <section class="ov44-card ov44-my-prep"><div class="ov44-card-head"><h2>Моя подготовка</h2><button data-v44-jump="profile">Открыть профиль</button></div>
-          <div class="ov44-prep-grid"><div class="ov44-person"><div class="avatar">${safe(initials(me?.name||'У'))}</div><div><strong>${safe(me?.name||'Участник')}</strong><span>${safe(roles.join(' · ')||'Роль не назначена')}</span></div></div>
+          <div class="ov44-prep-grid"><div class="ov44-person"><div class="avatar">${safe(initials(me?.name||(window.HikeSession?.signed?'У':'Г')))}</div><div><strong>${safe(me?.name||(window.HikeSession?.signed?'Участник':'Гость'))}</strong><span>${safe(roles.join(' · ')||'Роль не назначена')}</span></div></div>
           <div class="ov44-progress-block"><div><span>Снаряжение</span><b>${pr[0]} / ${pr[1]}</b></div><div class="ov44-progress"><i style="width:${pr[2]}%"></i></div></div>
-          <div class="ov44-prep-lines"><button data-v44-jump="transport"><span>Транспорт туда</span><b>${safe(rideLabel(me.id,'there'))}</b></button><button data-v44-jump="transport"><span>Транспорт обратно</span><b class="${['unset','need'].includes(S.rides?.back?.[me.id])?'warn':''}">${safe(rideLabel(me.id,'back'))}</b></button>${shared.length?`<button data-v44-jump="gear"><span>Групповое имущество</span><b>${safe(shared.join(' · '))}</b></button>`:''}</div></div>
+          <div class="ov44-prep-lines"><button data-v44-jump="transport"><span>Транспорт туда</span><b>${safe(rideLabel(meId,'there'))}</b></button><button data-v44-jump="transport"><span>Транспорт обратно</span><b class="${['unset','need'].includes(S.rides?.back?.[meId])?'warn':''}">${safe(rideLabel(meId,'back'))}</b></button>${shared.length?`<button data-v44-jump="gear"><span>Групповое имущество</span><b>${safe(shared.join(' · '))}</b></button>`:''}</div></div>
           <div class="ov44-next-action"><span>Следующее действие</span><strong>${safe(tasks[0]?.text||'Критичных действий нет')}</strong>${tasks[0]?.tab?`<button data-v44-jump="${tasks[0].tab}">Открыть раздел →</button>`:''}</div>
         </section>
         <section class="ov44-card ov44-attention"><div class="ov44-card-head"><h2>Требует внимания <span>${att.count}</span></h2><button data-v44-jump="participants">Смотреть всё</button></div><div class="ov44-att-list">${topAttention.map(x=>`<button data-v44-jump="${x.tab}" class="${x.tone}"><i></i><span><b>${safe(x.title)}</b><small>${safe(x.detail)}</small></span><em>Открыть</em></button>`).join('')||'<div class="ov44-empty">Незакрытых вопросов нет.</div>'}</div></section>
@@ -192,9 +192,18 @@
     }catch(e){body.innerHTML=`<div class="ov44-weather-icon">${weatherIcon44('cloud')}</div><div class="ov44-weather-copy"><strong>Прогноз временно недоступен</strong><span>Остальные данные похода работают без погоды.</span></div>`}
   }
 
+  function guestAccess44(){
+    const me=(S.participants||[]).find(p=>p.id===S.current)||(S.participants||[])[0];
+    if(me)return;
+    const card=$('.ov44-my-prep');
+    if(!card)return;
+    card.innerHTML='<div class="ov44-card-head"><h2>Присоединиться к походу</h2></div><div class="ov44-empty"><strong>Вы пока не вошли.</strong><br>Нажмите «Войти» в верхней панели, укажите email и отправьте заявку на участие.</div>';
+  }
+
   function bind44(){
     document.body.classList.toggle('ov44-active',tab==='overview');
     if(tab!=='overview')return;
+    guestAccess44();
     document.querySelectorAll('[data-v44-jump]').forEach(b=>b.onclick=()=>{const target=b.dataset.v44Jump;if(!target)return;tab=target;render()});
     document.querySelector('[data-v44-weather]')?.addEventListener('click',loadWeather44);
     requestAnimationFrame(()=>{initMap44();loadWeather44()});

@@ -15,10 +15,10 @@ const roleDescriptions={
   'Питание':'Контролирует воду, перекус и общие позиции питания, если они нужны.'
 };
 const seed=()=>({
-  current:'p1',
-  event:{title:'Лыткарино · разведывательный поход',short:'Лыткарино',type:'Поход-тренировка',status:'Подготовка',date:'10–11 октября 2026',meeting:'09:00 · место сбора уточняется',start:'10:00',distance:'Уточняется',duration:'2 дня',durationDays:2,overnight:true,replyDeadline:'18 сентября'},
-  participants:[['p1','Сергей','yes'],['p2','Иван','yes'],['p3','Алексей','yes'],['p4','Максим','maybe'],['p5','Андрей','yes'],['p6','Николай','pending']].map(x=>({id:x[0],name:x[1],rsvp:x[2]})),
-  roles:[['Руководитель','p1',1],['Навигатор','p2',1],['Замыкающий','',1],['Первая помощь','p3',1],['Транспорт','p5',0],['Связь','p2',0],['Снаряжение','',0],['Питание','p4',0]].map((x,i)=>({id:'r'+i,title:x[0],p:x[1],critical:!!x[2],desc:roleDescriptions[x[0]]})),
+  current:'',
+  event:{title:'Томинский лесопарк',short:'Томинский лесопарк',type:'Поход-тренировка',status:'Регистрация открыта',date:'10–11 октября 2026',meeting:'09:00 · место сбора уточняется',start:'10:00',distance:'Уточняется',duration:'2 дня · 1 ночь',replyDeadline:'не задан'},
+  participants:[],
+  roles:[['Руководитель','',1],['Навигатор','',1],['Замыкающий','',1],['Первая помощь','',1],['Транспорт','',0],['Связь','',0],['Снаряжение','',0],['Питание','',0]].map((x,i)=>({id:'r'+i,title:x[0],p:x[1],critical:!!x[2],desc:roleDescriptions[x[0]]})),
   personal:[
     {id:'pg0',title:'Рюкзак',priority:'required'},
     {id:'pg1',title:'Вода',priority:'required'},
@@ -29,26 +29,17 @@ const seed=()=>({
     {id:'pg6',title:'Запасной слой / носки',priority:'weather'},
     {id:'pg7',title:'Телефон / офлайн-карта',priority:'required'}
   ],
-  checks:{p1:['pg0','pg1','pg2','pg3','pg4','pg5','pg6','pg7'],p2:['pg0','pg1','pg3','pg4','pg7'],p3:['pg0','pg1','pg5','pg7'],p4:['pg0','pg7'],p5:['pg0','pg1','pg2','pg3','pg6','pg7'],p6:[]},
+  checks:{},
   shared:[
-    {id:'g0',title:'Групповая аптечка',need:1,a:[['p3',1]],confirmed:['p3']},
-    {id:'g1',title:'Компасы',need:3,a:[['p1',1],['p2',1]],confirmed:['p2']},
-    {id:'g2',title:'Бумажный атлас',need:1,a:[['p2',1]],confirmed:[]},
-    {id:'g3',title:'Power bank общий',need:1,a:[['p5',1]],confirmed:['p5']},
+    {id:'g0',title:'Групповая аптечка',need:1,a:[],confirmed:[]},
+    {id:'g1',title:'Компасы',need:3,a:[],confirmed:[]},
+    {id:'g2',title:'Бумажный атлас',need:1,a:[],confirmed:[]},
+    {id:'g3',title:'Power bank общий',need:1,a:[],confirmed:[]},
     {id:'g4',title:'Ремнабор',need:1,a:[],confirmed:[]},
-    {id:'g5',title:'Тент / дождевое укрытие',need:1,a:[['p1',1]],confirmed:['p1']}
+    {id:'g5',title:'Тент / дождевое укрытие',need:1,a:[],confirmed:[]}
   ],
-  cars:{
-    there:[
-      {id:'c1',driver:'p1',name:'Машина Сергея',cap:3,pass:['p2','p3'],time:'07:40',from:'Точка A · уточняется'},
-      {id:'c2',driver:'p5',name:'Машина Андрея',cap:3,pass:['p4'],time:'07:50',from:'Точка B · уточняется'}
-    ],
-    back:[
-      {id:'b1',driver:'p1',name:'Машина Сергея',cap:3,pass:['p2'],time:'17:30',from:'Финиш маршрута'},
-      {id:'b2',driver:'p5',name:'Машина Андрея',cap:3,pass:[],time:'17:40',from:'Финиш маршрута'}
-    ]
-  },
-  rides:{there:{p1:'own',p2:'c1',p3:'c1',p4:'c2',p5:'own',p6:'unset'},back:{p1:'own',p2:'b1',p3:'unset',p4:'unset',p5:'own',p6:'unset'}},
+  cars:{there:[],back:[]},
+  rides:{there:{},back:{}},
   routeSteps:[
     {id:'s1',title:'Старт',note:'Точка старта у лесного массива. Финальная точка сбора уточняется.'},
     {id:'s2',title:'Участок вдоль железной дороги',note:'Контроль движения группы и сверка с картой.'},
@@ -63,15 +54,82 @@ const seed=()=>({
     {id:'m3',title:'Краткая памятка участника',type:'TXT',status:'draft'}
   ],
   timeline:[
-    {id:'t1',time:'07:30',title:'Общий сбор',owner:'p1',route:'',note:'Проверка состава и общей готовности.'},
-    {id:'t2',time:'07:50',title:'Выезд',owner:'p5',route:'',note:'Распределение по машинам.'},
-    {id:'t3',time:'09:15',title:'Старт маршрута',owner:'p2',route:'s1',note:'Сверка направления и состава.'},
-    {id:'t4',time:'10:30',title:'Контрольная точка 1',owner:'p2',route:'s3',note:'Ориентирование по карте.'},
-    {id:'t5',time:'12:30',title:'Привал',owner:'p4',route:'s5',note:'Вода, перекус, контроль состояния.'},
-    {id:'t6',time:'15:30',title:'Завершение маршрута',owner:'p1',route:'s6',note:'Сбор группы.'},
-    {id:'t7',time:'17:30',title:'Отъезд',owner:'p5',route:'',note:'Распределение по машинам обратно.'}
+    {id:'t1',time:'09:00',title:'Общий сбор',owner:'',route:'',note:'Проверка состава и общей готовности.'},
+    {id:'t2',time:'09:30',title:'Выезд / переход к старту',owner:'',route:'',note:'Финальная логистика уточняется.'},
+    {id:'t3',time:'10:00',title:'Старт маршрута',owner:'',route:'s1',note:'Сверка направления и состава.'},
+    {id:'t4',time:'12:30',title:'Привал',owner:'',route:'s5',note:'Вода, перекус, контроль состояния.'},
+    {id:'t5',time:'',title:'Завершение маршрута',owner:'',route:'s6',note:'Сбор группы.'}
   ]
 });
+function hasHikeSession(){try{return !!JSON.parse(localStorage.getItem('rl_hike_auth_v42')||'null')?.access_token}catch(e){return false}}
+function purgeLegacyDemoData(){
+  const bad=new Set(['p2','p3','p4','p5','p6']);
+  if(!hasHikeSession())bad.add('p1');
+  const isBad=id=>bad.has(String(id||''));
+  const legacyCars=new Set(['c1','c2','b1','b2']);
+  const cleanMap=obj=>{if(!obj||typeof obj!=='object')return;for(const id of bad)delete obj[id]};
+
+  if(Array.isArray(S.participants))S.participants=S.participants.filter(p=>!isBad(p?.id));
+  if(Array.isArray(S.roles))S.roles=S.roles.map(r=>isBad(r?.p)?{...r,p:''}:r);
+  cleanMap(S.checks);
+
+  if(Array.isArray(S.shared))S.shared=S.shared.map(g=>({
+    ...g,
+    a:(g.a||[]).filter(a=>!isBad(a?.[0])),
+    confirmed:(g.confirmed||[]).filter(id=>!isBad(id))
+  }));
+
+  if(S.cars)for(const d of ['there','back']){
+    S.cars[d]=(S.cars[d]||[]).filter(c=>!isBad(c?.driver)&&!legacyCars.has(c?.id)).map(c=>({...c,pass:(c.pass||[]).filter(id=>!isBad(id))}));
+  }
+  if(S.rides)for(const d of ['there','back']){
+    S.rides[d] ||= {};
+    cleanMap(S.rides[d]);
+    const cars=S.cars?.[d]||[];
+    for(const [pid,value] of Object.entries(S.rides[d])){
+      if(legacyCars.has(value)||(value==='own'&&!cars.some(c=>c.driver===pid))||(value&&!['own','self','need','unset'].includes(value)&&!cars.some(c=>c.id===value)))S.rides[d][pid]='unset';
+    }
+  }
+
+  if(Array.isArray(S.timeline))S.timeline=S.timeline.map(t=>isBad(t?.owner)?{...t,owner:''}:t);
+
+  if(S.rolesV36){
+    if(Array.isArray(S.rolesV36.roles))S.rolesV36.roles=S.rolesV36.roles.map(r=>isBad(r?.p)?{...r,p:''}:r);
+    cleanMap(S.rolesV36.skills);
+    if(S.rolesV36.candidates&&typeof S.rolesV36.candidates==='object'){
+      for(const key of Object.keys(S.rolesV36.candidates))S.rolesV36.candidates[key]=(S.rolesV36.candidates[key]||[]).filter(id=>!isBad(id));
+    }
+  }
+
+  for(const block of [S.gearV30,S.gearV36]){
+    if(!block)continue;
+    cleanMap(block.status);cleanMap(block.final);cleanMap(block.notes);
+  }
+
+  if(S.foodV31){
+    (S.foodV31.meals||[]).forEach(m=>{m.cooks=(m.cooks||[]).filter(id=>!isBad(id))});
+    (S.foodV31.ingredients||[]).forEach(i=>{
+      if(isBad(i.buyer)||(['fi1','fi2','fi4'].includes(i.id)&&['p1','p5'].includes(i.buyer)))i.buyer='';
+      i.bring=(i.bring||[]).filter(x=>!isBad(x?.pid||x?.id));
+    });
+    if(S.foodV31.personNotes)cleanMap(S.foodV31.personNotes);
+    if(S.foodV31.mealChecks)for(const value of Object.values(S.foodV31.mealChecks))cleanMap(value);
+    if(S.foodV31.attendance)for(const value of Object.values(S.foodV31.attendance))cleanMap(value);
+  }
+
+  const t=S.transportV24;
+  if(t){
+    cleanMap(t.profiles);cleanMap(t.returnOverrides);
+    for(const d of ['there','back']){
+      if(t.choices?.[d])cleanMap(t.choices[d]);
+      if(Array.isArray(t.rides?.[d]))t.rides[d]=t.rides[d]
+        .filter(r=>!isBad(r?.driver)&&!legacyCars.has(r?.id))
+        .map(r=>({...r,requests:(r.requests||[]).filter(q=>!isBad(q?.pid)),passengers:(r.passengers||[]).filter(id=>!isBad(id))}));
+    }
+  }
+
+  if(isBad(S.current))S.current='';
+}
 let S;
 function storageGet(){try{return localStorage.getItem(STORAGE)}catch(e){return null}}
 function storageSet(v){try{localStorage.setItem(STORAGE,v)}catch(e){}}
@@ -80,6 +138,7 @@ normalize();
 let tab='overview',gearMode='personal',dir='there';
 function normalize(){
   const fresh=seed();
+  purgeLegacyDemoData();
   S.event={...fresh.event,...(S.event||{})};
   S.participants=S.participants||fresh.participants;
   S.roles=(S.roles||fresh.roles).map(r=>({...r,desc:r.desc||roleDescriptions[r.title]||''}));
@@ -92,7 +151,7 @@ function normalize(){
   S.materials=S.materials||fresh.materials;
   if(Array.isArray(S.timeline)&&Array.isArray(S.timeline[0]))S.timeline=S.timeline.map((t,i)=>({id:'t'+(i+1),time:t[0],title:t[1],owner:t[2],route:'',note:''}));
   S.timeline=S.timeline||fresh.timeline;
-  S.current=S.current||'p1';
+  S.current=(S.current&&S.participants.some(p=>p.id===S.current))?S.current:(S.participants[0]?.id||'');
 }
 const save=()=>{
   storageSet(JSON.stringify(S));
@@ -154,7 +213,7 @@ function mapSvg(){return `<svg class="map-svg" viewBox="0 0 620 330" role="img" 
 function overview(){
   const yes=S.participants.filter(p=>p.rsvp==='yes').length,maybe=S.participants.filter(p=>p.rsvp==='maybe').length;
   const roleDone=S.roles.filter(r=>r.p).length,gearDone=S.shared.filter(g=>assigned(g)>=g.need).length;
-  const me=S.participants.find(p=>p.id===S.current),pr=progress(S.current),myRoles=participantRoles(S.current),myShared=participantShared(S.current),att=attentionGroups();
+  const me=S.participants.find(p=>p.id===S.current)||{id:'',name:'Гость',rsvp:'pending'},pr=progress(S.current),myRoles=participantRoles(S.current),myShared=participantShared(S.current),att=attentionGroups();
   const myTasks=[];
   if(me.rsvp==='pending')myTasks.push(['warn','Подтвердить участие']);
   if(['unset','need'].includes(S.rides.there[S.current]))myTasks.push(['warn','Выбрать транспорт туда']);
@@ -164,7 +223,7 @@ function overview(){
   if(unconfirmed.length)myTasks.push(['warn',`Подтвердить групповое имущество: ${unconfirmed.map(g=>g.title).join(', ')}`]);
   if(!myTasks.length)myTasks.push(['ok','Критичных действий на сейчас нет']);
   const attentionHtml=(kind,label,items)=>items.length?`<div class="attention-group"><div class="attention-group__head"><strong>${label}</strong><span class="attention-count">${items.length}</span></div>${items.map(x=>`<div class="attention-item"><i class="attention-bar ${kind}"></i><div><b>${esc(x.title)}</b><small>${esc(x.detail)}</small></div><button class="btn alt sm" data-jump="${x.tab}">Открыть</button></div>`).join('')}</div>`:'';
-  return `${pageHead('Командный штаб',S.event.short,'Подготовка похода в одном месте: люди, роли, транспорт, снаряжение, маршрут и план дня.')}<section class="event-hero"><div class="hero-copy"><div><div class="hero-labels">${tag(S.event.type,'sand')}${tag(S.event.status,'ok')}</div><h2 class="hero-title">${esc(S.event.short)}</h2><p class="hero-lead">Разведывательный поход с проверкой ориентирования, связи и организации группы. Точные параметры маршрута уточняются.</p></div><div class="hero-meta"><div><small>Дата</small><strong>${esc(S.event.date)}</strong></div><div><small>Сбор</small><strong>${esc(S.event.meeting)}</strong></div><div><small>Старт</small><strong>${esc(S.event.start)}</strong></div><div><small>Длительность</small><strong>${esc(S.event.duration)}</strong></div></div></div><div class="map-panel"><div class="map-caption"><small>Маршрут</small><strong>Схема · демо</strong></div><div class="map-watermark">Атлас v19 будет подключён</div>${mapSvg()}<div class="map-actions"><button class="btn sm" data-jump="route">Открыть маршрут</button></div></div></section><div class="summary-strip"><div class="metric"><small>Участвуют</small><strong>${yes}</strong><em>${maybe?`${maybe} возможно`:'все определились'}</em></div><div class="metric"><small>Роли</small><strong>${roleDone}/${S.roles.length}</strong><em>${S.roles.filter(r=>r.critical&&!r.p).length?'есть критичные':'базовые закрыты'}</em></div><div class="metric"><small>Групповое</small><strong>${gearDone}/${S.shared.length}</strong><em>${S.shared.length-gearDone?'есть дефициты':'комплект закрыт'}</em></div><div class="metric"><small>Готовность</small><strong>${readiness()}%</strong><em>по активным участникам</em></div><div class="metric"><small>Сигналы</small><strong>${attentionCount()}</strong><em>требуют внимания</em></div></div>${section('Моя подготовка',`<div class="my-prep"><div class="prep-primary"><div class="prep-person">${esc(me.name)}</div><div class="prep-role">${myRoles.length?myRoles.join(' · '):'Роль не назначена'}</div><div class="prep-checks"><div class="prep-line"><small>Участие</small><strong>${rsvpLabel(me.rsvp)}</strong></div><div class="prep-line"><small>Личное снаряжение</small><strong>${pr[0]} / ${pr[1]} · ${pr[2]}%</strong><div class="progress"><i style="width:${pr[2]}%"></i></div></div><div class="prep-line"><small>Транспорт туда</small><strong>${esc(rideLabel(S.current,'there'))}</strong></div><div class="prep-line"><small>Транспорт обратно</small><strong>${esc(rideLabel(S.current,'back'))}</strong></div>${myShared.length?`<div class="prep-line"><small>Групповое имущество</small><strong>${esc(myShared.join(' · '))}</strong></div>`:''}</div></div><div class="prep-side"><div class="page-kicker">Следующие действия</div>${myTasks.map(t=>`<div class="prep-task"><i class="task-dot ${t[0]}"></i><div>${esc(t[1])}</div></div>`).join('')}</div></div>`,'Каждый видит только то, что нужно сделать именно ему.')}${section('Требует внимания',`<div class="attention-groups">${attentionHtml('risk','Критично',att.critical)}${attentionHtml('','Требует решения',att.warning)}${attentionHtml('info','Информация',att.info)}${!attentionCount()?'<div class="panel">Незакрытых вопросов нет.</div>':''}</div>`,'Похожие проблемы объединены, чтобы организатор видел картину, а не простыню уведомлений.')}${section('Ближайшие этапы',`<div class="list">${S.timeline.slice(0,4).map(t=>`<div class="row"><div class="row-main"><div class="row-title"><b>${esc(t.time)} · ${esc(t.title)}</b></div><small>${esc(pn(t.owner))}${t.route?' · '+esc(routeName(t.route)):''}</small></div></div>`).join('')}</div>`,'Первые точки плана дня.')}`;
+  return `${pageHead('Командный штаб',S.event.short,'Подготовка похода в одном месте: люди, роли, транспорт, снаряжение, маршрут и план дня.')}<section class="event-hero"><div class="hero-copy"><div><div class="hero-labels">${tag(S.event.type,'sand')}${tag(S.event.status,'ok')}</div><h2 class="hero-title">${esc(S.event.short)}</h2><p class="hero-lead">Разведывательный поход с проверкой ориентирования, связи и организации группы. Точные параметры маршрута уточняются.</p></div><div class="hero-meta"><div><small>Дата</small><strong>${esc(S.event.date)}</strong></div><div><small>Сбор</small><strong>${esc(S.event.meeting)}</strong></div><div><small>Старт</small><strong>${esc(S.event.start)}</strong></div><div><small>Длительность</small><strong>${esc(S.event.duration)}</strong></div></div></div><div class="map-panel"><div class="map-caption"><small>Маршрут</small><strong>Схема маршрута</strong></div><div class="map-watermark">Атлас v19 будет подключён</div>${mapSvg()}<div class="map-actions"><button class="btn sm" data-jump="route">Открыть маршрут</button></div></div></section><div class="summary-strip"><div class="metric"><small>Участвуют</small><strong>${yes}</strong><em>${maybe?`${maybe} возможно`:'все определились'}</em></div><div class="metric"><small>Роли</small><strong>${roleDone}/${S.roles.length}</strong><em>${S.roles.filter(r=>r.critical&&!r.p).length?'есть критичные':'базовые закрыты'}</em></div><div class="metric"><small>Групповое</small><strong>${gearDone}/${S.shared.length}</strong><em>${S.shared.length-gearDone?'есть дефициты':'комплект закрыт'}</em></div><div class="metric"><small>Готовность</small><strong>${readiness()}%</strong><em>по активным участникам</em></div><div class="metric"><small>Сигналы</small><strong>${attentionCount()}</strong><em>требуют внимания</em></div></div>${section('Моя подготовка',`<div class="my-prep"><div class="prep-primary"><div class="prep-person">${esc(me.name)}</div><div class="prep-role">${myRoles.length?myRoles.join(' · '):'Роль не назначена'}</div><div class="prep-checks"><div class="prep-line"><small>Участие</small><strong>${rsvpLabel(me.rsvp)}</strong></div><div class="prep-line"><small>Личное снаряжение</small><strong>${pr[0]} / ${pr[1]} · ${pr[2]}%</strong><div class="progress"><i style="width:${pr[2]}%"></i></div></div><div class="prep-line"><small>Транспорт туда</small><strong>${esc(rideLabel(S.current,'there'))}</strong></div><div class="prep-line"><small>Транспорт обратно</small><strong>${esc(rideLabel(S.current,'back'))}</strong></div>${myShared.length?`<div class="prep-line"><small>Групповое имущество</small><strong>${esc(myShared.join(' · '))}</strong></div>`:''}</div></div><div class="prep-side"><div class="page-kicker">Следующие действия</div>${myTasks.map(t=>`<div class="prep-task"><i class="task-dot ${t[0]}"></i><div>${esc(t[1])}</div></div>`).join('')}</div></div>`,'Каждый видит только то, что нужно сделать именно ему.')}${section('Требует внимания',`<div class="attention-groups">${attentionHtml('risk','Критично',att.critical)}${attentionHtml('','Требует решения',att.warning)}${attentionHtml('info','Информация',att.info)}${!attentionCount()?'<div class="panel">Незакрытых вопросов нет.</div>':''}</div>`,'Похожие проблемы объединены, чтобы организатор видел картину, а не простыню уведомлений.')}${section('Ближайшие этапы',`<div class="list">${S.timeline.slice(0,4).map(t=>`<div class="row"><div class="row-main"><div class="row-title"><b>${esc(t.time)} · ${esc(t.title)}</b></div><small>${esc(pn(t.owner))}${t.route?' · '+esc(routeName(t.route)):''}</small></div></div>`).join('')}</div>`,'Первые точки плана дня.')}`;
 }
 const RSVP={yes:'Участвую',maybe:'Возможно',no:'Не участвую',pending:'Не ответил'};
 function rsvpLabel(x){return RSVP[x]||x}
@@ -186,12 +245,12 @@ function transportPage(){
   return `${pageHead('Логистика','Транспорт','Дорога туда и обратно управляется отдельно. Водитель не может случайно стать пассажиром своей же машины.',`<button class="btn alt" id="addCar">Добавить машину</button>`)}<div class="segmented"><button class="${dir==='there'?'active':''}" data-dir="there">Туда</button><button class="${dir==='back'?'active':''}" data-dir="back">Обратно</button></div><div class="transport-alert"><div><strong>${unresolved.length?'Требуется решение':'Транспорт закрыт'}</strong><span>${unresolved.length?' · '+unresolved.map(p=>p.name).join(' · '):' · у активных участников выбран способ поездки'}</span></div>${tag(`${unresolved.length} без решения`,unresolved.length?'warn':'ok')}</div><div class="row-actions" style="justify-content:flex-start;margin-bottom:18px">${currentDriver?tag(`Вы водитель · ${currentDriver.name}`,'sand'):`<button class="btn ${ride==='need'?'sand':'alt'} sm" data-mode="need">Нужно место</button><button class="btn ${ride==='self'?'sand':'alt'} sm" data-mode="self">Самостоятельно</button>`}</div><div class="cars">${cars.map(c=>{const free=c.cap-c.pass.length,inside=c.pass.includes(S.current),isDriver=c.driver===S.current;return `<article class="car"><div class="car-head"><div><h3>${esc(c.name)}</h3><small>Водитель · ${esc(pn(c.driver))}</small></div>${tag(`Свободно ${free}`,free?'ok':'risk')}</div><div class="car-meta"><div><small>Выезд</small><strong>${esc(c.time)}</strong></div><div><small>Откуда</small><strong>${esc(c.from)}</strong></div></div><div class="passengers">${c.pass.length?c.pass.map(p=>`<div class="passenger"><span>${esc(pn(p))}</span><span>пассажир</span></div>`).join(''):'<div class="passenger"><span>Пассажиров пока нет</span></div>'}</div><div class="row-actions" style="justify-content:flex-start;margin-top:10px">${isDriver?tag('Ваша машина','sand'):inside?`<button class="btn alt sm" data-seat="${c.id}">Выйти</button>`:`<button class="btn sm" data-seat="${c.id}" ${free<=0?'disabled':''}>Занять место</button>`}</div></article>`}).join('')}</div>`;
 }
 function routeName(id){return S.routeSteps.find(s=>s.id===id)?.title||'—'}
-function routePage(){return `${pageHead('Навигация','Маршрут','Карта отвечает на вопрос «где идём», а план — «когда и что делаем».')}<div class="route-layout"><div class="route-map"><div class="map-panel"><div class="map-caption"><small>Маршрут</small><strong>Схема · демо</strong></div><div class="map-watermark">Контурное превью до подключения атласа</div>${mapSvg()}<div class="map-actions"><button class="btn sm" id="atlas">Открыть атлас</button></div></div></div><aside class="route-summary"><div class="metric"><small>Дистанция</small><strong>${esc(S.event.distance)}</strong><em>будет уточнено по финальной карте</em></div><div class="metric"><small>Формат</small><strong>${esc(S.event.duration)}</strong><em>${esc(S.event.type)}</em></div><div class="metric"><small>Старт</small><strong>${esc(S.event.start)}</strong><em>${esc(S.event.meeting)}</em></div>${section('Материалы',`<div>${S.materials.map(m=>`<div class="material"><div><b>${esc(m.title)}</b><small>${esc(m.type)}</small></div>${tag(m.status==='pending'?'не загружен':m.status==='draft'?'черновик':'готов',m.status==='ready'?'ok':'warn')}</div>`).join('')}</div>`)}</aside></div>${section('Этапы маршрута',`<div>${S.routeSteps.map((s,i)=>`<div class="route-step"><div></div><div><h3>${esc(s.title)}</h3><p>${esc(s.note)}</p></div><div class="row-actions"><button class="icon-btn" data-move="${i}:-1" ${i===0?'disabled':''}>↑</button><button class="icon-btn" data-move="${i}:1" ${i===S.routeSteps.length-1?'disabled':''}>↓</button></div></div>`).join('')}</div>`,'Порядок точек можно менять без дублирования таймлайна.')}`}
+function routePage(){return `${pageHead('Навигация','Маршрут','Карта отвечает на вопрос «где идём», а план — «когда и что делаем».')}<div class="route-layout"><div class="route-map"><div class="map-panel"><div class="map-caption"><small>Маршрут</small><strong>Схема маршрута</strong></div><div class="map-watermark">Схема маршрута</div>${mapSvg()}<div class="map-actions"><button class="btn sm" id="atlas">Открыть атлас</button></div></div></div><aside class="route-summary"><div class="metric"><small>Дистанция</small><strong>${esc(S.event.distance)}</strong><em>будет уточнено по финальной карте</em></div><div class="metric"><small>Формат</small><strong>${esc(S.event.duration)}</strong><em>${esc(S.event.type)}</em></div><div class="metric"><small>Старт</small><strong>${esc(S.event.start)}</strong><em>${esc(S.event.meeting)}</em></div>${section('Материалы',`<div>${S.materials.map(m=>`<div class="material"><div><b>${esc(m.title)}</b><small>${esc(m.type)}</small></div>${tag(m.status==='pending'?'не загружен':m.status==='draft'?'черновик':'готов',m.status==='ready'?'ok':'warn')}</div>`).join('')}</div>`)}</aside></div>${section('Этапы маршрута',`<div>${S.routeSteps.map((s,i)=>`<div class="route-step"><div></div><div><h3>${esc(s.title)}</h3><p>${esc(s.note)}</p></div><div class="row-actions"><button class="icon-btn" data-move="${i}:-1" ${i===0?'disabled':''}>↑</button><button class="icon-btn" data-move="${i}:1" ${i===S.routeSteps.length-1?'disabled':''}>↓</button></div></div>`).join('')}</div>`,'Порядок точек можно менять без дублирования таймлайна.')}`}
 function planPage(){return `${pageHead('Организация дня','План','Таймлайн показывает время и действия; при необходимости этап привязывается к точке маршрута.',`<button class="btn sand" id="addTimeline">Добавить этап</button>`)}${section('Таймлайн',`<div class="timeline-head"><span>Время</span><span>Этап</span><span>Ответственный</span><span>Маршрут</span><span></span></div>${S.timeline.map(t=>`<div class="timeline-row"><div class="timeline-time">${esc(t.time)}</div><div><b>${esc(t.title)}</b><small>${esc(t.note||'')}</small></div><div>${esc(pn(t.owner))}</div><div>${t.route?esc(routeName(t.route)):'—'}</div><div class="row-actions"><button class="icon-btn" data-edit-time="${t.id}" title="Редактировать">✎</button><button class="icon-btn" data-del-time="${t.id}" title="Удалить">×</button></div></div>`).join('')}`,'Формы открываются внутри интерфейса — без браузерных prompt-окон.')}${section('Учебные задачи',`<div class="learning-grid"><div class="learning"><strong>Ориентирование</strong><p>Сверка карты, контрольных точек и положения группы.</p></div><div class="learning"><strong>Радиосвязь</strong><p>Проверка основного и резервного канала перед маршрутом.</p></div><div class="learning"><strong>Организация группы</strong><p>Контроль состава на старте, привале и финише.</p></div></div>`,'Без боевой тактики и опасных упражнений.')}`}
 function openModal(title,body,onSave){const layer=document.getElementById('modalLayer');layer.innerHTML=`<div class="modal" role="dialog" aria-modal="true"><div class="modal-head"><strong>${esc(title)}</strong><button class="icon-btn" id="modalClose">×</button></div><div class="modal-body">${body}</div><div class="modal-foot"><button class="btn alt" id="modalCancel">Отмена</button><button class="btn sand" id="modalSave">Сохранить</button></div></div>`;layer.classList.add('open');layer.setAttribute('aria-hidden','false');const close=()=>{layer.classList.remove('open');layer.setAttribute('aria-hidden','true');layer.innerHTML=''};layer.querySelector('#modalClose').onclick=close;layer.querySelector('#modalCancel').onclick=close;layer.onclick=e=>{if(e.target===layer)close()};layer.querySelector('#modalSave').onclick=async()=>{const button=layer.querySelector('#modalSave');button.disabled=true;try{if(await onSave(layer)!==false)close()}finally{button.disabled=false}}}
 function timelineModal(item=null){const t=item||{time:'',title:'',owner:S.current,route:'',note:''};openModal(item?'Редактировать этап':'Новый этап',`<div class="form-grid"><div class="field"><label>Время</label><input id="fTime" type="time" value="${esc(t.time)}"></div><div class="field"><label>Ответственный</label><select id="fOwner">${S.participants.filter(p=>p.rsvp!=='no').map(p=>`<option value="${p.id}" ${p.id===t.owner?'selected':''}>${esc(p.name)}</option>`).join('')}</select></div><div class="field full"><label>Название</label><input id="fTitle" value="${esc(t.title)}" placeholder="Например, контрольная точка"></div><div class="field full"><label>Связанная точка маршрута</label><select id="fRoute"><option value="">Не привязывать</option>${S.routeSteps.map(s=>`<option value="${s.id}" ${s.id===t.route?'selected':''}>${esc(s.title)}</option>`).join('')}</select></div><div class="field full"><label>Комментарий</label><textarea id="fNote">${esc(t.note||'')}</textarea></div></div>`,layer=>{const time=layer.querySelector('#fTime').value,title=layer.querySelector('#fTitle').value.trim();if(!time||!title){toast('Заполни время и название');return false}const obj={id:item?.id||'t'+Date.now(),time,title,owner:layer.querySelector('#fOwner').value,route:layer.querySelector('#fRoute').value,note:layer.querySelector('#fNote').value.trim()};if(item)Object.assign(item,obj);else S.timeline.push(obj);S.timeline.sort((a,b)=>a.time.localeCompare(b.time));save();render();toast(item?'Этап обновлён':'Этап добавлен')})}
 function sharedModal(){openModal('Добавить групповое имущество',`<div class="form-grid"><div class="field full"><label>Предмет</label><input id="gTitle" placeholder="Например, запасной компас"></div><div class="field"><label>Количество</label><input id="gNeed" type="number" min="1" value="1"></div></div>`,layer=>{const title=layer.querySelector('#gTitle').value.trim(),need=+layer.querySelector('#gNeed').value;if(!title||!need){toast('Заполни название и количество');return false}S.shared.push({id:'g'+Date.now(),title,need,a:[],confirmed:[]});save();render();toast('Предмет добавлен')})}
-function carModal(){openModal('Добавить машину',`<div class="form-grid"><div class="field"><label>Водитель</label><select id="cDriver">${S.participants.filter(p=>p.rsvp!=='no').map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div><div class="field"><label>Мест для пассажиров</label><input id="cCap" type="number" min="1" value="3"></div><div class="field"><label>Время выезда</label><input id="cTime" type="time" value="07:40"></div><div class="field"><label>Название</label><input id="cName" placeholder="Машина Сергея"></div><div class="field full"><label>Точка отправления</label><input id="cFrom" placeholder="Точка уточняется"></div></div>`,layer=>{const driver=layer.querySelector('#cDriver').value;if(driverCar(driver,dir)){toast('У этого участника уже есть машина в этом направлении');return false}const cap=+layer.querySelector('#cCap').value,name=layer.querySelector('#cName').value.trim()||`Машина ${pn(driver)}`,time=layer.querySelector('#cTime').value||'Уточняется',from=layer.querySelector('#cFrom').value.trim()||'Точка уточняется';const id=(dir==='there'?'c':'b')+Date.now();S.cars[dir].push({id,driver,name,cap,pass:[],time,from});S.rides[dir][driver]='own';save();render();toast('Машина добавлена')})}
+function carModal(){openModal('Добавить машину',`<div class="form-grid"><div class="field"><label>Водитель</label><select id="cDriver">${S.participants.filter(p=>p.rsvp!=='no').map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div><div class="field"><label>Мест для пассажиров</label><input id="cCap" type="number" min="1" value="3"></div><div class="field"><label>Время выезда</label><input id="cTime" type="time" value="07:40"></div><div class="field"><label>Название</label><input id="cName" placeholder="Например, Kia Sportage"></div><div class="field full"><label>Точка отправления</label><input id="cFrom" placeholder="Точка уточняется"></div></div>`,layer=>{const driver=layer.querySelector('#cDriver').value;if(driverCar(driver,dir)){toast('У этого участника уже есть машина в этом направлении');return false}const cap=+layer.querySelector('#cCap').value,name=layer.querySelector('#cName').value.trim()||`Машина ${pn(driver)}`,time=layer.querySelector('#cTime').value||'Уточняется',from=layer.querySelector('#cFrom').value.trim()||'Точка уточняется';const id=(dir==='there'?'c':'b')+Date.now();S.cars[dir].push({id,driver,name,cap,pass:[],time,from});S.rides[dir][driver]='own';save();render();toast('Машина добавлена')})}
 function bind(){
   document.getElementById('who').onchange=e=>{S.current=e.target.value;save();render()};
   document.querySelectorAll('[data-jump]').forEach(b=>b.onclick=()=>{tab=b.dataset.jump;render()});
@@ -213,8 +272,8 @@ function bind(){
   document.querySelectorAll('[data-edit-time]').forEach(b=>b.onclick=()=>timelineModal(S.timeline.find(t=>t.id===b.dataset.editTime)));
   document.querySelectorAll('[data-del-time]').forEach(b=>b.onclick=()=>{const t=S.timeline.find(x=>x.id===b.dataset.delTime);if(confirm(`Удалить этап «${t?.title||''}»?`)){S.timeline=S.timeline.filter(x=>x.id!==b.dataset.delTime);save();render()}});
 }
-document.getElementById('reset').onclick=()=>{if(confirm('Сбросить все изменения демо-версии?')){S=seed();save();tab='overview';gearMode='personal';dir='there';render();toast('Демо сброшено')}};
-document.getElementById('eventSwitcher').onclick=()=>toast('Пока тестируем один реальный сценарий. Создание новых мероприятий — следующий этап после UX-проверки.');
+document.getElementById('reset').onclick=()=>{if(confirm('Сбросить локальные изменения?')){S=seed();save();tab='overview';gearMode='personal';dir='there';render();toast('Локальные изменения сброшены')}};
+document.getElementById('eventSwitcher').onclick=()=>toast('Сейчас доступно одно мероприятие.');
 render();
 
 
@@ -227,7 +286,7 @@ const cpV9=id=>ROUTE_V9_POINTS.find(p=>p.id===id);
 function applyRouteV9(force=false){if(!force&&S.routeVersion===3)return;S.routeVersion=3;S.event={...S.event,title:'Томинский лесопарк · полевой маршрут',short:'Томинский лесопарк',type:'Поход-тренировка',status:'Подготовка',date:S.event?.date||'Дата уточняется',meeting:'09:00 · Лагерь',start:'10:00',finish:'19:00',distance:'21,3 км',duration:'9 часов',replyDeadline:S.event?.replyDeadline||'уточняется',cpCount:17};S.routeSteps=ROUTE_V9_POINTS.map(p=>({...p,note:p.stop||''}));S.materials=[{id:'m1',title:'Полевой атлас',type:'PDF · 14 страниц',status:'source',action:'source'},{id:'m2',title:'Трек маршрута',type:'GPX · 132 точки',status:'ready',url:'./route.gpx',action:'download'},{id:'m3',title:'Маршрут',type:'KML',status:'ready',url:'./route.kml',action:'download'}];S.timeline=ROUTE_V9_POINTS.map((p,i)=>({id:'rt'+i,time:p.arrival,title:p.title,owner:'',route:p.id,note:p.stop||(i===0?'Старт маршрута':i===ROUTE_V9_POINTS.length-1?'Плановый финиш':'Контроль прохождения')}));save();}
 function mapSvgV9(){const W=620,H=330,pad=24,lats=ROUTE_V9_TRACK.map(p=>p[0]),lons=ROUTE_V9_TRACK.map(p=>p[1]),minLat=Math.min(...lats),maxLat=Math.max(...lats),minLon=Math.min(...lons),maxLon=Math.max(...lons),project=([lat,lon])=>[pad+(lon-minLon)/(maxLon-minLon)*(W-pad*2),pad+(maxLat-lat)/(maxLat-minLat)*(H-pad*2)],pts=ROUTE_V9_TRACK.map(p=>project(p).map(v=>v.toFixed(1)).join(',')).join(' '),marks=ROUTE_V9_POINTS.filter(p=>p.id!=='cpf').map((p,i)=>{const [x,y]=project([p.lat,p.lon]),lab=p.id==='cp0'?'Л':String(i);return `<g class="cp-mark"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5"/><text x="${(x+7).toFixed(1)}" y="${(y-7).toFixed(1)}">${lab}</text></g>`}).join('');return `<svg class="map-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Контур маршрута по GPX"><polyline class="route-halo" points="${pts}"/><polyline class="route-line" points="${pts}"/>${marks}</svg>`;}
 mapSvg=mapSvgV9;
-const overviewV8=overview;overview=function(){return overviewV8().replace('Разведывательный поход с проверкой ориентирования, связи и организации группы. Точные параметры маршрута уточняются.','Полевой маршрут 21,3 км через ЖД, ЛЭП, каменоломню, карстовую пещеру, памятник лётчикам и восточную петлю.').replace('Схема · демо','GPX · реальный контур').replace('Атлас v19 будет подключён','21,3 км · 17 КП');};
+const overviewV8=overview;overview=function(){return overviewV8().replace('Разведывательный поход с проверкой ориентирования, связи и организации группы. Точные параметры маршрута уточняются.','Полевой маршрут 21,3 км через ЖД, ЛЭП, каменоломню, карстовую пещеру, памятник лётчикам и восточную петлю.').replace('Схема маршрута','GPX · реальный контур').replace('Атлас v19 будет подключён','21,3 км · 17 КП');};
 function mountRouteMapV9(){const el=document.getElementById('routeMapInteractive');if(!el)return;if(routeMapV9){try{routeMapV9.remove()}catch(e){}routeMapV9=null;routeMarkersV9={}}if(!window.L){el.innerHTML=`<div class="map-fallback">${mapSvgV9()}<div class="map-fallback__note">Онлайн-подложка недоступна. Контур построен по загруженному GPX.</div></div>`;return}routeMapV9=L.map(el,{zoomControl:true,attributionControl:true,preferCanvas:true});L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(routeMapV9);const line=L.polyline(ROUTE_V9_TRACK,{color:'#b88b3c',weight:4,opacity:.95,lineJoin:'round'}).addTo(routeMapV9);ROUTE_V9_POINTS.forEach((p,i)=>{const camp=p.id==='cp0'||p.id==='cpf',m=L.circleMarker([p.lat,p.lon],{radius:camp?7:5,color:'#171815',weight:2,fillColor:camp?'#c7a65a':'#f2eee5',fillOpacity:1}).addTo(routeMapV9);m.bindTooltip(`${p.id==='cp0'?'Старт':p.id==='cpf'?'Финиш':'КП '+i} · ${p.title}`,{direction:'top'});routeMarkersV9[p.id]=m});routeMapV9.fitBounds(line.getBounds(),{padding:[28,28]});}
 function focusCpV9(id){const p=cpV9(id);if(!p)return;if(routeMapV9){routeMapV9.setView([p.lat,p.lon],15,{animate:true});routeMarkersV9[id]?.openTooltip();}document.querySelectorAll('[data-cp-v9]').forEach(x=>x.classList.toggle('active',x.dataset.cpV9===id));}
 function materialRowsV9(){return S.materials.map(m=>`<div class="material"><div><b>${esc(m.title)}</b><small>${esc(m.type)}</small></div><div class="row-actions">${tag(m.status==='ready'?'готов':'источник',m.status==='ready'?'ok':'sand')}${m.action==='download'?`<a class="btn alt sm" href="${m.url}" download>Скачать</a>`:'<span class="source-note">исходный PDF</span>'}</div></div>`).join('')}
@@ -2383,13 +2442,13 @@ const buildV241=document.querySelector('.build-label');if(buildV241)buildV241.te
       version:VER,
       meals:[
         {id:'fm2',day:'День 1',time:'12:30',title:'Обед',mode:'self',location:'Привал',menu:'Личный обед + ходовой перекус.',note:'Каждый несёт свою еду и воду.',portions:0,planEventId:'t5',cooks:[],equipment:[]},
-        {id:'fm3',day:'День 1',time:'19:00',title:'Ужин',mode:'common',location:'Лагерь',menu:'Гречка с тушёнкой + чай.',note:'Общий приём пищи: продукты закупаются и распределяются заранее.',portions:Math.max(1,yes.length),planEventId:'',cooks:['p4'],equipment:DEFAULT_EQUIPMENT.map(title=>({title,sharedId:''}))}
+        {id:'fm3',day:'День 1',time:'19:00',title:'Ужин',mode:'common',location:'Лагерь',menu:'Гречка с тушёнкой + чай.',note:'Общий приём пищи: продукты закупаются и распределяются заранее.',portions:Math.max(1,yes.length),planEventId:'',cooks:[],equipment:DEFAULT_EQUIPMENT.map(title=>({title,sharedId:''}))}
       ],
       ingredients:[
-        {id:'fi1',mealId:'fm3',title:'Гречка',need:0.8,unit:'кг',home:0.2,purchased:0,price:180,buyer:'p1',bring:[]},
-        {id:'fi2',mealId:'fm3',title:'Тушёнка',need:5,unit:'бан.',home:2,purchased:0,price:230,buyer:'p1',bring:[]},
+        {id:'fi1',mealId:'fm3',title:'Гречка',need:0.8,unit:'кг',home:0.2,purchased:0,price:180,buyer:'',bring:[]},
+        {id:'fi2',mealId:'fm3',title:'Тушёнка',need:5,unit:'бан.',home:2,purchased:0,price:230,buyer:'',bring:[]},
         {id:'fi3',mealId:'fm3',title:'Чай',need:20,unit:'пак.',home:20,purchased:0,price:0,buyer:'',bring:[]},
-        {id:'fi4',mealId:'fm3',title:'Сахар',need:0.3,unit:'кг',home:0,purchased:0,price:95,buyer:'p5',bring:[]}
+        {id:'fi4',mealId:'fm3',title:'Сахар',need:0.3,unit:'кг',home:0,purchased:0,price:95,buyer:'',bring:[]}
       ],
       mealChecks:{},
       attendance:{fm3:attendance},
@@ -3622,7 +3681,7 @@ const buildV241=document.querySelector('.build-label');if(buildV241)buildV241.te
               <div class="v38-profile-card-head"><div><h2>Основные данные</h2><p>То, как участник отображается внутри похода и как с ним связаться.</p></div></div>
               <div class="v38-profile-card-body">
                 <div class="v38-form-grid">
-                  <label class="v38-field"><span>Имя</span><input id="v38Name" autocomplete="name" value="${esc(p.name || '')}" placeholder="Сергей"></label>
+                  <label class="v38-field"><span>Имя</span><input id="v38Name" autocomplete="name" value="${esc(p.name || '')}" placeholder="Ваше имя"></label>
                   <label class="v38-field"><span>Позывной</span><input id="v38Callsign" value="${esc(p.callsign || '')}" placeholder="Например, Серый"></label>
                   <label class="v38-field full"><span>Телефон</span><input id="v38Phone" type="tel" autocomplete="tel" value="${esc(transport.phone || '')}" placeholder="+7 ..."><small class="v38-help">Нужен прежде всего для связи с водителем и организатором. Можно оставить пустым.</small></label>
                 </div>
@@ -5186,7 +5245,7 @@ render();
 
   function overview44(){
     const me=(S.participants||[]).find(p=>p.id===S.current)||(S.participants||[])[0];
-    const rs=routeStats44(),att=attention44(),tasks=nextTasks44(me),pr=me?progress(me.id):[0,0,0],roles=me?participantRoles(me.id):[],shared=me?participantShared(me.id):[];
+    const meId=me?.id||'',rs=routeStats44(),att=attention44(),tasks=nextTasks44(me),pr=me?progress(me.id):[0,0,0],roles=me?participantRoles(me.id):[],shared=me?participantShared(me.id):[];
     const yes=confirmedCount44(),maybe=maybeCount44(),roleDone=rolesDone44(),gearDone=gearDone44(),ready=typeof readiness==='function'?readiness():0;
     const roleMissing=Math.max(0,(S.roles||[]).length-roleDone),gearMissing=Math.max(0,(S.shared||[]).length-gearDone);
     const topAttention=att.all.slice(0,3);
@@ -5210,9 +5269,9 @@ render();
       </section>
       <section class="ov44-main-grid">
         <section class="ov44-card ov44-my-prep"><div class="ov44-card-head"><h2>Моя подготовка</h2><button data-v44-jump="profile">Открыть профиль</button></div>
-          <div class="ov44-prep-grid"><div class="ov44-person"><div class="avatar">${safe(initials(me?.name||'У'))}</div><div><strong>${safe(me?.name||'Участник')}</strong><span>${safe(roles.join(' · ')||'Роль не назначена')}</span></div></div>
+          <div class="ov44-prep-grid"><div class="ov44-person"><div class="avatar">${safe(initials(me?.name||(window.HikeSession?.signed?'У':'Г')))}</div><div><strong>${safe(me?.name||(window.HikeSession?.signed?'Участник':'Гость'))}</strong><span>${safe(roles.join(' · ')||'Роль не назначена')}</span></div></div>
           <div class="ov44-progress-block"><div><span>Снаряжение</span><b>${pr[0]} / ${pr[1]}</b></div><div class="ov44-progress"><i style="width:${pr[2]}%"></i></div></div>
-          <div class="ov44-prep-lines"><button data-v44-jump="transport"><span>Транспорт туда</span><b>${safe(rideLabel(me.id,'there'))}</b></button><button data-v44-jump="transport"><span>Транспорт обратно</span><b class="${['unset','need'].includes(S.rides?.back?.[me.id])?'warn':''}">${safe(rideLabel(me.id,'back'))}</b></button>${shared.length?`<button data-v44-jump="gear"><span>Групповое имущество</span><b>${safe(shared.join(' · '))}</b></button>`:''}</div></div>
+          <div class="ov44-prep-lines"><button data-v44-jump="transport"><span>Транспорт туда</span><b>${safe(rideLabel(meId,'there'))}</b></button><button data-v44-jump="transport"><span>Транспорт обратно</span><b class="${['unset','need'].includes(S.rides?.back?.[meId])?'warn':''}">${safe(rideLabel(meId,'back'))}</b></button>${shared.length?`<button data-v44-jump="gear"><span>Групповое имущество</span><b>${safe(shared.join(' · '))}</b></button>`:''}</div></div>
           <div class="ov44-next-action"><span>Следующее действие</span><strong>${safe(tasks[0]?.text||'Критичных действий нет')}</strong>${tasks[0]?.tab?`<button data-v44-jump="${tasks[0].tab}">Открыть раздел →</button>`:''}</div>
         </section>
         <section class="ov44-card ov44-attention"><div class="ov44-card-head"><h2>Требует внимания <span>${att.count}</span></h2><button data-v44-jump="participants">Смотреть всё</button></div><div class="ov44-att-list">${topAttention.map(x=>`<button data-v44-jump="${x.tab}" class="${x.tone}"><i></i><span><b>${safe(x.title)}</b><small>${safe(x.detail)}</small></span><em>Открыть</em></button>`).join('')||'<div class="ov44-empty">Незакрытых вопросов нет.</div>'}</div></section>
@@ -5263,9 +5322,18 @@ render();
     }catch(e){body.innerHTML=`<div class="ov44-weather-icon">${weatherIcon44('cloud')}</div><div class="ov44-weather-copy"><strong>Прогноз временно недоступен</strong><span>Остальные данные похода работают без погоды.</span></div>`}
   }
 
+  function guestAccess44(){
+    const me=(S.participants||[]).find(p=>p.id===S.current)||(S.participants||[])[0];
+    if(me)return;
+    const card=$('.ov44-my-prep');
+    if(!card)return;
+    card.innerHTML='<div class="ov44-card-head"><h2>Присоединиться к походу</h2></div><div class="ov44-empty"><strong>Вы пока не вошли.</strong><br>Нажмите «Войти» в верхней панели, укажите email и отправьте заявку на участие.</div>';
+  }
+
   function bind44(){
     document.body.classList.toggle('ov44-active',tab==='overview');
     if(tab!=='overview')return;
+    guestAccess44();
     document.querySelectorAll('[data-v44-jump]').forEach(b=>b.onclick=()=>{const target=b.dataset.v44Jump;if(!target)return;tab=target;render()});
     document.querySelector('[data-v44-weather]')?.addEventListener('click',loadWeather44);
     requestAnimationFrame(()=>{initMap44();loadWeather44()});
@@ -5904,7 +5972,9 @@ render();
   function participantSummary() {
     const c=counts(), l=limit(), f=free();
     const item=(type,label,value,detail)=>`<div class="p50-friendly"><div class="p50-friendly__icon">${icon(type)}</div><div><small>${label}</small><strong>${value}</strong><span class="p50-sub">${detail}</span></div></div>`;
-    return `<section class="p50-participant-summary">${item('people','Команда',`Нас уже ${c.yes}`,c.yes===1?'участник подтвердил участие':'участников подтвердили участие')}${item('plus','Набор',l?`${f} свободных мест`:'Регистрация открыта',l?'можно пригласить друзей':'лимит участников не задан')}</section>`;
+    const teamValue=c.yes?`Нас уже ${c.yes}`:'Пока никого';
+    const teamDetail=c.yes?(c.yes===1?'участник подтвердил участие':'участников подтвердили участие'):'После входа можно подать заявку на участие';
+    return `<section class="p50-participant-summary">${item('people','Команда',teamValue,teamDetail)}${item('plus','Набор',l?`${f} свободных мест`:'Регистрация открыта',l?'можно приглашать участников':'заявки принимаются по email')}</section>`;
   }
 
   function participantRows() {

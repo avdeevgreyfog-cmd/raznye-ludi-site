@@ -28,13 +28,13 @@
       version:VER,
       meals:[
         {id:'fm2',day:'День 1',time:'12:30',title:'Обед',mode:'self',location:'Привал',menu:'Личный обед + ходовой перекус.',note:'Каждый несёт свою еду и воду.',portions:0,planEventId:'t5',cooks:[],equipment:[]},
-        {id:'fm3',day:'День 1',time:'19:00',title:'Ужин',mode:'common',location:'Лагерь',menu:'Гречка с тушёнкой + чай.',note:'Общий приём пищи: продукты закупаются и распределяются заранее.',portions:Math.max(1,yes.length),planEventId:'',cooks:['p4'],equipment:DEFAULT_EQUIPMENT.map(title=>({title,sharedId:''}))}
+        {id:'fm3',day:'День 1',time:'19:00',title:'Ужин',mode:'common',location:'Лагерь',menu:'Гречка с тушёнкой + чай.',note:'Общий приём пищи: продукты закупаются и распределяются заранее.',portions:Math.max(1,yes.length),planEventId:'',cooks:[],equipment:DEFAULT_EQUIPMENT.map(title=>({title,sharedId:''}))}
       ],
       ingredients:[
-        {id:'fi1',mealId:'fm3',title:'Гречка',need:0.8,unit:'кг',home:0.2,purchased:0,price:180,buyer:'p1',bring:[]},
-        {id:'fi2',mealId:'fm3',title:'Тушёнка',need:5,unit:'бан.',home:2,purchased:0,price:230,buyer:'p1',bring:[]},
+        {id:'fi1',mealId:'fm3',title:'Гречка',need:0.8,unit:'кг',home:0.2,purchased:0,price:180,buyer:'',bring:[]},
+        {id:'fi2',mealId:'fm3',title:'Тушёнка',need:5,unit:'бан.',home:2,purchased:0,price:230,buyer:'',bring:[]},
         {id:'fi3',mealId:'fm3',title:'Чай',need:20,unit:'пак.',home:20,purchased:0,price:0,buyer:'',bring:[]},
-        {id:'fi4',mealId:'fm3',title:'Сахар',need:0.3,unit:'кг',home:0,purchased:0,price:95,buyer:'p5',bring:[]}
+        {id:'fi4',mealId:'fm3',title:'Сахар',need:0.3,unit:'кг',home:0,purchased:0,price:95,buyer:'',bring:[]}
       ],
       mealChecks:{},
       attendance:{fm3:attendance},
