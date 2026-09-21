@@ -5322,9 +5322,18 @@ render();
     }catch(e){body.innerHTML=`<div class="ov44-weather-icon">${weatherIcon44('cloud')}</div><div class="ov44-weather-copy"><strong>Прогноз временно недоступен</strong><span>Остальные данные похода работают без погоды.</span></div>`}
   }
 
+  function guestAccess44(){
+    const me=(S.participants||[]).find(p=>p.id===S.current)||(S.participants||[])[0];
+    if(me)return;
+    const card=$('.ov44-my-prep');
+    if(!card)return;
+    card.innerHTML='<div class="ov44-card-head"><h2>Присоединиться к походу</h2></div><div class="ov44-empty"><strong>Вы пока не вошли.</strong><br>Нажмите «Войти» в верхней панели, укажите email и отправьте заявку на участие.</div>';
+  }
+
   function bind44(){
     document.body.classList.toggle('ov44-active',tab==='overview');
     if(tab!=='overview')return;
+    guestAccess44();
     document.querySelectorAll('[data-v44-jump]').forEach(b=>b.onclick=()=>{const target=b.dataset.v44Jump;if(!target)return;tab=target;render()});
     document.querySelector('[data-v44-weather]')?.addEventListener('click',loadWeather44);
     requestAnimationFrame(()=>{initMap44();loadWeather44()});
@@ -5963,7 +5972,9 @@ render();
   function participantSummary() {
     const c=counts(), l=limit(), f=free();
     const item=(type,label,value,detail)=>`<div class="p50-friendly"><div class="p50-friendly__icon">${icon(type)}</div><div><small>${label}</small><strong>${value}</strong><span class="p50-sub">${detail}</span></div></div>`;
-    return `<section class="p50-participant-summary">${item('people','Команда',`Нас уже ${c.yes}`,c.yes===1?'участник подтвердил участие':'участников подтвердили участие')}${item('plus','Набор',l?`${f} свободных мест`:'Регистрация открыта',l?'можно пригласить друзей':'лимит участников не задан')}</section>`;
+    const teamValue=c.yes?`Нас уже ${c.yes}`:'Пока никого';
+    const teamDetail=c.yes?(c.yes===1?'участник подтвердил участие':'участников подтвердили участие'):'После входа можно подать заявку на участие';
+    return `<section class="p50-participant-summary">${item('people','Команда',teamValue,teamDetail)}${item('plus','Набор',l?`${f} свободных мест`:'Регистрация открыта',l?'можно приглашать участников':'заявки принимаются по email')}</section>`;
   }
 
   function participantRows() {
