@@ -16,7 +16,7 @@ const roleDescriptions={
 };
 const seed=()=>({
   current:'p1',
-  event:{title:'Лыткарино · разведывательный поход',short:'Лыткарино',type:'Поход-тренировка',status:'Подготовка',date:'Дата уточняется',meeting:'07:30 · точка уточняется',start:'09:15',distance:'Уточняется',duration:'1 день',replyDeadline:'18 сентября'},
+  event:{title:'Лыткарино · разведывательный поход',short:'Лыткарино',type:'Поход-тренировка',status:'Подготовка',date:'10–11 октября 2026',meeting:'07:30 · точка уточняется',start:'09:15',distance:'Уточняется',duration:'2 дня',durationDays:2,overnight:true,replyDeadline:'18 сентября'},
   participants:[['p1','Сергей','yes'],['p2','Иван','yes'],['p3','Алексей','yes'],['p4','Максим','maybe'],['p5','Андрей','yes'],['p6','Николай','pending']].map(x=>({id:x[0],name:x[1],rsvp:x[2]})),
   roles:[['Руководитель','p1',1],['Навигатор','p2',1],['Замыкающий','',1],['Первая помощь','p3',1],['Транспорт','p5',0],['Связь','p2',0],['Снаряжение','',0],['Питание','p4',0]].map((x,i)=>({id:'r'+i,title:x[0],p:x[1],critical:!!x[2],desc:roleDescriptions[x[0]]})),
   personal:[
@@ -4861,11 +4861,26 @@ render();
       ensureCurrentParticipant(name, false); updateAuthUI(); toast('Заявка отправлена организатору'); return true;
     });
   }
-  function russianDate(value) { if (!value) return 'Дата уточняется'; const date = new Date(value); return Number.isNaN(date.getTime()) ? 'Дата уточняется' : new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }).format(date); }
+  function russianDate(value,durationDays=1) {
+    if (!value) return 'Дата уточняется';
+    const start = new Date(value);
+    if (Number.isNaN(start.getTime())) return 'Дата уточняется';
+    const tz='Europe/Moscow';
+    const parts=d=>Object.fromEntries(new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:tz}).formatToParts(d).filter(x=>x.type!=='literal').map(x=>[x.type,x.value]));
+    const a=parts(start),days=Math.max(1,Number(durationDays)||1);
+    if(days===1)return `${a.day} ${a.month} ${a.year}`;
+    const end=new Date(start.getTime()+(days-1)*86400000),b=parts(end);
+    if(a.month===b.month&&a.year===b.year)return `${a.day}–${b.day} ${b.month} ${b.year}`;
+    if(a.year===b.year)return `${a.day} ${a.month} – ${b.day} ${b.month} ${b.year}`;
+    return `${a.day} ${a.month} ${a.year} – ${b.day} ${b.month} ${b.year}`;
+  }
   function applyEventToApp() {
     if (!event || !S?.event) return;
-    S.event.date = russianDate(event.starts_at); S.event.meeting = event.meeting_label || 'Время и точка уточняются';
-    S.event.replyDeadline = event.reply_deadline ? new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long' }).format(new Date(event.reply_deadline)) : 'не задан';
+    S.event.date = russianDate(event.starts_at,event.duration_days);
+    S.event.durationDays = Math.max(1,Number(event.duration_days)||1);
+    S.event.overnight = event.overnight !== false;
+    S.event.meeting = event.meeting_label || 'Время и точка уточняются';
+    S.event.replyDeadline = event.reply_deadline ? new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', timeZone:'Europe/Moscow' }).format(new Date(event.reply_deadline)) : 'не задан';
     S.event.status = ({ planning: 'Подготовка', open: 'Регистрация открыта', closed: 'Набор закрыт', cancelled: 'Отменён' })[event.status] || 'Подготовка';
   }
   function cloudKeys() {
