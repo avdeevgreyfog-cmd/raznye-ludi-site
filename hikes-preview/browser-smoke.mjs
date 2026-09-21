@@ -17,8 +17,8 @@ try{
  await page.locator('#nav [data-tab="roles"]').waitFor({timeout:30000});
  await page.waitForTimeout(1500);
  const publicState=await page.evaluate(()=>({
-   participants:Array.isArray(window.S?.participants)?window.S.participants.map(p=>({id:p.id,name:p.name})):[],
-   current:window.S?.current||'',
+   participants:(typeof S!=='undefined'&&Array.isArray(S.participants))?S.participants.map(p=>({id:p.id,name:p.name})):[],
+   current:typeof S!=='undefined'?(S.current||''):'',
    text:document.body.innerText
  }));
  assert.equal(publicState.participants.length,0,'Public workspace must start with no seeded participants');
