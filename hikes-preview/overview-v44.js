@@ -192,9 +192,18 @@
     }catch(e){body.innerHTML=`<div class="ov44-weather-icon">${weatherIcon44('cloud')}</div><div class="ov44-weather-copy"><strong>Прогноз временно недоступен</strong><span>Остальные данные похода работают без погоды.</span></div>`}
   }
 
+  function guestAccess44(){
+    const me=(S.participants||[]).find(p=>p.id===S.current)||(S.participants||[])[0];
+    if(me)return;
+    const card=$('.ov44-my-prep');
+    if(!card)return;
+    card.innerHTML='<div class="ov44-card-head"><h2>Присоединиться к походу</h2></div><div class="ov44-empty"><strong>Вы пока не вошли.</strong><br>Нажмите «Войти» в верхней панели, укажите email и отправьте заявку на участие.</div>';
+  }
+
   function bind44(){
     document.body.classList.toggle('ov44-active',tab==='overview');
     if(tab!=='overview')return;
+    guestAccess44();
     document.querySelectorAll('[data-v44-jump]').forEach(b=>b.onclick=()=>{const target=b.dataset.v44Jump;if(!target)return;tab=target;render()});
     document.querySelector('[data-v44-weather]')?.addEventListener('click',loadWeather44);
     requestAnimationFrame(()=>{initMap44();loadWeather44()});
