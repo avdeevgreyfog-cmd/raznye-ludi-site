@@ -1,10 +1,21 @@
 name: Hikes browser smoke
+
 on:
   push:
+    branches: [main, develop]
+    paths:
+      - 'hikes-preview/**'
+      - '.github/workflows/hikes-smoke.yml'
+  pull_request:
     branches: [main]
-    paths: ['hikes-preview/**', '.github/workflows/hikes-smoke.yml']
+    paths:
+      - 'hikes-preview/**'
+      - '.github/workflows/hikes-smoke.yml'
+  workflow_dispatch:
+
 permissions:
   contents: read
+
 jobs:
   smoke:
     runs-on: ubuntu-latest
